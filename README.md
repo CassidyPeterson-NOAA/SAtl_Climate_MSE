@@ -2,7 +2,7 @@
 
 This repository contains scripts used to test various model-based and empirical MPs across nonstationary projections designed to mimic potential climate change impacts. This study follows the "empirical approach" of evaluating MPs across climate uncertainty, wherein trends in key processes are modeled without identification of the underlying causal mechanisms (Punt et al. 2014). 
 
-This project uses [openMSE](https://openmse.com/) software (developed by [Blue Matter Science](https://www.bluematterscience.com/)) and builds on extensive foundational work led by Nikolai Klibansky (see [bamExtras](https://github.com/nikolaifish/bamExtras) and [bamMSE](https://github.com/nikolaifish/bamMSE)).
+This project uses [openMSE](https://openmse.com/) software (developed by [Blue Matter Science](https://www.bluematterscience.com/)) and builds on extensive foundational work led by Nikolai Klibansky (see [bamExtras](https://github.com/nikolaifish/bamExtras), [bamMSE](https://github.com/nikolaifish/bamMSE), and [SEFSCInterimAnalysis](https://github.com/nikolaifish/SEFSCInterimAnalysis)).
 
 
 ## References
