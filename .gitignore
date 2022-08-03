@@ -39,5 +39,6 @@ vignettes/*.pdf
 .Renviron
 
 # files to ignore
-
+MSE_obj
+Plots
 
