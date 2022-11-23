@@ -8,9 +8,10 @@ library(openMSE)
 library(bamExtras)
 library(bamMSE)
 
+filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
 # setwd("C:\\Users\\cassidy.peterson\\Documents\\Github\\SEFSCInterimAnalysis\\RunMSE\\SEFSC\\")
-setwd("C:/Users/cassidy.peterson/Documents/Github/SAtl_Climate_MSE/")
+setwd(file.path(filepath, "SAtl_Climate_MSE/"))
 # setwd("D:/SAtl_MSE")
 
 
@@ -19,11 +20,11 @@ t_list <- Sys.time()
 myseed <- 8675309
 
 
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R")
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R"))
 source("GB_target1.R")
 source("GB_slope1.R")
 source("myIslope.R")
@@ -34,17 +35,17 @@ source("myIratio.R"   )
 
 
 ######
-# BSB_init <- readRDS("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass.rds")
+# BSB_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass.rds"))
 # BSBo<-Replace(BSB_init, Overages, Name="BSB_Over")
-# saveRDS(BSBo,file = "C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass_Over.rds")
+# saveRDS(BSBo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass_Over.rds"))
 #
-# VS_init <- readRDS("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_VermilionSnapper.rds")
+# VS_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_VermilionSnapper.rds"))
 # VSo<-Replace(VS_init, Overages, Name="VS_Over")
-# saveRDS(VSo,file = "C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_VermilionSnapper_Over.rds")
+# saveRDS(VSo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_VermilionSnapper_Over.rds"))
 #
-# RP_init <- readRDS("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy.rds")
+# RP_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy.rds"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
-# saveRDS(RPo,file = "C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds")
+# saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
 #####
 
 ncores <- 10
@@ -357,11 +358,11 @@ sfLibrary("magrittr", character.only = TRUE, verbose = FALSE)
 
 
 
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R")
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R"))
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R"))
 source("GB_slope1.R")
 source("GB_target1.R")
 source("myIratio.R")
@@ -385,8 +386,8 @@ for(OMName_k in OMName)       { ######### Loop over operating model
   MSEName_k <- gsub("OM","MSE",OMName_k)
   DataName_k <- gsub("OM","Data",OMName_k)
 
-  OMInit_k <- readRDS(paste0("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/OM/", OMName_k, ".rds"))
-  DataInit_k <- readRDS(paste0("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/Data/", DataName_k, ".rds"))
+  OMInit_k <- readRDS(paste0(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/", OMName_k, ".rds")))
+  DataInit_k <- readRDS(paste0(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/", DataName_k, ".rds")))
   Data_k <- DataInit_k
 
   if(OMName_k=="OM_BlackSeaBass") MPs_user_k <- MPs_user_BSB
