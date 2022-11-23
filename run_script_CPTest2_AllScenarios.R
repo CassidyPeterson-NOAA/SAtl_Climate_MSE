@@ -231,12 +231,12 @@ SCAfree_args <- list(fix_h=FALSE,fix_F_equilibrium=FALSE, fix_omega=FALSE, fix_t
 # seeds <- setNames(sample(1:10000,length(OMName),replace = FALSE),OMName)
 
 
-Irefbias_lo_args<-list("min"=0.2, "max"=0.5)
-Irefbias_hi_args<-list("min"=1.2, "max"=1.5)
-Brefbias_lo_args<-list("min"=0.2, "max"=0.5)
-Brefbias_hi_args<-list("min"=1.2, "max"=1.5)
-Crefbias_lo_args<-list("min"=0.2, "max"=0.5)
-Crefbias_hi_args<-list("min"=1.2, "max"=1.5)
+Irefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Irefbias_hi_args<-list("min"=1.25, "max"=1.5)
+Brefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Brefbias_hi_args<-list("min"=1.25, "max"=1.5)
+Crefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Crefbias_hi_args<-list("min"=1.25, "max"=1.5)
 
 refbias_hi_args<-list(Irefbias_args = Irefbias_hi_args,
                       Brefbias_args = Brefbias_hi_args,
