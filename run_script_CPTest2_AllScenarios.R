@@ -253,9 +253,9 @@ proj_ucv_args = list('scale'=1,        # hist scale param
                  "yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
                  "transdur"= 10    # Duration (in years) of transition between regime 1 and 2
 )
-uobs_lo_args<-list(scale1 = 0, scale2 = -2,
+uobs_lo_args<-list(scale1 = 1, scale2 = 0.5,
                    startyr = 10, transdur = 10)
-uobs_hi_args<-list(scale1 = 0, scale2 = 2,
+uobs_hi_args<-list(scale1 = 1, scale2 = 2,
                    startyr = 10, transdur = 10)
 recns_args <- list("yr1diff"=  0,   # Number of years between the beginning of the projection period and start of change in rec devs
                    "y0"=1,"sd"=5,"mu"=0) # Arguments passed to bamExtras::random_walk
@@ -534,7 +534,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       # Regime change (change in average recruitment deviations)
       if(scenario_i=="recdev"){
         args <- get(paste0(scenario_i,"_args"))
-        Perr_y <- OM_k@cpars$Perr_y
+        Perr_y <- OM_k@cpars$Perr_y # Perr_y is the observed process error
         years <- dim(Perr_y)[2]
         y_mult <- local({
           x <- rep(1,years)
@@ -834,7 +834,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       message(paste0("at: ",tail(t_list,1),".(",round(diff(tail(t_list,2)),2)," since start)"))
       # Run all MPs together so that the Hist objects are always identical
       set.seed(myseed)
-      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac","myIslope"))
+      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac"))#,"myIslope"))
 
 
       MSE_batch_1 <- runMSE(OM_k,
@@ -852,22 +852,23 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
 
       # ##### TESTING CMPS ##############
-      # OM_k@interval <- 1
-      # set.seed(myseed)
-      # MSE <- runMSE(OM_k,MPs = "GB_slope_RP",
-      #               parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      #
-      #
-      # # dim(MSE1@SB_SBMSY)
-      # plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years")
-      # abline(h=1)
-      # lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='orchid', lwd=2)
+      OM_k@interval <- 1
+      set.seed(myseed)
+      MSE <- runMSE(OM_k,MPs = "SCA_1",
+                    parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+
+
+
+      # dim(MSE1@SB_SBMSY)
+      plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years")
+      abline(h=1)
+      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='black', lwd=2)
 
 
 
 
-      # ## Example for figure.
+
+    # ## Example for figure.
       # OM_k@interval <- 1
       # set.seed(myseed)
       # MSE_VSdefault <- runMSE(OM_k,MPs = "Itarget1",
