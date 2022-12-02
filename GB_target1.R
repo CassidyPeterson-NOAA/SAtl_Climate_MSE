@@ -30,7 +30,9 @@
 #   attr(,"class")
 # [1] "MP"
 
-GB_target_BSB<- function (x, Data, reps = 100, plot = FALSE, w = 0.1, index="AddInd", ind=1)
+GB_target_BSB<- function (x, Data, reps = 100, plot = FALSE,
+                          index="AddInd", ind=1,
+                          w = 0.5, c0=0.35, delta=0.2)
 {
   dependencies = "Data@Cat, Data@Cref, Data@Iref, Data@Ind, Data@AddInd"
 
@@ -46,14 +48,14 @@ GB_target_BSB<- function (x, Data, reps = 100, plot = FALSE, w = 0.1, index="Add
   Itarg <- MSEtool::trlnorm(reps, Data@Iref[x], Data@CV_Iref)
   Iav <- mean(INDEX[x, (length(INDEX[x, ]) - 4):length(INDEX[x,  ])], na.rm = T)
   Irec <- mean(INDEX[x, (length(INDEX[x, ]) - 3):length(INDEX[x,  ])], na.rm = T)
-  I0 <- 0.2 * Iav
+  I0 <- c0 * Iav
   TAC <- rep(NA, reps)
   if (Irec > I0)
     TAC <- TACtarg * (w + (1 - w) * ((Irec - I0)/(Itarg - I0)))
   if (Irec < I0)
     TAC <- TACtarg * w * (Irec/I0)^2
-  TAC[TAC > (1.2 * Catrec)] <- 1.2 * Catrec
-  TAC[TAC < (0.8 * Catrec)] <- 0.8 * Catrec
+  TAC[TAC > ((1+delta) * Catrec)] <- (1+delta) * Catrec
+  TAC[TAC < ((1-delta) * Catrec)] <- (1-delta) * Catrec
   TAC <- MSEtool::TACfilter(TAC)
   if (plot)
     GB_target_plot(Itarg, Irec, I0, Data, Catrec, TAC)
@@ -68,7 +70,7 @@ class(GB_target_BSB)<-"MP"
 # avail(OM)
 
 
-GB_target_RP<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=1, index="AddInd", ind=1) # w default = 0.5 | c0 default = 0.2
+GB_target_RP<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=1, index="AddInd", ind=1, delta=0.2) # w default = 0.5 | c0 default = 0.2
 {
   dependencies = "Data@Cat, Data@Cref, Data@Iref, Data@Ind, Data@AddInd"
 
@@ -90,8 +92,8 @@ GB_target_RP<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=1, index
     TAC <- TACtarg * (w + (1 - w) * ((Irec - I0)/(Itarg - I0)))
   if (Irec < I0)
     TAC <- TACtarg * w * (Irec/I0)^2
-  TAC[TAC > (1.2 * Catrec)] <- 1.2 * Catrec
-  TAC[TAC < (0.8 * Catrec)] <- 0.8 * Catrec
+  TAC[TAC > ((1+delta) * Catrec)] <- (1+delta) * Catrec
+  TAC[TAC < ((1-delta) * Catrec)] <- (1-delta) * Catrec
   TAC <- MSEtool::TACfilter(TAC)
   if (plot)
     GB_target_plot(Itarg, Irec, I0, Data, Catrec, TAC)
@@ -104,7 +106,7 @@ class(GB_target_RP)<-"MP"
 
 
 
-GB_target_VS<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=0.5, index="AddInd", ind=1) # w default = 0.5 | c0 default = 0.2
+GB_target_VS<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=0.5, index="AddInd", ind=1, delta=0.2) # w default = 0.5 | c0 default = 0.2
 {
   dependencies = "Data@Cat, Data@Cref, Data@Iref, Data@Ind, Data@AddInd"
 
@@ -126,8 +128,8 @@ GB_target_VS<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=0.5, ind
     TAC <- TACtarg * (w + (1 - w) * ((Irec - I0)/(Itarg - I0)))
   if (Irec < I0)
     TAC <- TACtarg * w * (Irec/I0)^2
-  TAC[TAC > (1.2 * Catrec)] <- 1.2 * Catrec
-  TAC[TAC < (0.8 * Catrec)] <- 0.8 * Catrec
+  TAC[TAC > ((1+delta) * Catrec)] <- (1+delta) * Catrec
+  TAC[TAC < ((1-delta) * Catrec)] <- (1-delta) * Catrec
   TAC <- MSEtool::TACfilter(TAC)
   if (plot)
     GB_target_plot(Itarg, Irec, I0, Data, Catrec, TAC)
@@ -139,5 +141,17 @@ GB_target_VS<- function (x, Data, reps = 100, plot = FALSE, w = 0.5, c0=0.5, ind
 class(GB_target_VS)<-"MP"
 
 
-# avail(OM)
+
+# More reponsive
+GB_target_VS2<-GB_target_VS
+formals(GB_target_VS2)$w<-0.25
+class(GB_target_VS2)<-"MP"
+
+GB_target_BSB2<-GB_target_BSB
+formals(GB_target_BSB2)$w<-0.25
+class(GB_target_BSB2)<-"MP"
+
+GB_target_RP2<-GB_target_RP
+formals(GB_target_RP2)$w<-0.25
+class(GB_target_RP2)<-"MP"
 
