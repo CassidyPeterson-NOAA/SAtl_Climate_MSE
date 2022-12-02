@@ -8,7 +8,6 @@ library(openMSE)
 library(bamExtras)
 library(bamMSE)
 
-filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
 # setwd("C:\\Users\\cassidy.peterson\\Documents\\Github\\SEFSCInterimAnalysis\\RunMSE\\SEFSC\\")
 setwd(file.path(filepath, "SAtl_Climate_MSE/"))
@@ -18,6 +17,8 @@ setwd(file.path(filepath, "SAtl_Climate_MSE/"))
 rm(list=ls())
 t_list <- Sys.time()
 myseed <- 8675309
+
+filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
 
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
@@ -107,9 +108,9 @@ MPs_user_interval2<-c(5,10)
 # OMName_all <- gsub(".rds","",list.files("OM"))
 # OMName <- OMName_all[!OMName_all%in%OMName_complete]
 OMName <- c(#"OM_BlackSeaBass" #, # Runs
-             "OM_RedPorgy" #, # Runs,
+            # "OM_RedPorgy" #, # Runs,
             # "OM_SnowyGrouper",
-            # "OM_VermilionSnapper" # Runs
+             "OM_VermilionSnapper" # Runs
             #"OM_RedGrouper", # 2022-1-19 This took 7 hours just to run the base scenario batch 1 so I interrupted it
             #,"OM_GagGrouper"#, # Runs
             #,"OM_GrayTriggerfish" # Problems with lightly fished scenario where "More than 5 % of simulations can't get to the specified level of depletion with these Operating Model parameters"
@@ -232,11 +233,11 @@ SCAfree_args <- list(fix_h=FALSE,fix_F_equilibrium=FALSE, fix_omega=FALSE, fix_t
 # seeds <- setNames(sample(1:10000,length(OMName),replace = FALSE),OMName)
 
 
-Irefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Irefbias_lo_args<-list("min"=0.5, "max"=0.75)
 Irefbias_hi_args<-list("min"=1.25, "max"=1.5)
-Brefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Brefbias_lo_args<-list("min"=0.5, "max"=0.75)
 Brefbias_hi_args<-list("min"=1.25, "max"=1.5)
-Crefbias_lo_args<-list("min"=0.25, "max"=0.5)
+Crefbias_lo_args<-list("min"=0.5, "max"=0.75)
 Crefbias_hi_args<-list("min"=1.25, "max"=1.5)
 
 refbias_hi_args<-list(Irefbias_args = Irefbias_hi_args,
@@ -374,7 +375,7 @@ source('C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/S
 
 #
 OMName_k<-OMName[1]
-scenario_i<-scenario[1]
+scenario_i<-scenario[7] #scenario[1]
 
 
 
@@ -386,8 +387,8 @@ for(OMName_k in OMName)       { ######### Loop over operating model
   MSEName_k <- gsub("OM","MSE",OMName_k)
   DataName_k <- gsub("OM","Data",OMName_k)
 
-  OMInit_k <- readRDS(paste0(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/", OMName_k, ".rds")))
-  DataInit_k <- readRDS(paste0(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/", DataName_k, ".rds")))
+  OMInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/", paste0(OMName_k, ".rds")))
+  DataInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/", paste0(DataName_k, ".rds")))
   Data_k <- DataInit_k
 
   if(OMName_k=="OM_BlackSeaBass") MPs_user_k <- MPs_user_BSB
@@ -533,9 +534,9 @@ for(OMName_k in OMName)       { ######### Loop over operating model
 
 
       # Regime change (change in average recruitment deviations)
-      if(scenario_i=="recdev"){
+      if(scenario_i=="recdev" | scenario_i=="recdev_hi" | scenario_i=="recdev_lo"){
         args <- get(paste0(scenario_i,"_args"))
-        Perr_y <- OM_k@cpars$Perr_y # Perr_y is the observed process error
+        Perr_y <- OM_k@cpars$Perr_y
         years <- dim(Perr_y)[2]
         y_mult <- local({
           x <- rep(1,years)
@@ -835,7 +836,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       message(paste0("at: ",tail(t_list,1),".(",round(diff(tail(t_list,2)),2)," since start)"))
       # Run all MPs together so that the Hist objects are always identical
       set.seed(myseed)
-      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac"))#,"myIslope"))
+      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac",MPs_user_k))
 
 
       MSE_batch_1 <- runMSE(OM_k,
@@ -855,7 +856,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       # ##### TESTING CMPS ##############
       OM_k@interval <- 1
       set.seed(myseed)
-      MSE <- runMSE(OM_k,MPs = "SCA_1",
+      MSE <- runMSE(OM_k,MPs = "myIT10_RP",
                     parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
@@ -863,11 +864,12 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       # dim(MSE1@SB_SBMSY)
       plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years")
       abline(h=1)
-      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='black', lwd=2)
+      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='lightgreen', lwd=2)
 
 
 
-
+#MSE_refbias_hi<- MSE
+# MSE_refbias_lo<-MSE
 
     # ## Example for figure.
       # OM_k@interval <- 1

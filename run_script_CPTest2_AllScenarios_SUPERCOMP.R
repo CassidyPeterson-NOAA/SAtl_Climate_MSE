@@ -556,7 +556,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
 
 
       # Regime change (change in average recruitment deviations)
-      if(scenario_i=="recdev_hi" | scenario_i=="recdev_lo"){
+      if(scenario_i=="recdev_hi" | scenario_i=="recdev_lo" | scenario_i=="recdev"){
         args <- get(paste0(scenario_i,"_args"))
         Perr_y <- OM_k@cpars$Perr_y
         years <- dim(Perr_y)[2]
