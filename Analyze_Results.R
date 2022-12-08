@@ -74,6 +74,7 @@ GetResults<-function(species1=species, sp1=sp, oScenarios=orderedScenarios){
   return(temp_res)
 }
 
+
 # COLLATE AAVY, terminal relative SSB ratio, terminal relative F ratio, terminal yield, cumulative yield
 CollatePMs <- function(dataN='BSB', stat=c('AAVY','trelSSB','trelF','tyield','cyield', 'PNOF', 'P100')){
   data<-get(dataN)
@@ -316,10 +317,10 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
 
 
 ## VIOLIN PLOTS ##
-Plot_trelSSB<-function(SPP, ylims=c(NULL), MPnam=MP_namesR_leg, MPcol=MP_R_col){
+Plot_trelSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_leg, MPcol=MP_R_col){
   par(mfrow=c(4,3))
   for(ii in 1:length(names(SPP))){
-    vioplot(P100(SPP[[ii]], Yrs=-1)@Stat, col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
+    vioplot(P100(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("SSB ratio", 2, line=1.1)
   }# end for loop
@@ -327,7 +328,7 @@ Plot_trelSSB<-function(SPP, ylims=c(NULL), MPnam=MP_namesR_leg, MPcol=MP_R_col){
 Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col){
   par(mfrow=c(4,3))
   for(ii in 1:length(names(SPP))){
-    vioplot(PNOF(SPP[[ii]])@Prob, col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
+    vioplot(PNOF(SPP[[ii]])@Prob[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("PNOF", 2, line=1.1)
   }# end for loop
@@ -335,7 +336,7 @@ Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol
 Plot_P100<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col){
   par(mfrow=c(4,3))
   for(ii in 1:length(names(SPP))){
-    vioplot(P100(SPP[[ii]],Yrs=-10)@Prob, col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
+    vioplot(P100(SPP[[ii]],Yrs=-10)@Prob[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("Prob SSB_40-50>SSBMSY", 2, line=1.1)
   }# end for loop
@@ -343,7 +344,7 @@ Plot_P100<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol
 Plot_AAVY<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col){
   par(mfrow=c(4,3))
   for(ii in 1:length(names(SPP))){
-    vioplot(AAVY(SPP[[ii]],Yrs=-10)@Stat, col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(AAVY(SPP[[ii]],Yrs=-10)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("AAVY", 2, line=1.1)
   }# end for loop
@@ -362,20 +363,21 @@ PlotCumPM<-function(sp, title=NULL, Pstat=c('AAVY','trelSSB','trelF','tyield','c
 }
 
 
-
 # -------------------------------------------------- GET DATA ------------------------------------------------------
 
+# BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 
 ##### INPUTS ######
 set.file<-"MSE_obj/"
-species<-"BlackSeaBass"; sp<-"BSB"
+species<-"VermilionSnapper"; sp<-"VS"
+# species<-"BlackSeaBass"; sp<-"BSB"
 ## DATA AND PLOTTING INPUTS
-orderedMPs<-c(1, 9:10, 2:8)
-orderedScenarios<-c(3,5:6,4,1:2,7:11)
-scenarios<-c("base","age0M_hi","age0M_lo","epiM","recdev_hi","recdev_lo",
-             "recns","refbias_hi","refbias_lo","uobs_hi","uobs_lo")
-MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p", "GBtarg","ICI","Irat","IT10","Itarg")
-MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue')
+orderedMPs<- c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
+scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
+             "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
+MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p", "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","GBslope","Islope")
+MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen', 'cadetblue','cadetblue1')
 par.args<-list(mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
 par(par.args)
 
@@ -383,7 +385,7 @@ par(par.args)
 
 
 ### Run FUNCTIONS for input species ##
-assign(sp, GetResults(species1=species,sp1=sp)) # save GetResults with sp
+assign(sp, GetResults(species1=species,sp1=sp)) # save GetResults with sp | BSB
 
 # correct results for EpiM SSB nonsensical results
 sptemp<-get(sp)                       # save BSB as sptemp
@@ -427,11 +429,11 @@ Plot_AAVY(SPP=spec, refline=0.30)
 
 
 par(mfrow=c(1,1))
-PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title="Black Sea Bass")
-PlotCumPM(sp, Pstat="PNOF", refline=c(0.5), title="Black Sea Bass")
-PlotCumPM(sp, Pstat="P100", refline=c(0.5), title="Black Sea Bass")
-PlotCumPM(sp, Pstat="trelSSB", ylim=c(0,10), refline=c(1), title="Black Sea Bass")
-PlotCumPM(sp, Pstat="cyield",  refline=c(45), title="Black Sea Bass")
+PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species)
+PlotCumPM(sp, Pstat="PNOF", refline=c(0.5), title=species)
+PlotCumPM(sp, Pstat="P100", refline=c(0.5), title=species)
+PlotCumPM(sp, Pstat="trelSSB", ylim=c(0,10), refline=c(1), title=species)
+PlotCumPM(sp, Pstat="cyield",  refline=c(45), title=species)
 
 
 
@@ -445,6 +447,7 @@ myWorm<-function(sp, OM="base", MPs=NULL,                 ### NOTE: MPs names sh
                  nworms=4, iters=NULL, seed=NULL , byMP=FALSE, ... ){
   dat<-get(OM, get(sp))
   if(is.null(seed)) seed<-8675309
+  set.seed(seed)
   if(is.null(iters)) iters<-sample(1:dat@nsim, nworms, replace=FALSE)
 
 
@@ -466,7 +469,7 @@ myWorm<-function(sp, OM="base", MPs=NULL,                 ### NOTE: MPs names sh
         } # end m loop
 
       } # end i for loop
-      legend("topright",MPs,lty=1:length(MPs), col=1:length(MPs))
+      legend("topright",MPs,lty=1:length(MPs), col=1:length(MPs), bty='n')
     } # end if byMP==F
 
 
@@ -502,6 +505,9 @@ myWorm<-function(sp, OM="base", MPs=NULL,                 ### NOTE: MPs names sh
   return(list(seed=seed, iters=iters))
 } # end function
 
-par(mfrow=c(1,3))
+par(mfrow=c(1,4))
 myWorm(sp, OM="base", MPs=c("SCA_1","GB_target_BSB","myICI_BSB"),
        metric="SB_SBMSY")
+par(mfrow=c(1,3))
+myWorm(sp, OM="base", MPs=c("SCA_1","GB_target_BSB","myICI_BSB"),
+       metric="SB_SBMSY", byMP=T)
