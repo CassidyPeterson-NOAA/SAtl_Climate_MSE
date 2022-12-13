@@ -153,6 +153,6 @@ class(GB_target_BSB2)<-"MP"
 
 GB_target_RP2<-GB_target_RP
 formals(GB_target_RP2)$w<-0.25
-formals(GB_target_RP2)$c0<-0.94
+formals(GB_target_RP2)$c0<-0.955
 class(GB_target_RP2)<-"MP"
 
