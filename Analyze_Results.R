@@ -396,7 +396,11 @@ Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10r
         returnlist[[ss]][[oms]]<- (apply(P100(data[[oms]], Yrs=-10)@Stat, c(1,2), mean) - apply(P100(data[[b]], Yrs=-10)@Stat, c(1,2), mean)) / apply(P100(data[[b]], Yrs=-10)@Stat, c(1,2), mean)
       }#t10relSSB
       if(ss=='t10relF'){
-        returnlist[[ss]][[oms]]<- (apply(PNOF(data[[oms]], Yrs=-10)@Stat, c(1,2), mean) - apply(PNOF(data[[b]], Yrs=-10)@Stat, c(1,2), mean)) / apply(PNOF(data[[b]], Yrs=-10)@Stat, c(1,2), mean)
+        yyy<-PNOF(data[[oms]], Yrs=-10)@Stat # get observed values for EpiM
+        yyy[which(yyy==Inf)]<-100            # remove Inf values with very large F/FMSY values ==100
+        xxx<-PNOF(data[[b]], Yrs=-10)@Stat   # get observed values for Base
+        xxx[which(xxx==Inf)]<-100            # remove Inf values with very large F/FMSY values ==100
+        returnlist[[ss]][[oms]]<- (apply(yyy, c(1,2), mean) - apply(xxx, c(1,2), mean)) / apply(xxx, c(1,2), mean)
       }#t10relF
       if(ss=='tyield'){
         returnlist[[ss]][[oms]]<- (Yield(data[[oms]], Yrs=-1)@Stat - Yield(data[[b]], Yrs=-1)@Stat) / Yield(data[[b]], Yrs=-1)@Stat
@@ -435,7 +439,8 @@ Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10r
 ## one plot each -- new color
 Plot_SSBtraj<-function( fsh, scenarios=NULL, save.png=F,
                         oMPs=orderedMPs, oScenarios=NULL,
-                        colsR=MP_R_col, namesR=MP_namesR_leg){
+                        colsR=MP_R_col, namesR=MP_namesR_leg,
+                        subset=NULL){
 
   data<-get(fsh)
   if(is.null(scenarios)){
@@ -451,6 +456,9 @@ Plot_SSBtraj<-function( fsh, scenarios=NULL, save.png=F,
 
     MP_names<-data[[1]]@MPs
     MP_namesR<-c(MP_names[oMPs])
+    if(!is.null(subset)){
+      MP_namesR<-MP_namesR[subset]
+      namesR<-MP_namesR_leg[subset]}
 
 
     ## SSB/SSBMSY
@@ -555,93 +563,152 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
 
 
 ## VIOLIN PLOTS (by OM scenario) ##
-Plot_trelSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_trelSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                       mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(P100(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
+    if(ii==4){ylims1=c(0,5)} ## for epiM
+    if(ii!=4){ylims1=ylims}
+    vioplot(P100(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims1, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1)
+
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("SSB ratio", 2, line=1.1)
   }# end for loop
 }
-Plot_trelF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_trelF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                     mf=c(4,3), xlab.cex=0.79){
+
+
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(PNOF(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
+    yyy<-PNOF(SPP[[ii]], Yrs=-1)@Stat # get observed values for EpiM
+    yyy[which(yyy==Inf)]<-100            # remove Inf values with very large F/FMSY values ==100
+    if(ii==4){ ylims1<-c(0,10) }
+    if(ii!=4){ ylims1<-ylims }
+    vioplot(yyy[,oMPs], col=MPcol, names=MPnam, ylim=ylims1, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=NA, cex.axis=xlab.cex)
+    box(); abline(h=1)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("F ratio", 2, line=1.1)
   }# end for loop
 }
-Plot_t10relSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_t10relSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                         mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(apply(P100(SPP[[ii]], Yrs=-10)@Stat, c(1,2), mean)[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
+    if(ii==4){ylims1=c(0,5)} ## for epiM
+    if(ii!=4){ylims1=ylims}
+    vioplot(apply(P100(SPP[[ii]], Yrs=-10)@Stat, c(1,2), mean)[,oMPs], col=MPcol, names=NA, ylim=ylims1, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("SSB ratio", 2, line=1.1)
   }# end for loop
 }
-Plot_t10relF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_t10relF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                       mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(apply(PNOF(SPP[[ii]], Yrs=-10)@Stat, c(1,2), mean)[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1)
+    yyy<-PNOF(SPP[[ii]], Yrs=-10)@Stat # get observed values for EpiM
+    yyy[which(yyy==Inf)]<-100            # remove Inf values with very large F/FMSY values ==100
+    if(ii==4){ ylims1<-c(0,10) }        # limit yaxes for EpiM scenario
+    if(ii!=4){ ylims1<-ylims }
+    vioplot(apply(yyy, c(1,2), mean)[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("F ratio", 2, line=1.1)
   }# end for loop
 }
-Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                    mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(PNOF(SPP[[ii]])@Prob[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
+    vioplot(PNOF(SPP[[ii]])@Prob[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("PNOF", 2, line=1.1)
   }# end for loop
 }
-Plot_P100<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_P100<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                    mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(P100(SPP[[ii]],Yrs=-10)@Prob[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=1); abline(h=refline, lty=2)
+    vioplot(P100(SPP[[ii]],Yrs=-10)@Prob[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("Prob SSB_40-50>SSBMSY", 2, line=1.1)
   }# end for loop
 }
-Plot_AAVY<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_AAVY<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                    mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(AAVY(SPP[[ii]])@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(AAVY(SPP[[ii]])@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("AAVY", 2, line=1.1)
   }# end for loop
 }
-Plot_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                      mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(Yield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(Yield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
 }
-Plot_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, oMPs=orderedMPs, mf=c(4,3)){
+Plot_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                      oMPs=orderedMPs, mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   dat<-lapply(SPP, SumYieldMP)
   for(ii in 1:length(names(SPP))){
-    vioplot(dat[[ii]][,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(dat[[ii]][,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
 }
 ## NOTE YIELD IS CALCULATED RELATIVE TO REFERENCE YIELD IF FISHERY WERE BEING EXPLOITED AT FMSY
-Plot_my_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, mf=c(4,3)){
+Plot_my_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                         mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(myYield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(myYield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
 }
-Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col, oMPs=orderedMPs, mf=c(4,3)){
+Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                         oMPs=orderedMPs, mf=c(4,3), xlab.cex=0.79){
   par(mfrow=mf)
   dat<-lapply(SPP, SumMyYieldMP)
   for(ii in 1:length(names(SPP))){
-    vioplot(dat[[ii]][,oMPs], col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+    vioplot(dat[[ii]][,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
@@ -653,23 +720,28 @@ Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, 
 # cumulative violin plots (across all OMs)
 PlotCumPM<-function(sp, title=NULL,
                     Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield','PNOF','P100'),
-                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_leg, MPcol=MP_R_col){
+                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9){
   dat<-get(paste0(sp,"_PM"))
   datStat<-get(Pstat, dat)
 
-  vioplot(datStat, col=MPcol, names=MPnam, ylim=ylims); abline(h=refline, lty=2)
+  vioplot(datStat, col=MPcol, names=NA, ylim=ylims, axes=F)
+  axis(2)
+  axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+  box()
+  abline(h=refline, lty=2)
   if(is.null(title)) title<-sp
   mtext(title, 3, line=-1.2)
   mtext(Pstat, 2, line=1.1)
 }
 
 
-## violin plots (for PMs relative to base)
-PlotCumRelPM<-function(sp, calc='s', title=NULL,
-                       Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield','PNOF','P100'),
-                       ylims=c(NULL), baserefline=NULL, refline=NULL, MPnam=MP_namesR_leg,
-                       MPcol=MP_R_col, mf=c(4,3), oMPs=orderedMPs, minylim=NULL, maxylim=NULL){
-
+## violin plots (for PMs relative to base) "trelSSB"   "trelF"     "t10relSSB" "t10relF"   "tyield"    "cyield"
+PlotRelPM<-function(sp, calc='s', title=NULL,
+                    Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield'),
+                    ylims=c(NULL), baserefline=NULL, refline=NULL, MPnam=MP_namesR_abbrev,
+                    MPcol=MP_R_col, mf=c(4,3), oMPs=orderedMPs, minylim=NULL, maxylim=NULL,
+                    xlab.cex=0.79){
+  # par(cex.axis=1)
   dat<-get(paste(sp,'RelPM',calc, sep="_"))
   datStat<-get(Pstat, dat)
   par(mfrow=mf, oma=c(0,0,2.2,0))
@@ -723,7 +795,13 @@ PlotCumRelPM<-function(sp, calc='s', title=NULL,
 
   # Plot BaseRes
   ylims1=c(minylim[1],maxylim[1])    # get ylims
-  vioplot(BaseRes, col=MPcol, names=MPnam, ylim=ylims1)
+  # boxplot(BaseRes, col=MPcol, names=MPnam, ylim=ylims1)
+  boxplot(BaseRes, col=MPcol, names=MPnam, ylim=ylims1, axes=F)
+  axis(2)
+  axis(1, at=1:dim(BaseRes)[2], labels=MPnam, cex.axis=xlab.cex)
+  # axis(1, at=1:dim(BaseRes)[2], labels=F)
+  # text(x=1:dim(BaseRes)[2]-0.1, y=par("usr")[3]-0.25, xpd=NA, labels=MPnam, srt=35, cex=xlab.cex)
+  box()
   abline(h=baserefline)
   mtext("Base Results", 3, line=-1.1)
   mtext(Pstat, 2, line=1.1)
@@ -737,7 +815,13 @@ PlotCumRelPM<-function(sp, calc='s', title=NULL,
       } else{ylims<-NULL} # end nested if-else
     }else{ ylims1<-ylims} # end outer if-else
 
-    vioplot(get(ss,datStat), col=MPcol, names=MPnam, ylim=ylims1, na.rm=T)
+    # boxplot(get(ss,datStat), col=MPcol, names=MPnam, ylim=ylims1, na.rm=T)
+    boxplot(get(ss,datStat), col=MPcol, names=MPnam, ylim=ylims1, na.rm=T, axes=F)
+    axis(2)
+    axis(1, at=1:dim(BaseRes)[2], labels=MPnam, cex.axis=xlab.cex)
+    # axis(1, at=1:dim(BaseRes)[2], labels=F)
+    # text(x=1:dim(BaseRes)[2]-0.1, y=par("usr")[3]-0.25, xpd=NA, labels=MPnam, srt=35, cex=xlab.cex)
+    box()
     mtext("Difference", 2, line=1)
     mtext(ss, 3, line=-1.1)
     abline(h=refline)
@@ -746,6 +830,7 @@ PlotCumRelPM<-function(sp, calc='s', title=NULL,
   mtext(title, 3, line=1, outer=T)
   mtext(Pstat, 3, line=0, outer=T)
 }
+
 
 ### TradeOff Plot ###
 TOff_Plot<- function(SPP_PM, PMx, PMy, lbound=0.1, ubound=0.9, errbars=TRUE, mpnames=MP_namesR_leg , mpcols=MP_R_col){
@@ -863,35 +948,66 @@ myWorm<-function(sp, OM="base", MPs=NULL,                 ### NOTE: MPs names sh
 } # end function
 
 
+## TRADEOFF PLOT FOR DIFFERENCE RESULTS
+CollateDifferenceResults<-function(sp, calc, Pstat, stat){
+  ddat<-get(paste0(sp,'_RelPM_', calc))
+  Pddat<-ddat[[Pstat]]
+
+  RP_rel<-array(unlist(Pddat), dim=c(dim(Pddat[[1]]), length(Pddat)))
+  res<-apply(RP_rel, 2, stat)
+  res1<-matrix(res, nrow=1)
+  colnames(res1) <- colnames(Pddat[[1]])
+  return(res1)
+} # potential Pstat == [1] "trelSSB"   "trelF"     "t10relSSB" "t10relF"   "tyield"    "cyield"
+
+Toff_Difference_Plot<-function(sp, calc='rd', Pstaty='trelSSB',Pstatx='cyield', stat=median, mpcols=MP_R_col[-1]){
+  yy1<-CollateDifferenceResults(sp, calc, Pstat=Pstaty, stat)
+  xx1<-CollateDifferenceResults(sp, calc, Pstat=Pstatx, stat)
+  ylims<-c( (min(yy1)-0.025*min(yy1)),
+            (max(yy1)+0.02*max(yy1)) )
+  xlims<-c( (min(xx1)-0.02*min(xx1)),
+            (max(xx1)+0.025*max(xx1)) )
+  plot( xx1,yy1,
+        pch=16, col=mpcols,
+        xlab=Pstatx, ylab=Pstaty, ylim=ylims, xlim=xlims)
+  text( (xx1 + 0.1*xx1),
+        (yy1 - 0.1*yy1), labels=MP_namesR_leg, col=mpcols)
+  abline(h=0); abline(v=0)
+
+}
 
 
 
 
 
 
-# -------------------------------------------------- GET DATA ------------------------------------------------------
+#### -------------------------------------------------- GET DATA ------------------------------------------------------ #####
 
-# BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 
 ##### INPUTS ######
+# BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
-species<-"RedPorgy"; sp<-"RP"
+# species<-"RedPorgy"; sp<-"RP"
 # species<-"VermilionSnapper"; sp<-"VS"
 # species<-"BlackSeaBass"; sp<-"BSB"
+# species<-"RedPorgy_Over"; sp<-"RP_O"
+species<-"VermilionSnapper_Over"; sp<-"VS_O"
+# species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
 orderedMPs<- c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
 orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
 MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p", "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","GBslope","Islope")
+MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2","ICI","Ira","I10","Ita","GBs","Isl")
 MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen', 'cadetblue','cadetblue1')
-par.args<-list(mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
+par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par(par.args)
 
 
 
 
-### Run FUNCTIONS for input species ##
+### Run FUNCTIONS for input species #####
 assign(sp, GetResults(species1=species,sp1=sp)) # save GetResults with sp | SP
 
 # correct results for EpiM SSB nonsensical results
@@ -917,14 +1033,21 @@ assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 
 # --------------------------------------------------- PLOTTING -------------------------------------------------
 
-# Plot median Trajectories
+### Plot median Trajectories
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj(fsh=sp)
 par(mfrow=c(4,3), par.args)
 Plot_Catchtraj(fsh=sp)
 
+### Plot subset median Trajectories
+par(mfrow=c(4,3), par.args)
+Plot_SSBtraj(fsh=sp, subset=c(1,8:13),
+             colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue'))
+par(mfrow=c(4,3), par.args)
+Plot_SSBtraj(fsh=sp, subset=c(1:5),
+             colsR=c('black','deepskyblue','steelblue','deeppink','darkorange'))
 
-# plot violin plots
+### plot violin plots
 spec<-get(sp)
 Plot_trelSSB(SPP=spec) # terminal year relSSB
 Plot_trelF(SPP=spec)
@@ -939,9 +1062,9 @@ Plot_AAVY(SPP=spec, refline=0.30)
 
 
 
-## cumulative violins / boxplots
+### cumulative violins / boxplots
 par(mfrow=c(1,1))
-PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species)
+PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species) #, ylims=c(0,5) # for BSB_O
 PlotCumPM(sp, Pstat="PNOF", refline=c(0.5), title=species)
 PlotCumPM(sp, Pstat="P100", refline=c(0.5), title=species)
 PlotCumPM(sp, Pstat="trelSSB", ylim=c(0,10), refline=c(1), title=species)
@@ -949,23 +1072,135 @@ PlotCumPM(sp, Pstat="cyield",  refline=c(50), title=species)
 
 
 
-## Relative violins | Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield','PNOF','P100'),
-
-PlotCumRelPM(sp, calc='s', Pstat='trelSSB',
-             ylims=c(NULL), baserefline=1, refline=0)
-
-PlotCumRelPM(sp, calc='rd', Pstat='trelSSB',
-             baserefline=1, refline=0,
-             maxylim=c(3.5, 1000, 0, 10, -0.25, 10, 10, 5, 25, 10, 10),
-             minylim=c(0, rep(-1.1,10)) )
-# PlotCumRelPM(sp, calc='d', Pstat='trelSSB',
-#              ylims=c(NULL), baserefline=1, refline=0,
-#              maxylim=c(3.5, 1000, 0.5, 1000, 2, 1000, 1000, 5000, 5000, 5000, 5000),
-#              minylim=c(rep(0,11)))
+### Relative violins
+# | Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield'),
 
 
-# Tradeoff plot
+par(mfrow=c(4,3), mar=c(2.2, 2.2, 0.2, 0.2), mgp=c(1.2, 0.25, 0), tck=-0.01)
+
+# trelSSB
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='trelSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 7500, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 5), #RP
+            maxylim=c(3.5, 10, -0.5, 1, -0.0, 2.5, 4, 3.5, 5, 4, 5), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='trelSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 10, -0.5, 1, -0.0, 2.5, 4, 3.5, 5, 4, 5), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='trelSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 10, 0.5, 1, 2, 3, 2, 2, 2, 2, 3), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='trelSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 10, 0.5, 1, 2, 3, 2, 1, 2, 1.5, 3), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+
+
+
+#t10relSSB
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 2500, -0.5, 2, -0.0, 30, 6, 3, 35, 8, 10), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 8, -0.3, 2, 0.1, 2, 4, 3.5, 4, 4, 5), #VS
+            minylim=c(0, rep(-1,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 8, 0.25, 2, 1.5, 3, 2.0, 1.5, 2, 2, 4), #BSB
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+
+
+#trelF
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='trelF',
+            baserefline=1, refline=0,
+            maxylim=c(10, 5, 50, 50, 150, 2.5, 3, 50, 1.5, 10, 5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='trelF',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 1.5, 15, 2, 15, 1.5, 4, 20, 10, 20, 15), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='trelF',
+            baserefline=1, refline=0,
+            maxylim=c(2.5, 10, 10, 10, 25, 4, 3, 5, 2, 5, 4), #BSB
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+
+
+#t10relF
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relF',         ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+            baserefline=1, refline=0,
+            maxylim=c(10, 3, 50, 150, 150, 1.5, 3, 50, 1.5, 10, 5), # RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 1.5, 15, 2, 15, 1, 4, 20, 10, 20, 15), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+            baserefline=1, refline=0,
+            maxylim=c(2.25, 7, 7, 50, 15, 3, 2, 4, 2, 4, 3), #BSB
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+
+
+
+# cyield
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 7500, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 10), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=1, refline=0,
+            maxylim=c(100, 0, 3.5,    1, 1.5, 0.1, 3,   1,  1, 2, 1.5), #VS
+            minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=1, refline=0,
+            maxylim=c(100, 0.2, 3, 1.5, 5, 0.1, 2, 0.5, 0.5, 0.5, 0.2), #BSB
+            minylim=c(0, -1, -0.75, -1,  -0.25, -1, -1, -.75, -0.5, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+
+
+### Tradeoff plot
 spp_pm<-get(paste(sp, "PM", sep="_"))
+par(mfrow=c(1,2))
 # TOff_Plot(SPP_PM=spp_pm, PMy='trelSSB', PMx='cyield')
 # TOff_Plot(SPP_PM=spp_pm, PMy='trelSSB', PMx='cyield', errbars=F); abline(h=1)
 # TOff_Plot(SPP_PM=spp_pm, PMy='trelSSB', PMx='AAVY', errbars=F); abline(h=1)
@@ -974,7 +1209,13 @@ TOff_Plot(SPP_PM=spp_pm, PMy='PNOF', PMx='cyield', errbars=F); abline(h=1)
 TOff_Plot(SPP_PM=spp_pm, PMy='P100', PMx='AAVY', errbars=F); abline(h=1)
 
 
-## wormplot
+
+### TRADEOFF PLOT FOR DIFFERENCE RESULTS
+par(mfrow=c(1,1))
+Toff_Difference_Plot(sp, calc='rd',Pstatx='cyield',Pstaty='trelSSB', stat=median)
+
+
+### wormplot
 nms<-get(sp)$base@MPs; nms
 mpnms<-nms[c(1,6,8)]
 names(get(sp))
