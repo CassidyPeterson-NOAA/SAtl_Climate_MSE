@@ -41,6 +41,18 @@ vignettes/*.pdf
 # files to ignore
 MSE_obj
 Plots
+run_script_CPTest2_AllScenarios.R
+OLD_MSE_obj
+OM_BSB_Base.RDS
+OM_BSB_recdevhi.RDS
+OM_BSB_recdevlo.RDS
+OM_RP_Base.RDS"
+OM_RP_recdevhi.RDS
+OM_RP_recdevlo.RDS
+OM_VS_Base.RDS
+OM_VS_recdevhi.RDS
+OM_VS_recdevlo.RDS
+OMs_loaded.RData
 
-run_script_CPTest2_AllScenarios_SUPERCOMP_slope2.R
+SAVE_PLOTS_Analyze_Results.R
 
