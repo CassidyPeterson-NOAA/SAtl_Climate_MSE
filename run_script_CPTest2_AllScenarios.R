@@ -20,18 +20,18 @@ myseed <- 8675309
 
 filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
-
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R"))
-source("GB_target1.R")
-source("GB_slope1.R")
-source("myIslope.R")
-source("myIT10.R")
-source("myItarget.R")
-source("myIratio.R"   )
+source(file.path(filepath,"SAtl_Climate_MSE/GB_slope1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/GB_target1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myICI2.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 
 
 
@@ -47,6 +47,15 @@ source("myIratio.R"   )
 # RP_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy.rds"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
+
+#
+# Data_BSB<-readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/Data_BlackSeaBass.rds"))
+# Data_BSB@CV_Mort
+# Hist_BSB<-readRDS(file.path(filepath, "SEFSCInterimAnalysis/BuildOM/Hist/SEFSC/Hist_BlackSeaBass.rds"))
+# Hist_BSB@Data@CV_Mort
+# # HIST OBJ CONTAINS INFO ON Data, OM.
+#
+# BSB_init@
 #####
 
 ncores <- 10
@@ -108,9 +117,9 @@ MPs_user_interval2<-c(5,10)
 # OMName_all <- gsub(".rds","",list.files("OM"))
 # OMName <- OMName_all[!OMName_all%in%OMName_complete]
 OMName <- c(#"OM_BlackSeaBass" #, # Runs
-            # "OM_RedPorgy" #, # Runs,
+            #"OM_RedPorgy" #, # Runs,
+            "OM_VermilionSnapper" # Runs
             # "OM_SnowyGrouper",
-             "OM_VermilionSnapper" # Runs
             #"OM_RedGrouper", # 2022-1-19 This took 7 hours just to run the base scenario batch 1 so I interrupted it
             #,"OM_GagGrouper"#, # Runs
             #,"OM_GrayTriggerfish" # Problems with lightly fished scenario where "More than 5 % of simulations can't get to the specified level of depletion with these Operating Model parameters"
@@ -130,7 +139,8 @@ scenario <- c("base"
               ,"refbias_hi" # ref poitns biased high
               ,"refbias_lo" # ref points biased low
               ,"epiM"  # Red Porgy sometimes has problems getting down to the specified level of depletion
-              ,"recdev"     # Regime change
+              ,"recdev_hi"     # Regime change
+              ,"recdev_lo"     # Regime change
               ######
               #,"hs"
               #,"hd"
@@ -216,10 +226,15 @@ ubias_args <- list("int"=0,
 #                  "r2_mult" =  0.75  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
 # )
 # Regime change scenario args
-recdev_args <-  list("yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
-                 "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
-                 "r2_mult" =  2  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
+recdev_hi_args <-  list("yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
+                        "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
+                        "r2_mult" =  2  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
 )
+recdev_lo_args <-  list("yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
+                        "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
+                        "r2_mult" =  0.5  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
+)
+
 
 #
 tachi_args <- list("MSY_frac"=1.25)
@@ -233,7 +248,7 @@ SCAfree_args <- list(fix_h=FALSE,fix_F_equilibrium=FALSE, fix_omega=FALSE, fix_t
 # seeds <- setNames(sample(1:10000,length(OMName),replace = FALSE),OMName)
 
 
-Irefbias_lo_args<-list("min"=0.5, "max"=0.75)
+Irefbias_lo_args<-Brefbias_lo_args<-Crefbias_lo_args<-list("min"=-0.75, "max"=-0.5)
 Irefbias_hi_args<-list("min"=1.25, "max"=1.5)
 Brefbias_lo_args<-list("min"=0.5, "max"=0.75)
 Brefbias_hi_args<-list("min"=1.25, "max"=1.5)
@@ -364,25 +379,26 @@ source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R"))
-source("GB_slope1.R")
-source("GB_target1.R")
-source("myIratio.R")
-source("myIslope.R")
-source("myIT10.R")
-source("myItarget.R")
+source(file.path(filepath,"SAtl_Climate_MSE/GB_slope1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/GB_target1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myICI2.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 source('C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R') # Define MPs
 
 
 #
 OMName_k<-OMName[1]
-scenario_i<-scenario[7] #scenario[1]
+scenario_i<-scenario[1] #scenario[1]
 
 
 
 
 
 
-for(OMName_k in OMName)       { ######### Loop over operating model
+# for(OMName_k in OMName)       { ######### Loop over operating model
 
   MSEName_k <- gsub("OM","MSE",OMName_k)
   DataName_k <- gsub("OM","Data",OMName_k)
@@ -395,7 +411,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
   if(OMName_k=="OM_RedPorgy") MPs_user_k <- MPs_user_RP
   if(OMName_k=="OM_VermilionSnapper") MPs_user_k <- MPs_user_VS
 
-  for(scenario_i in scenario) { ######### Loop over scenario
+  # for(scenario_i in scenario) { ######### Loop over scenario
     set.seed(myseed)
 
     # All scenarios
@@ -667,6 +683,8 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       # AddIbeta -- Beta for each sim and index (matrix[nrow=nsim, ncol=n.ind])
       # Cbias - numeric vector length nsim, catch bias by simulation
       # Cobservation error
+      # refbias_hi_args
+      # refbias_lo_args
       if(scenario_i=="refbias_hi" | scenario_i=="refbias_lo"){
         args<-get(paste0(scenario_i,"_args"))
 
@@ -798,7 +816,7 @@ for(OMName_k in OMName)       { ######### Loop over operating model
         BAM_SCA_args$control <- list("omega"=catcvlo_args$cv)
       }
 
-      source('C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R') # Define MPs
+      source(file.path(filepath,'SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R')) # Define MPs
 
 
       OM_k@nsim <- nsim
@@ -839,24 +857,40 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac",MPs_user_k))
 
 
-      MSE_batch_1 <- runMSE(OM_k,
-                            MPs = MPs_user_k,
-                            parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+
+      # OM_VS_Base<-OM_k
+      # OM_VS_recdevlo<- OM_k
+      # OM_VS_recdevhi<- OM_k
+      # OM_BSB_Base<- OM_k
+      # OM_BSB_recdevhi<- OM_k
+      # OM_BSB_recdevlo<- OM_k
+      # OM_RP_Base<- OM_k
+      # OM_RP_recdevlo<- OM_k
+      # OM_RP_recdevhi<- OM_k
 
 
-      OM_k@interval <- MPs_user_interval2
-      set.seed(myseed)
-      MSE_batch_2 <- runMSE(OM_k,
-                            MPs = MPs_user2,
-                            parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
 
+      # MSE_batch_1 <- runMSE(OM_k,
+      #                       MPs = MPs_user_k,
+      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+      #
+      #
+      # OM_k@interval <- MPs_user_interval2
+      # set.seed(myseed)
+      # MSE_batch_2 <- runMSE(OM_k,
+      #                       MPs = MPs_user2,
+      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+      #
+      #
+      # MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
 
-      MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
 
       # ##### TESTING CMPS ##############
+      # OM_k<-OM_BSB_recdevlo  #recdevhi #Base #recdevlo
+      # OM_k<-OM_BSB_Base #recdevhi #Base #recdevlo
       OM_k@interval <- 1
       set.seed(myseed)
-      MSE <- runMSE(OM_k,MPs = "myIT10_RP",
+      MSE <- runMSE(OM_k,MPs = "myICI_BSB", #SCA_1, myIT10_VS, myIratio_VS, GB_target_VS
                     parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
@@ -864,12 +898,15 @@ for(OMName_k in OMName)       { ######### Loop over operating model
       # dim(MSE1@SB_SBMSY)
       plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years")
       abline(h=1)
-      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='lightgreen', lwd=2)
+      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='orchid', lwd=2, lty=2)
+      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='skyblue2', lwd=2)
+      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='gray', lwd=2)
 
-
+      #SCA_1 = black, myIT10_VS=lightgreen, myIratio_VS=lightblue, GB_target_VS=orchid
 
 #MSE_refbias_hi<- MSE
 # MSE_refbias_lo<-MSE
+      MSE_refbias_hi@SB_SBMSY[1,,] == MSE_refbias_lo@SB_SBMSY[1,,]
 
     # ## Example for figure.
       # OM_k@interval <- 1
@@ -924,11 +961,33 @@ for(OMName_k in OMName)       { ######### Loop over operating model
 
       saveRDS(res,file = paste0("MSE_obj/", MSEName_k, "_", scenario_i, ".rds"))
     # } #end if OMName_scen is not complete
-  }
-}
+  # }
+# }
 
 # save.image("run_script.RData")
 
 sfStop()
 
+#
+save.image(file="OMs_loaded.RData")
 
+
+saveRDS(OM_VS_Base, file="OM_VS_Base.RDS")
+saveRDS(OM_VS_recdevlo, file="OM_VS_recdevlo.RDS")
+saveRDS(OM_VS_recdevhi, file="OM_VS_recdevhi.RDS")
+saveRDS(OM_BSB_Base, file="OM_BSB_Base.RDS")
+saveRDS(OM_BSB_recdevlo, file="OM_BSB_recdevlo.RDS")
+saveRDS(OM_BSB_recdevhi, file="OM_BSB_recdevhi.RDS")
+saveRDS(OM_RP_Base, file="OM_RP_Base.RDS")
+saveRDS(OM_RP_recdevlo, file="OM_RP_recdevlo.RDS")
+saveRDS(OM_RP_recdevhi, file="OM_RP_recdevhi.RDS")
+
+OM_VS_Base<-readRDS("OM_VS_Base.RDS")
+OM_VS_recdevlo<-readRDS("OM_VS_recdevlo.RDS")
+OM_VS_recdevhi<-readRDS("OM_VS_recdevhi.RDS")
+OM_BSB_Base<-readRDS("OM_BSB_Base.RDS")
+OM_BSB_recdevlo<-readRDS("OM_BSB_recdevlo.RDS")
+OM_BSB_recdevhi<-readRDS("OM_BSB_recdevhi.RDS")
+OM_RP_Base<-readRDS("OM_RP_Base.RDS")
+OM_RP_recdevlo<-readRDS("OM_RP_recdevlo.RDS")
+OM_RP_recdevhi<-readRDS("OM_RP_recdevhi.RDS")
