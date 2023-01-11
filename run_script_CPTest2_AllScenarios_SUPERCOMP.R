@@ -87,24 +87,33 @@ OMName_scen_complete <- NA
 
 
 
-MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" , "GB_target_BSB", #"GB_slope_BSB",
-                  "GB_target_BSB2","myICI_BSB", "myIratio_BSB",
-                  "myIT10_BSB", "myItarget_BSB" #,"myIslope_BSB"
+MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
+                  "GB_target_BSB", "GB_target_BSB2",
+                  "myICI_BSB", "myIratio_BSB",
+                  "myIT10_BSB", "myItarget_BSB" ,
+                  "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
+                  "myIslope_BSB","myIslope_BSB2"
 )
-MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10", "GB_target_RP", #"GB_slope_RP",
-                 "GB_target_RP2", "myICI2_RP", "myIratio_RP",
-                 "myIT10_RP", "myItarget_RP"#, "myIslope_RP"
+MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_RP", "GB_target_RP2",
+                 "myICI_RP", "myICI_RP2", "myIratio_RP",
+                 "myIT10_RP", "myItarget_RP",
+                 "GB_slope_RP","GB_slope_RP2",
+                 "myIslope_RP", "myIslope_RP2"
 )
-MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10", "GB_target_VS", #"GB_slope_VS",
-                 "GB_target_VS2", "myICI2_VS", "myIratio_VS",
-                 "myIT10_VS", "myItarget_VS"#, "myIslope_VS"
+MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_VS", "GB_target_VS2",
+                 "myICI_VS", "myIratio_VS",
+                 "myIT10_VS", "myItarget_VS", "myItarget_VS2",
+                 "GB_slope_VS", "GB_slope_VS2",
+                 "myIslope_VS", "myIslope_VS2"
 )
 
 
 
 MPs_user2 <- c("SCA_5","SCA_10")
 # MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
-MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1)
+MPs_user_interval<-c(1, 5, 10, rep(1, 11))
 MPs_user_interval2<-c(5,10)
 
 
@@ -121,12 +130,14 @@ OMName <- c("OM_BlackSeaBass" , # Runs
   #,"OM_GrayTriggerfish" # Problems with lightly fished scenario where "More than 5 % of simulations can't get to the specified level of depletion with these Operating Model parameters"
   #"OM_RedSnapper" # Seems to run but takes a long time
 )
+# OMName<-c("OM_VermilionSnapper")
 
 OMName_O <- c("OM_BlackSeaBass_Over" , # Runs
             "OM_RedPorgy_Over" , # Runs,
             "OM_VermilionSnapper_Over" # Runs
 )
 
+# OMName_O<-c("OM_VermilionSnapper_Over")
 
 
 
@@ -825,7 +836,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
         BAM_SCA_args$control <- list("omega"=catcvlo_args$cv)
       }
 
-      source('C:/Users/cassidy.peterson/Documents/git/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R') # Define MPs
+      source(file.path(filepath,'SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R')) # Define MPs
 
 
       OM_k@nsim <- nsim
@@ -868,14 +879,16 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
 
       MSE_batch_1 <- runMSE(OM_k,
                             MPs = MPs_user_k,
-                            parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+                            parallel = runMSE_args$parallel,
+                            extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
       OM_k@interval <- MPs_user_interval2
       set.seed(myseed)
       MSE_batch_2 <- runMSE(OM_k,
                             MPs = MPs_user2,
-                            parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+                            parallel = runMSE_args$parallel,
+                            extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
       MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)

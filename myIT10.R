@@ -137,11 +137,11 @@ formals(myIT10_VS)$damp<-1 #1
 class(myIT10_VS)<-"MP"
 
 
-myIT10_VS2<-myIT10
-formals(myIT10_VS2)$mc<-0.4 # 0.3 - ALT tuning: mc=0.9, c1=1.6
-formals(myIT10_VS2)$c1<-1.6 # 1.575; TESTING: 1.6 when mc>0.5
-formals(myIT10_VS2)$c2<-1 # 1; OLD=0.9225
-formals(myIT10_VS2)$c3<-1
-formals(myIT10_VS2)$damp<-0.5
-
-class(myIT10_VS2)<-"MP"
+# myIT10_VS2<-myIT10
+# formals(myIT10_VS2)$mc<-0.4 # 0.3 - ALT tuning: mc=0.9, c1=1.6
+# formals(myIT10_VS2)$c1<-1.6 # 1.575; TESTING: 1.6 when mc>0.5
+# formals(myIT10_VS2)$c2<-1 # 1; OLD=0.9225
+# formals(myIT10_VS2)$c3<-1
+# formals(myIT10_VS2)$damp<-0.5
+#
+# class(myIT10_VS2)<-"MP"
