@@ -69,6 +69,26 @@ BSB_uobs_lo <- readRDS("MSE_obj/MSE_BlackSeaBass_uobs_lo.rds")
 # BSB_ <- readRDS("MSE_obj/MSE_BlackSeaBass_.rds")
 # BSB_ <- readRDS("MSE_obj/MSE_BlackSeaBass_.rds")
 
+BSB_base@PPD$SCA_1@CV_AddInd[,1,] # projected CV = 0.199
+names(BSB_age0M_hi@RefPoint$Dynamic_Unfished)
+SSB0dyn<-BSB_age0M_hi@RefPoint$Dynamic_Unfished$SSB0
+BSB_age0M_hi@RefPoint$SSBMSY[,1,]/BSB_age0M_hi@RefPoint$Dynamic_Unfished$SSB0
+SSBtemp<-cbind(BSB_age0M_hi@SSB_hist, BSB_age0M_hi@SSB[,1,])
+SSBtempdyn<-SSBtemp/SSB0dyn
+SSBtempdyn_med<-apply(SSBtempdyn,2,median)
+plot(SSBtempdyn_med, type='l', ylim=c(0,2))
+# lines(y=apply(BSB_age0M_hi@SB_SBMSY[,1,],2,median),x=c(40:89), type='l', lty=2, col="red")
+lines(apply(((cbind(BSB_age0M_hi@SSB_hist, BSB_age0M_hi@SSB[,6,]))/BSB_age0M_hi@RefPoint$Dynamic_Unfished$SSB0),2,median), type='l', lty=2, col="red")
+
+plot(apply(SSBtemp, 2, median) , type='l')
+lines(apply(cbind(BSB_age0M_hi@SSB_hist, BSB_age0M_hi@SSB[,6,]), 2, median), type='l', lty=2, col="red")
+BSB_age0M_hi@MPs
+
+
+
+
+dim(BSB_age0M_hi@SB_SBMSY[,1,])
+
 BSB<-list(base = BSB_base,
           age0M_hi = BSB_age0M_hi,
           age0M_lo = BSB_age0M_lo,
@@ -100,6 +120,9 @@ VS_refbias_hi <- readRDS("MSE_obj/MSE_VermilionSnapper_refbias_hi.rds")
 VS_refbias_lo <- readRDS("MSE_obj/MSE_VermilionSnapper_refbias_lo.rds")
 VS_uobs_hi <- readRDS("MSE_obj/MSE_VermilionSnapper_uobs_hi.rds")
 VS_uobs_lo <- readRDS("MSE_obj/MSE_VermilionSnapper_uobs_lo.rds")
+
+
+VS_base@PPD$SCA_1@CV_AddInd[,1,] # projected CV = 0.276
 
 VS<-list(base = VS_base,
           age0M_hi = VS_age0M_hi,
@@ -134,6 +157,9 @@ RP_uobs_hi <- readRDS("MSE_obj/MSE_RedPorgy_uobs_hi.rds")
 RP_uobs_lo <- readRDS("MSE_obj/MSE_RedPorgy_uobs_lo.rds")
 # RP_ <- readRDS("MSE_obj/MSE_RedPorgy_.rds")
 # RP_ <- readRDS("MSE_obj/MSE_RedPorgy_.rds")
+
+
+RP_base@PPD$SCA_1@CV_AddInd[,1,] # projected CV = 0.12
 
 RP<-list(base = RP_base,
           age0M_hi = RP_age0M_hi,

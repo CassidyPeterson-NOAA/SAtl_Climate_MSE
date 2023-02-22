@@ -111,7 +111,8 @@ GetResults<-function(species1=species, sp1=sp, oScenarios=orderedScenarios){
 
 # COLLATE AAVY, terminal relative SSB ratio (last year and mean over last 10 years), terminal relative F ratio (last year and mean over last 10 years), terminal yield, cumulative yield across OMs (get SP_PMs)
 CollatePMs <- function(dataN=sp,
-                       stat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield', 'PNOF', 'P100')){
+                       stat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
+                              't10relF','tyield','cyield', 'PNOF', 'P100')){
   data<-get(dataN)
   MP_names<-data[[1]]@MPs
   returnlist<-list()
@@ -139,6 +140,20 @@ CollatePMs <- function(dataN=sp,
     returnlist$trelSSB<-trelSSB
   } # end trelSSB
 
+  #terminal relative dSSB0 ratio
+  if('treldSSB0' %in% stat){
+    l1<-dim(data[[1]]@SSB[,1,])[2]
+    l2<-dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]
+
+    treldSSB0<-data[[1]]@SSB[,,l1] / data[[1]]@RefPoint$Dynamic_Unfished$SSB0[,l2]
+    for(i in 2:length(data)){
+      treldSSB0<-rbind(treldSSB0, (data[[i]]@SSB[,,l1] / data[[i]]@RefPoint$Dynamic_Unfished$SSB0[,l2]) )
+    } # end for loop
+
+    colnames(treldSSB0)<-MP_names
+    returnlist$treldSSB0<-treldSSB0
+  } # end treldSSB0
+
 
   #terminal F ratio
   if('trelF' %in% stat){
@@ -153,14 +168,34 @@ CollatePMs <- function(dataN=sp,
 
   #terminal relative SSB ratio
   if('t10relSSB' %in% stat){
-    trelSSB<-apply(P100(data[[1]], Yrs=-1)@Stat, c(1,2), mean)
+    t10relSSB<-apply(P100(data[[1]], Yrs=-1)@Stat, c(1,2), mean)
     for(i in 2:length(data)){
-      trelSSB<-rbind(trelSSB, apply(P100(data[[i]], Yrs=-1)@Stat, c(1,2), mean))
+      t10relSSB<-rbind(t10relSSB, apply(P100(data[[i]], Yrs=-1)@Stat, c(1,2), mean))
     } # end for loop
 
-    colnames(trelSSB)<-MP_names
-    returnlist$trelSSB<-trelSSB
-  } # end trelSSB
+    colnames(t10relSSB)<-MP_names
+    returnlist$t10relSSB<-t10relSSB
+  } # end t10relSSB
+
+
+  #terminal relative dSSB0 ratio
+  if('t10reldSSB0' %in% stat){
+    l1<-(dim(data[[1]]@SSB[,1,])[2]-9):dim(data[[1]]@SSB[,1,])[2]
+    l2<-(dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]-9):dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]
+    t10reldSSB0<-c()
+    for(s in 1:length(data)){
+      temp<-c()
+      for(c in 1:dim(data[[1]]@SSB)[2]){
+        temp<-cbind( temp, apply((data[[s]]@SSB[,c,l1] / data[[s]]@RefPoint$Dynamic_Unfished$SSB0[,l2]), 1, mean) )
+    }# end cloop (where c is CMP)
+    t10reldSSB0<-rbind(t10reldSSB0, temp)
+    } # end sloop (where s in OM scenario)
+
+    dim(t10reldSSB0)
+
+    colnames(t10reldSSB0)<-MP_names
+    returnlist$t10reldSSB0<-t10reldSSB0
+  } # end t10reldSSB0
 
 
   #terminal F ratio
@@ -368,7 +403,7 @@ Relative_MP_Perf_d<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10re
   return(returnlist)
 }# end function
 
-Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10relF','tyield','cyield'), oMPs=orderedMPs){
+Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10relF','tyield','cyield','PNOF','P100','P90'), oMPs=orderedMPs){
 
   data<-get(sp)           # get data (SP)
   MP_names<-data[[1]]@MPs # get MP_names
@@ -389,12 +424,44 @@ Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10r
       if(ss=='trelSSB'){
         returnlist[[ss]][[oms]]<- (P100(data[[oms]], Yrs=-1)@Stat - P100(data[[b]], Yrs=-1)@Stat) /P100(data[[b]], Yrs=-1)@Stat
       }#trelSSB
+
+      if(ss=='treldSSB0'){
+          l1<-dim(data[[1]]@SSB[,1,])[2]
+          l2<-dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]
+          b1<- (data[[b]]@SSB[,,l1] / data[[b]]@RefPoint$Dynamic_Unfished$SSB0[,l2])
+          o1<- (data[[oms]]@SSB[,,l1] / data[[oms]]@RefPoint$Dynamic_Unfished$SSB0[,l2])
+          returnlist[[ss]][[oms]]<-(o1 - b1)/(b1)
+      }#treldSSB0
       if(ss=='trelF'){
         returnlist[[ss]][[oms]]<- (PNOF(data[[oms]], Yrs=-1)@Stat - PNOF(data[[b]], Yrs=-1)@Stat) /PNOF(data[[b]], Yrs=-1)@Stat
       }#trelF
       if(ss=='t10relSSB'){
         returnlist[[ss]][[oms]]<- (apply(P100(data[[oms]], Yrs=-10)@Stat, c(1,2), mean) - apply(P100(data[[b]], Yrs=-10)@Stat, c(1,2), mean)) / apply(P100(data[[b]], Yrs=-10)@Stat, c(1,2), mean)
       }#t10relSSB
+
+      if(ss=='t10reldSSB0'){
+        l1<-(dim(data[[1]]@SSB[,1,])[2]-9):dim(data[[1]]@SSB[,1,])[2]
+        l2<-(dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]-9):dim(data[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]
+        # Calc t10reldSSB0_b
+        t10reldSSB0_b<-c()
+        for(c in 1:dim(data[[b]]@SSB)[2]){
+          t10reldSSB0_b<-cbind( t10reldSSB0_b,
+                                apply((data[[b]]@SSB[,c,l1] /
+                                         data[[b]]@RefPoint$Dynamic_Unfished$SSB0[,l2]), 1, mean) )
+        }# end cloop (where c is CMP)
+
+        # stats for oms
+          temp<-c()
+          for(c in 1:dim(data[[oms]]@SSB)[2]){
+            temp<-cbind( temp, apply((data[[oms]]@SSB[,c,l1] / data[[oms]]@RefPoint$Dynamic_Unfished$SSB0[,l2]), 1, mean) )
+          }# end cloop (where c is CMP)
+          returnlist[[ss]][[oms]]<-  (temp - t10reldSSB0_b) / (t10reldSSB0_b)
+
+      }#t10reldSSB0
+###################################################### END HERE - 2/22/23 #################################
+
+
+
       if(ss=='t10relF'){
         yyy<-PNOF(data[[oms]], Yrs=-10)@Stat # get observed values for EpiM
         yyy[which(yyy==Inf)]<-100            # remove Inf values with very large F/FMSY values ==100
@@ -417,11 +484,14 @@ Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10r
         returnlist[[ss]][[oms]]<- (SumYieldMP(data[[oms]]) - SumYieldMP(data[[b]])) / SumYieldMP(data[[b]])
       }#cyield
       if(ss=='PNOF'){
-        returnlist[[ss]][[oms]]<- (PNOF(data[[oms]])@Prob - PNOF(data[[b]])@Prob) / PNOF(data[[b]])@Prob
-      }#PNOF
+        returnlist[[ss]][[oms]]<- ((PNOF(data[[oms]])@Prob+0.001) - (PNOF(data[[b]])@Prob+0.001)) / (PNOF(data[[b]])@Prob+0.001)
+      }#PNOF ## WITH CORRECTION SO NO INFs
       if(ss=='P100'){
-        returnlist[[ss]][[oms]]<- (P100(data[[oms]], Yrs=-10)@Prob - P100(data[[b]], Yrs=-10)@Prob) / P100(data[[b]], Yrs=-10)@Prob
-      }#P100
+        returnlist[[ss]][[oms]]<- ((P100(data[[oms]], Yrs=-10)@Prob+0.01) - (P100(data[[b]], Yrs=-10)@Prob+0.01)) / (P100(data[[b]], Yrs=-10)@Prob+0.01)
+      }#P100## WITH CORRECTION SO NO INFs
+      if(ss=='P90'){
+        returnlist[[ss]][[oms]]<- ((P100(data[[oms]], Ref=0.9, Yrs=-10)@Prob+0.01) - (P100(data[[b]], Ref=0.9, Yrs=-10)@Prob+0.01)) / (P100(data[[b]], Ref=0.9, Yrs=-10)@Prob+0.01)
+      }#P100## WITH CORRECTION SO NO INFs
 
       colnames(returnlist[[ss]][[oms]])<-MP_names
       returnlist[[ss]][[oms]]<-returnlist[[ss]][[oms]][,oMPs]
@@ -437,7 +507,7 @@ Relative_MP_Perf_rd<-function(sp1=sp, stat=c('trelSSB','trelF','t10relSSB','t10r
 ### trajectories ###
 # par(mfrow=c(1,1), mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
 ## one plot each -- new color
-Plot_SSBtraj<-function( fsh, scenarios=NULL, save.png=F,
+Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
                         oMPs=orderedMPs, oScenarios=NULL,
                         colsR=MP_R_col, namesR=MP_namesR_leg,
                         subset=NULL){
@@ -486,6 +556,146 @@ Plot_SSBtraj<-function( fsh, scenarios=NULL, save.png=F,
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@SB_SBMSY[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
+    }
+    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
+    mtext( paste0(fsh, " ", res), side=3, line=-1.2)
+
+    if(save.png==T){
+      dev.off()
+    } # end save.png
+
+  } # end for res
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+
+} # end function
+
+
+
+Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
+                             oMPs=orderedMPs, oScenarios=NULL,
+                             colsR=MP_R_col, namesR=MP_namesR_leg,
+                             subset=NULL, ylims=c(0,1.1)){
+
+  data<-get(fsh)
+  if(is.null(scenarios)){
+    if(!is.null(oScenarios)){
+      scenarios<-names(data)[oScenarios]
+    } else {
+      scenarios<-names(data)
+    } # end if-else ; define scenarios
+  } # end get scenarios
+
+  for(res in scenarios){
+    results<-get(res,data)
+
+    MP_names<-data[[1]]@MPs
+    MP_namesR<-c(MP_names[oMPs])
+    if(!is.null(subset)){
+      MP_namesR<-MP_namesR[subset]
+      namesR<-MP_namesR_leg[subset]}
+
+
+    ## SSB/SSBMSY
+    if(save.png==T){
+      png(
+        filename = paste0("Plots/", fsh,"_",res, "_SSBSSBMSY.png"),
+        type = "cairo",
+        units = "mm",
+        width = 300,
+        height = 225,
+        pointsize = 24,
+        res = 300
+      )
+      par(mfrow=c(1,1), mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
+    } # end save.png
+
+
+    # SSBtmp<-cbind(results@SSB_hist, results@SSB[,1,]) / results@RefPoint$Dynamic_Unfished$SSB0
+    lngth<-(dim(results@SSB_hist)[2]+1):dim(results@RefPoint$Dynamic_Unfished$SSB0)[2]
+    SSBtmp<-results@SSB[,1,] / results@RefPoint$Dynamic_Unfished$SSB0[,lngth]
+    SSBSSB0<-apply(SSBtmp, 2, median)
+
+    plot(SSBSSB0, type='l', ylim=ylims, lwd=2,
+         ylab=expression("SSB / dSSB"['0']), xlab="Projected Years")
+
+    abline(h=1)
+    abline(h=0.5, lty=2)
+
+    for(iname in MP_namesR[2:length(MP_namesR)]){
+      i = which(results@MPs==iname)
+      iorder<-which(MP_namesR==iname)
+      # SSBSSB0<-apply(cbind(results@SSB_hist, results@SSB[,i,]) /
+      #                  results@RefPoint$Dynamic_Unfished$SSB0, 2, median)
+      SSBSSB0<-apply(results@SSB[,i,] /
+                       results@RefPoint$Dynamic_Unfished$SSB0[,lngth], 2, median)
+      lines(SSBSSB0, type='l', lwd=2, lty=iorder, col=colsR[iorder])
+    }
+    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
+    mtext( paste0(fsh, " ", res), side=3, line=-1.2)
+
+    if(save.png==T){
+      dev.off()
+    } # end save.png
+
+  } # end for res
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+
+} # end function
+
+Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
+                             oMPs=orderedMPs, oScenarios=NULL,
+                             colsR=MP_R_col, namesR=MP_namesR_leg,
+                             subset=NULL){
+
+  data<-get(fsh)
+  if(is.null(scenarios)){
+    if(!is.null(oScenarios)){
+      scenarios<-names(data)[oScenarios]
+    } else {
+      scenarios<-names(data)
+    } # end if-else ; define scenarios
+  } # end get scenarios
+
+  for(res in scenarios){
+    results<-get(res,data)
+
+    MP_names<-data[[1]]@MPs
+    MP_namesR<-c(MP_names[oMPs])
+    if(!is.null(subset)){
+      MP_namesR<-MP_namesR[subset]
+      namesR<-MP_namesR_leg[subset]}
+
+
+    ## SSB/SSBMSY
+    if(save.png==T){
+      png(
+        filename = paste0("Plots/", fsh,"_",res, "_SSBSSBMSY.png"),
+        type = "cairo",
+        units = "mm",
+        width = 300,
+        height = 225,
+        pointsize = 24,
+        res = 300
+      )
+      par(mfrow=c(1,1), mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
+    } # end save.png
+
+    max_y<-0
+    for(ii in 1:dim(results@SSB)[2]){
+      max_y<-max(max_y, apply(results@SSB[,ii,], 2, median) )
+    }
+
+    plot(apply(results@SSB[,1,], 2, median), type='l', ylim=c(0, max_y*0.95), lwd=2,
+         ylab="SSB" , xlab="Projected Years")
+    abline(h=1)
+    for(iname in MP_namesR[2:length(MP_namesR)]){
+      i = which(results@MPs==iname)
+      iorder<-which(MP_namesR==iname)
+      lines(apply(results@SSB[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
     if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
@@ -578,6 +788,56 @@ Plot_trelSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbr
     mtext("SSB ratio", 2, line=1.1)
   }# end for loop
 }
+Plot_treldSSB0<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                         mf=c(4,3), xlab.cex=0.79){
+  par(mfrow=mf)
+  l1<-dim(SPP[[1]]@SSB[,1,])[2]
+  l2<-dim(SPP[[1]]@RefPoint$Dynamic_Unfished$SSB0)[2]
+
+  for(ii in 1:length(names(SPP))){
+    ylims1=ylims
+
+    tSSBtmp<-c()
+    for(c in 1:dim(SPP[[ii]]@SSB)[2]){
+      tSSBtmp<-cbind(tSSBtmp, SPP[[ii]]@SSB[,c,l1] / SPP[[ii]]@RefPoint$Dynamic_Unfished$SSB0[,l2])
+    }
+    tSSBtmp_r <- tSSBtmp[,oMPs]
+
+    vioplot(tSSBtmp_r, col=MPcol, names=NA, ylim=ylims1, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box(); abline(h=1); abline(h=0.5, lty=2)
+
+    mtext(names(SPP)[ii], 3, line=-1.2)
+    mtext("SSB ratio", 2, line=1.1)
+  }# end for loop
+}
+Plot_trawSSB<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                         mf=c(4,3), xlab.cex=0.79, refMSY=T){
+  par(mfrow=mf)
+  l1<-dim(SPP[[1]]@SSB[,1,])[2]
+
+  for(ii in 1:length(names(SPP))){
+    if(ii!=4){ylims1=ylims}
+
+    tSSBtmp<-c()
+    for(c in 1:dim(SPP[[ii]]@SSB)[2]){
+      tSSBtmp<-cbind(tSSBtmp, SPP[[ii]]@SSB[,c,l1])
+    }
+    tSSBtmp_r <- tSSBtmp[,oMPs]
+
+    vioplot(tSSBtmp_r, col=MPcol, names=NA, ylim=ylims1, axes=F)
+    axis(2)
+    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    box()#; abline(h=1); abline(h=0.5, lty=2)
+    dim(SPP[[ii]]@RefPoint$MSY)
+    if(refMSY==T){
+      abline(h=SPP[[ii]]@RefPoint$SSBMSY[1,1, dim(SPP[[ii]]@RefPoint$SSBMSY)[3] ], lty=2)
+    }
+    mtext(names(SPP)[ii], 3, line=-1.2)
+    mtext("SSB", 2, line=1.1)
+  }# end for loop
+}
 Plot_trelF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
                      mf=c(4,3), xlab.cex=0.79){
 
@@ -627,7 +887,7 @@ Plot_t10relF<-function(SPP, ylims=c(NULL), oMPs=orderedMPs, MPnam=MP_namesR_abbr
   }# end for loop
 }
 Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                    mf=c(4,3), xlab.cex=0.79){
+                    mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
     vioplot(PNOF(SPP[[ii]])@Prob[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
@@ -639,19 +899,19 @@ Plot_PNOF<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MP
   }# end for loop
 }
 Plot_P100<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                    mf=c(4,3), xlab.cex=0.79){
+                    mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs, rref=1){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
-    vioplot(P100(SPP[[ii]],Yrs=-10)@Prob[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
+    vioplot(P100(SPP[[ii]], Ref=rref,Yrs=-10)@Prob[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
     axis(2)
     axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
     box(); abline(h=1); abline(h=refline, lty=2)
     mtext(names(SPP)[ii], 3, line=-1.2)
-    mtext("Prob SSB_40-50>SSBMSY", 2, line=1.1)
+    mtext(expression("Prob SSB"['40-50']~">SSB"['MSY']), 2, line=1.1, cex=0.7)
   }# end for loop
 }
 Plot_AAVY<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                    mf=c(4,3), xlab.cex=0.79){
+                    mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
     vioplot(AAVY(SPP[[ii]])@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
@@ -663,7 +923,7 @@ Plot_AAVY<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MP
   }# end for loop
 }
 Plot_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                      mf=c(4,3), xlab.cex=0.79){
+                      mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
     vioplot(Yield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
@@ -689,7 +949,7 @@ Plot_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, 
 }
 ## NOTE YIELD IS CALCULATED RELATIVE TO REFERENCE YIELD IF FISHERY WERE BEING EXPLOITED AT FMSY
 Plot_my_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                         mf=c(4,3), xlab.cex=0.79){
+                         mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
     vioplot(myYield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
@@ -737,7 +997,7 @@ PlotCumPM<-function(sp, title=NULL,
 
 ## violin plots (for PMs relative to base) "trelSSB"   "trelF"     "t10relSSB" "t10relF"   "tyield"    "cyield"
 PlotRelPM<-function(sp, calc='s', title=NULL,
-                    Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield'),
+                    Pstat=c('AAVY','trelSSB','trelF','t10relSSB','t10relF','tyield','cyield','PNOF','P100','P90'),
                     ylims=c(NULL), baserefline=NULL, refline=NULL, MPnam=MP_namesR_abbrev,
                     MPcol=MP_R_col, mf=c(4,3), oMPs=orderedMPs, minylim=NULL, maxylim=NULL,
                     xlab.cex=0.79){
@@ -774,6 +1034,11 @@ PlotRelPM<-function(sp, calc='s', title=NULL,
   } #PNOF
   if(Pstat=="P100"){
     BaseRes<-P100(get(sp)$base,Yrs=-10)@Prob
+    colnames(BaseRes)<-get(sp)$base@MPs
+    BaseRes<-BaseRes[,oMPs]
+  } #P100
+  if(Pstat=="P90"){
+    BaseRes<-P100(get(sp)$base, Ref=0.9,Yrs=-10)@Prob
     colnames(BaseRes)<-get(sp)$base@MPs
     BaseRes<-BaseRes[,oMPs]
   } #P100
@@ -987,20 +1252,110 @@ Toff_Difference_Plot<-function(sp, calc='rd', Pstaty='trelSSB',Pstatx='cyield', 
 ##### INPUTS ######
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
-# species<-"RedPorgy"; sp<-"RP"
+species<-"RedPorgy"; sp<-"RP"
 # species<-"VermilionSnapper"; sp<-"VS"
 # species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
-species<-"VermilionSnapper_Over"; sp<-"VS_O"
+# species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
-orderedMPs<- c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+
+# MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
+#                   "GB_target_BSB", "GB_target_BSB2",
+#                   "myICI_BSB", "myIratio_BSB",
+#                   "myIT10_BSB", "myItarget_BSB" ,
+#                   "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
+#                   "myIslope_BSB","myIslope_BSB2"
+# )
+# MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
+#                  "GB_target_RP", "GB_target_RP2",
+#                  "myICI_RP", "myICI_RP2", "myIratio_RP",
+#                  "myIT10_RP", "myItarget_RP",
+#                  "GB_slope_RP","GB_slope_RP2",
+#                  "myIslope_RP", "myIslope_RP2"
+# )
+# MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
+#                  "GB_target_VS", "GB_target_VS2",
+#                  "myICI_VS", "myIratio_VS",
+#                  "myIT10_VS", "myItarget_VS", "myItarget_VS2",
+#                  "GB_slope_VS", "GB_slope_VS2",
+#                  "myIslope_VS", "myIslope_VS2"
+# )
+
+abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
+
+orderedMPs<- c(1, 15:16, 2:14) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
 orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
-MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p", "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","GBslope","Islope")
-MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2","ICI","Ira","I10","Ita","GBs","Isl")
-MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen', 'cadetblue','cadetblue1')
+# get(sp)$base@MPs
+if(sp=="VS" | sp=="VS_O") {
+  if(abbrev==TRUE){
+    # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
+    orderedMPs<-c(1,15:16,2:3,5:8,10:11,14)
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","ICI","Irat","IT10","Itarg",
+                     "GBslope","Islope")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+                        "ICI","Ira","I10","Ita","GBs","Isl")
+  }#end if abbrev==TRUE
+
+  if(abbrev==FALSE){
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","Itarg2",
+                     "GBslope","GBslope2","Islope","Islope2")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+                        "ICI","Ira","I10","Ita","It2","GBs","Gs2","Isl","Is2")
+  }#end if abbrev==False
+} # end if sp==VS
+
+if(sp=="RP" | sp=="RP_O") {
+  if(abbrev==FALSE){
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","GBtarg2","ICI","ICI2","Irat","IT10","Itarg",
+                     "GBslope","GBslope2","Islope","Islope2")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+                        "ICI","IC2","Ira","I10","Ita","GBs","Gs2","Isl","Is2")
+  }#end abbrev=F
+  if(abbrev==TRUE){
+    # RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
+    orderedMPs<- c(1, 15:16, 2:3, 5, 7:10, 12, 14)
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","ICI","Irat","IT10","Itarg",
+                     "GBslope","Islope")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+                        "ICI","Ira","I10","Ita","GBs","Isl")
+  }#end abbrev=T
+}# end RP
+
+if(sp=="BSB" | sp=="BSB_O") {
+  if(abbrev==FALSE){
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg",
+                     "GBslope","GBslope1","GBslope2","Islope","Islope2")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+                        "ICI","Ira","I10","Ita","GBs","Gs1","Gs2","Isl","Is2")
+  }# end abbrev=F
+  if(abbrev==TRUE){
+    orderedMPs<- c(1, 15:16, 2:4, 6:10, 13)
+    # BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
+    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                     "GBtarg","ICI","Irat","IT10","Itarg",
+                     "GBslope","Islope")
+    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+                        "ICI","Ira","I10","Ita","GBs","Isl")
+  }# end abbrev=T
+
+  } #end BSB
+
+
+if(abbrev==FALSE){
+  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
+}
+if(abbrev==TRUE){
+  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
+}
+
 par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par(par.args)
 
@@ -1021,8 +1376,8 @@ assign(paste(sp,"PMs",sep='_'), CollatePMs(sp)) #SP_PMs
 assign(paste(sp, "PM", sep="_"), Reorder_MPs(get(paste0(sp,"_PMs"))) ) #SP_PM ## REORDERED PERF METRICS
 
 # Get performance metrics relative to base OM case
-assign(paste(sp,"RelPM_s", sep='_'), Relative_MP_Perf_s(sp)) #SP_RelPM_s
-assign(paste(sp,"RelPM_d", sep='_'), Relative_MP_Perf_d(sp)) #SP_RelPM_d
+# assign(paste(sp,"RelPM_s", sep='_'), Relative_MP_Perf_s(sp)) #SP_RelPM_s
+# assign(paste(sp,"RelPM_d", sep='_'), Relative_MP_Perf_d(sp)) #SP_RelPM_d
 assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 
 
@@ -1035,14 +1390,27 @@ assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 
 ### Plot median Trajectories
 par(mfrow=c(4,3), par.args)
-Plot_SSBtraj(fsh=sp)
+Plot_SSBtraj_MSY(fsh=sp)
+par(mfrow=c(4,3), par.args)
+Plot_SSBtraj_dSSB0(fsh=sp)
+par(mfrow=c(4,3), par.args)
+Plot_SSBtraj_rawSSB(fsh=sp)
+
 par(mfrow=c(4,3), par.args)
 Plot_Catchtraj(fsh=sp)
 
 ### Plot subset median Trajectories
 par(mfrow=c(4,3), par.args)
-Plot_SSBtraj(fsh=sp, subset=c(1,8:13),
-             colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue'))
+Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,6:12),#subset=c(1,8:13),
+             colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue', 'orchid'))
+                     # ,'blue','pink','green','orchid','cyan'))
+get(sp)$base@MPs[orderedMPs]
+Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,6:7),#subset=c(1,8:13),
+             colsR=c('black','deepskyblue','deeppink'))
+# BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
+# RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
+# RP_O: GB_targ_RP | myICI_RP (doesn't really matter) | myIslope_RP (doesn't really matter)
+# VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj(fsh=sp, subset=c(1:5),
              colsR=c('black','deepskyblue','steelblue','deeppink','darkorange'))
@@ -1050,11 +1418,14 @@ Plot_SSBtraj(fsh=sp, subset=c(1:5),
 ### plot violin plots
 spec<-get(sp)
 Plot_trelSSB(SPP=spec) # terminal year relSSB
+Plot_treldSSB0(SPP=spec, ylims=c(0,1.1))
+Plot_trawSSB(SPP=spec)
 Plot_trelF(SPP=spec)
 Plot_t10relSSB(SPP=spec) # terminal 10 years mean relSSB
 Plot_t10relF(SPP=spec)
 Plot_PNOF(SPP=spec, refline=0.5, ylims=c(0,1.2))
 Plot_P100(SPP=spec, refline=0.5, ylims=c(0,1.2))
+Plot_P100(SPP=spec, rref=0.9, refline=0.5, ylims=c(0,1.2))
 Plot_AAVY(SPP=spec, refline=0.30, ylims=c(0,1.5))
 Plot_AAVY(SPP=spec, refline=0.30)
 
@@ -1064,7 +1435,7 @@ Plot_AAVY(SPP=spec, refline=0.30)
 
 ### cumulative violins / boxplots
 par(mfrow=c(1,1))
-PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species) #, ylims=c(0,5) # for BSB_O
+PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species, ylims=c(0,1)) # for BSB_O ylims=c(0,5) |for VS ylims=c(0,5)
 PlotCumPM(sp, Pstat="PNOF", refline=c(0.5), title=species)
 PlotCumPM(sp, Pstat="P100", refline=c(0.5), title=species)
 PlotCumPM(sp, Pstat="trelSSB", ylim=c(0,10), refline=c(1), title=species)
@@ -1079,14 +1450,13 @@ PlotCumPM(sp, Pstat="cyield",  refline=c(50), title=species)
 par(mfrow=c(4,3), mar=c(2.2, 2.2, 0.2, 0.2), mgp=c(1.2, 0.25, 0), tck=-0.01)
 
 # trelSSB
-if(sp=='RP'){
+if(sp=='RP' | sp=='RP_O'){
   PlotRelPM(sp, calc='rd', Pstat='trelSSB',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 7500, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 5), #RP
-            maxylim=c(3.5, 10, -0.5, 1, -0.0, 2.5, 4, 3.5, 5, 4, 5), #VS
+            maxylim=c(3.5, 600, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 5), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
-if(sp=='VS'){
+if(sp=='VS' | sp=='VS_O'){
   PlotRelPM(sp, calc='rd', Pstat='trelSSB',
             baserefline=1, refline=0,
             maxylim=c(3.5, 10, -0.5, 1, -0.0, 2.5, 4, 3.5, 5, 4, 5), #VS
@@ -1095,7 +1465,7 @@ if(sp=='VS'){
 if(sp=='BSB'){
   PlotRelPM(sp, calc='rd', Pstat='trelSSB',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 10, 0.5, 1, 2, 3, 2, 2, 2, 2, 3), #BSB
+            maxylim=c(3.5, 8, 0.75, 1, 2.5, 3, 2, 1, 1.5, 1.5, 3), #BSB
             minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
 }
 if(sp=='BSB_O'){
@@ -1111,32 +1481,38 @@ if(sp=='BSB_O'){
 if(sp=='RP'){
   PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 2500, -0.5, 2, -0.0, 30, 6, 3, 35, 8, 10), #RP
+            maxylim=c(3.5, 2000, -0.5, 2, -0.0, 30, 6, 3, 35, 8, 10), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
-if(sp=='VS'){
+if(sp=='RP_O'){
   PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 8, -0.3, 2, 0.1, 2, 4, 3.5, 4, 4, 5), #VS
+            maxylim=c(3.5, 2000, -0.7, 5, -0.0, 30, 6, 10, 50, 8, 1000), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS' | sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
+            baserefline=1, refline=0,
+            maxylim=c(3.5, 8, -0.3, 2, 0.15, 2, 4, 3.5, 4, 4, 5), #VS
             minylim=c(0, rep(-1,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
-if(sp=='BSB'){
+if(sp=='BSB' | sp=='BSB_O'){
   PlotRelPM(sp, calc='rd', Pstat='t10relSSB',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 8, 0.25, 2, 1.5, 3, 2.0, 1.5, 2, 2, 4), #BSB
+            maxylim=c(3.5, 8, 0.25, 2, 2, 3, 2.0, 1, 2, 1, 3), #BSB
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 
 
 
 #trelF
-if(sp=='RP'){
+if(sp=='RP' | sp=='RP_O'){
   PlotRelPM(sp, calc='rd', Pstat='trelF',
             baserefline=1, refline=0,
             maxylim=c(10, 5, 50, 50, 150, 2.5, 3, 50, 1.5, 10, 5), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
-if(sp=='VS'){
+if(sp=='VS' | sp=='VS_O'){
   PlotRelPM(sp, calc='rd', Pstat='trelF',
             baserefline=1, refline=0,
             maxylim=c(3.5, 1.5, 15, 2, 15, 1.5, 4, 20, 10, 20, 15), #VS
@@ -1145,31 +1521,49 @@ if(sp=='VS'){
 if(sp=='BSB'){
   PlotRelPM(sp, calc='rd', Pstat='trelF',
             baserefline=1, refline=0,
-            maxylim=c(2.5, 10, 10, 10, 25, 4, 3, 5, 2, 5, 4), #BSB
+            maxylim=c(2.25, 10, 6, 10, 20, 5, 3, 5, 2, 3, 5), #BSB
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='trelF',
+            baserefline=1, refline=0,
+            maxylim=c(2.25, 10, 4, 4, 15, 5, 2, 5, 2, 2, 5), #BSB
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 
 
 
 #t10relF
-if(sp=='RP'){
+if(sp=='RP' | sp=='RP_O'){
   PlotRelPM(sp, calc='rd', Pstat='t10relF',         ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
             baserefline=1, refline=0,
-            maxylim=c(10, 3, 50, 150, 150, 1.5, 3, 50, 1.5, 10, 5), # RP
+            maxylim=c(10, 3, 50, 150, 150, 1.5, 3, 50, 5, 10, 5), # RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 
 if(sp=='VS'){
   PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
-            baserefline=1, refline=0,
             maxylim=c(3.5, 1.5, 15, 2, 15, 1, 4, 20, 10, 20, 15), #VS
+            baserefline=1, refline=0,
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+            baserefline=1, refline=0,
+            maxylim=c(3, 1.5, 7.5, 2, 7.5, 0.5, 2, 10, 12, 3, 10), #VS
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 
 if(sp=='BSB'){
   PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
             baserefline=1, refline=0,
-            maxylim=c(2.25, 7, 7, 50, 15, 3, 2, 4, 2, 4, 3), #BSB
+            maxylim=c(2.25, 7, 4, 50, 13.5, 3, 2, 4, 1, 3, 3), #BSB
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+            baserefline=1, refline=0,
+            maxylim=c(2.25, 7, 2, 50, 13.5, 3, 2, 4, 1, 1.5, 3), #BSB
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 
@@ -1177,10 +1571,10 @@ if(sp=='BSB'){
 
 
 # cyield
-if(sp=='RP'){
+if(sp=='RP' | sp=='RP'){
   PlotRelPM(sp, calc='rd', Pstat='cyield',
             baserefline=1, refline=0,
-            maxylim=c(3.5, 7500, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 10), #RP
+            maxylim=c(80, 0.5, 10, 1.5,6, 1, 4, 3, 2, 4, 2), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
 if(sp=='VS'){
@@ -1189,12 +1583,139 @@ if(sp=='VS'){
             maxylim=c(100, 0, 3.5,    1, 1.5, 0.1, 3,   1,  1, 2, 1.5), #VS
             minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
+if(sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=1, refline=0,
+            maxylim=c(80, 0, 2.5, 1, .75, 0.1, 1.25,   1,  1, 1, 1.5), #VS
+            minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
 if(sp=='BSB'){
   PlotRelPM(sp, calc='rd', Pstat='cyield',
             baserefline=1, refline=0,
-            maxylim=c(100, 0.2, 3, 1.5, 5, 0.1, 2, 0.5, 0.5, 0.5, 0.2), #BSB
+            maxylim=c(100, 0.2, 2.5, 1.5, 5, 0.1, 1.5, 0.5, 0.5, 0.3, 0.3), #BSB
             minylim=c(0, -1, -0.75, -1,  -0.25, -1, -1, -.75, -0.5, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 }
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=1, refline=0,
+            maxylim=c(100, 0.2, 2.5, 1.5, 5, 0.1, 1.5, 0.5, 0.5, 0.3, 0.3), #BSB
+            minylim=c(0, -0.9, -0.5, -1,  -0.25, -0.75, -0.75, -.4, -0.75, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+
+
+
+# P100 (last 10 years)
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.1, 0.1, 0.1, 30, 2, 3, 35, 2.5, 2.5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='RP_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 100, 0.1, 0.1, 0.1, 25, 1, 1, 35, 2, 0.5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 7.5, -0.75, 1, -0.0, 2, 1, 1, 5, 4, 5), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 20, -0, 5, -0.0, 10, 2, 5, 10, 5, 10), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 5), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P100',
+            baserefline=1, refline=0,
+            # maxylim=c(1.1, 10, 0.5, 1, 2, 3, 2, 1, 2, 1.5, 3), #BSB
+            maxylim=c(1.1, 100, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 5), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+
+
+# P90 (last 10 years)
+if(sp=='RP' | sp=='RP_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P90',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.1, 0.1, 0.1, 30, 0.5, 3, 35, 2.5, 2.5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='P90',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 7.5, -0.75, 1, -0.0, 2, 1, 1, 5, 4, 5), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P90',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 7.5, -0, 2, -0.0, 10, 1, 5, 10, 5, 10), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='P90',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 3), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='P90', ################################################## ERROR ####
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 100, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 5), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+
+
+# PNOF (last 10 years)
+if(sp=='RP'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.1, 0.1, 0.1, 30, 2, 3, 35, 2.5, 2.5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='RP_O'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 100, 0.1, 0.1, 0.1, 25, 1, 1, 35, 2, 0.5), #RP
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 7.5, -0.75, 1, -0.0, 2, 1, 1, 5, 4, 5), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='VS_O'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.2, 5, 0.2, 7.5, 2, 5, 7.5, 4, 10), #VS
+            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+}
+if(sp=='BSB'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            maxylim=c(1.1, 10, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 5), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+if(sp=='BSB_O'){
+  PlotRelPM(sp, calc='rd', Pstat='PNOF',
+            baserefline=1, refline=0,
+            # maxylim=c(1.1, 10, 0.5, 1, 2, 3, 2, 1, 2, 1.5, 3), #BSB
+            maxylim=c(1.1, 100, 0.5, 1.5, 5, 4.5, 1.5, 1, 2, 1, 5), #BSB
+            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
+}
+
 
 
 
@@ -1217,7 +1738,9 @@ Toff_Difference_Plot(sp, calc='rd',Pstatx='cyield',Pstaty='trelSSB', stat=median
 
 ### wormplot
 nms<-get(sp)$base@MPs; nms
-mpnms<-nms[c(1,6,8)]
+if(sp=='') mpnms<-nms[c(1,6,7)]
+if(sp=='') mpnms<-nms[c(1,6,7)]
+if(sp=='') mpnms<-nms[c(1,6,7)]
 names(get(sp))
 
 # par(mfrow=c(1,4))
