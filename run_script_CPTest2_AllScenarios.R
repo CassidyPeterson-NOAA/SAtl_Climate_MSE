@@ -886,17 +886,17 @@ scenario_i<-scenario[1] #scenario[1]
 
 
       # ##### TESTING CMPS ##############
-      # OM_k<-OM_BSB_recdevlo  #recdevhi #Base #recdevlo
-      # OM_k<-OM_BSB_Base #recdevhi #Base #recdevlo
+      # OM_k<-OM_VS_recdevlo  #recdevhi #Base #recdevlo
+      # OM_k<-OM_VS_Base #recdevhi #Base #recdevlo
       OM_k@interval <- 1
       set.seed(myseed)
-      MSE <- runMSE(OM_k,MPs = "myICI_BSB", #SCA_1, myIT10_VS, myIratio_VS, GB_target_VS
+      MSE <- runMSE(OM_k,MPs = "myIT10_VS2", #SCA_1, myIT10_VS, myIratio_VS, GB_target_VS
                     parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
 
       # dim(MSE1@SB_SBMSY)
-      plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years")
+      plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years", ylim=c(0, 2))
       abline(h=1)
       lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='orchid', lwd=2, lty=2)
       lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='skyblue2', lwd=2)
