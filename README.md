@@ -5,6 +5,9 @@ This repository contains scripts used to test various model-based and empirical 
 This project uses [openMSE](https://openmse.com/) software (developed by [Blue Matter Science](https://www.bluematterscience.com/)) and builds on extensive foundational work led by Nikolai Klibansky (see [bamExtras](https://github.com/nikolaifish/bamExtras), [bamMSE](https://github.com/nikolaifish/bamMSE), and [SEFSCInterimAnalysis](https://github.com/nikolaifish/SEFSCInterimAnalysis)).
 
 
+## Results
+[Get Results Here](file:///C:/Users/cassidy.peterson/Documents/Github/SAtl_Climate_MSE/SAtl_Climate_MSE_Results.html)
+
 ## References
 Punt AE. A’mar T. Bond NA. Butterworth DS. de Moor CL. De Oliveira JAA. Haltuch MA. Hollowed AB. Szuwalski C. (2014) Fisheries management under climate and environmental uncertainty: control rules and performance simulation. ICES Journal of Marine Science. 71(8): 2208-2220. 
 
