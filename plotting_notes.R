@@ -51,6 +51,20 @@ EpiMDeal<-function(data){
 source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R")
 
 
+## TEST IF REF POINTS ARE DYNAMIC -- INFO IN OM@RefPoint$SSBMSY MATCHES OM@SB_SBMSY
+SSB_SSBMSY <- VS$age0M_hi@SB_SBMSY[1,1,]
+
+SSB <- VS$age0M_hi@SSB[1,1,]
+
+SSB/SSB_SSBMSY
+
+VS$age0M_hi@OM$SSBMSY[1]
+VS$age0M_hi@RefPoint$SSBMSY[1,1,(length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])-49):length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])]
+
+
+
+# SSB / SSBMSY = SSB_SSBMSY
+# SSB / SSB_SSBMSY = SSBMSY
 
 # PLOTTING  RESULTS #
 ############# read in data ####################
@@ -84,7 +98,10 @@ plot(apply(SSBtemp, 2, median) , type='l')
 lines(apply(cbind(BSB_age0M_hi@SSB_hist, BSB_age0M_hi@SSB[,6,]), 2, median), type='l', lty=2, col="red")
 BSB_age0M_hi@MPs
 
-
+BSB$recdev_lo@F_FMSY
+BSB$recdev_hi@PPD$SCA_1@OM$BMSY_B0
+VS$recdev_hi@PPD$SCA_1@OM$BMSY_B0
+RP$recdev_hi@PPD$SCA_1@OM$BMSY_B0
 
 
 dim(BSB_age0M_hi@SB_SBMSY[,1,])
@@ -1830,3 +1847,18 @@ Plot_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, 
     mtext("tYield", 2, line=1.1)
   }# end for loop
 }
+
+
+Plot_trelSSB(SPP=spec) # terminal year relSSB
+Plot_treldSSB0(SPP=spec, ylims=c(0,1.1))
+Plot_trawSSB(SPP=spec)
+Plot_trelF(SPP=spec)
+Plot_t10relSSB(SPP=spec) # terminal 10 years mean relSSB
+# Plot_t10reldSSB10(SPP=spec) # terminal 10 years mean relSSB
+Plot_t10relF(SPP=spec)
+Plot_PNOF(SPP=spec, refline=0.5, ylims=c(0,1.2))
+Plot_P100(SPP=spec, refline=0.5, ylims=c(0,1.2))
+Plot_P100(SPP=spec, rref=0.9, refline=0.5, ylims=c(0,1.2))
+Plot_AAVY(SPP=spec, refline=0.30, ylims=c(0,1.5))
+Plot_AAVY(SPP=spec, refline=0.30)
+
