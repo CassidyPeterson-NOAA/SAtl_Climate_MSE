@@ -54,6 +54,9 @@ OM_VS_Base.RDS
 OM_VS_recdevhi.RDS
 OM_VS_recdevlo.RDS
 OMs_loaded.RData
+SP_PMs.RData
+SP_PMs_nest.RData
+SP_temp.RData
 
 SAVE_PLOTS_Analyze_Results.R
 
