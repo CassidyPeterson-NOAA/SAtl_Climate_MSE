@@ -164,20 +164,52 @@ pre code {
 </div>
 
 
-<div id="satl_climate_mse" class="section level1">
-<h1>SAtl_Climate_MSE</h1>
-<p>This repository contains scripts used to test various model-based and empirical MPs across nonstationary projections designed to mimic potential climate change impacts. This study follows the “empirical approach” of evaluating MPs across climate uncertainty, wherein trends in key processes are modeled without identification of the underlying causal mechanisms (Punt et al. 2014).</p>
+<div id="climate-readiness-of-fisheries-management-procedures-with-application-to-the-southeast-u.s.-atlantic" class="section level1">
+<h1>Climate-readiness of fisheries management procedures with application to the southeast U.S. Atlantic</h1>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p>This <a href="https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE">repository</a> contains scripts used to test various model-based and empirical management procedures (MPs) across nonstationary projections designed to mimic potential climate change impacts.</p>
+<blockquote>
+<p>Peterson et al. (in prep) Climate-readiness of fisheries management procedures with application to the southeast U.S. Atlantic.</p>
+</blockquote>
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<ul>
+<li>This analysis used a desk MSE to explore the performance of various MPs with nonstationary future projections, using three commercially and recreationally important fish stocks in the southeast U.S. Atlantic as a case study.</li>
+<li>MPs tested include traditional model-based (statistical-catch-at-age stock assessment) and less conventional <a href="https://dlmtool.github.io/DLMtool/reference/index.html">empirical (non-model, indicator-based) MPs</a>.</li>
+<li>Nonstationary OM scenarios included:
+<ul>
+<li>Recdev_hi &amp; Recdev_lo - regime shift in recruitment deviations</li>
+<li>Age0M_hi &amp; Age0M_lo - regime shift in young-of-year mortality-based</li>
+<li>EpiM - episodic natural mortality</li>
+<li>Recns - nonstationary recruitment deviations</li>
+<li>Uobs_hi &amp; Uobs_lo - regime shift in survey index variability</li>
+<li>Refbias_hi &amp; Refbias_lo - biases in perceived reference points</li>
+</ul></li>
+<li>Performance metrics included the ability to maintain a healthy stock biomass, avoid overfishing, high catches, and stability in fishery catches.</li>
+</ul>
+</div>
+<div id="take-homes" class="section level2">
+<h2>Take-homes</h2>
+<ul>
+<li>MP performance was species-specific.</li>
+<li>For RP and VS, empirical MPs were better able to adapt to nonstationarity compared to traditional SCA-based MPs.</li>
+<li>Empirical MP performance was very similar to that of model-based MPs for BSB.</li>
+<li>Empirical MPs may serve as a useful fishery management tool in the face of nonstationary future dynamics, and should be included in the fisheries managers’ toolbox for continued use and exploration.</li>
+<li>Future research should focus on defining the ideal tuning strategy for empirical MPs.</li>
+</ul>
+</div>
+<div id="software-and-packages" class="section level2">
+<h2>Software and Packages</h2>
 <p>This project uses <a href="https://openmse.com/">openMSE</a> software (developed by <a href="https://www.bluematterscience.com/">Blue Matter Science</a>) and builds on extensive foundational work led by Nikolai Klibansky (see <a href="https://github.com/nikolaifish/bamExtras">bamExtras</a>, <a href="https://github.com/nikolaifish/bamMSE">bamMSE</a>, and <a href="https://github.com/nikolaifish/SEFSCInterimAnalysis">SEFSCInterimAnalysis</a>).</p>
+</div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results.html">Get All Results Here</a></p>
-<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_SAtl_Climate_MSE_Results.html">Get VS Results Here</a></p>
-<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_SAtl_Climate_MSE_Results.html">Get BSB Results Here</a></p>
-<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_SAtl_Climate_MSE_Results.html">Get RP Results Here</a></p>
-</div>
-<div id="references" class="section level2">
-<h2>References</h2>
-<p>Punt AE. A’mar T. Bond NA. Butterworth DS. de Moor CL. De Oliveira JAA. Haltuch MA. Hollowed AB. Szuwalski C. (2014) Fisheries management under climate and environmental uncertainty: control rules and performance simulation. ICES Journal of Marine Science. 71(8): 2208-2220.</p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results.html">See All Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_SAtl_Climate_MSE_Results.html">See VS Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_SAtl_Climate_MSE_Results.html">See BSB Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_SAtl_Climate_MSE_Results.html">See RP Results Here</a></p>
 </div>
 <div id="disclaimer" class="section level2">
 <h2>Disclaimer</h2>
