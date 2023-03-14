@@ -7,8 +7,11 @@ This project uses [openMSE](https://openmse.com/) software (developed by [Blue M
 
 ## Results
 [Get All Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results.html)
+
 [Get VS Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_SAtl_Climate_MSE_Results.html)
+
 [Get BSB Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_SAtl_Climate_MSE_Results.html)
+
 [Get RP Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_SAtl_Climate_MSE_Results.html)
 
 ## References

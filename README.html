@@ -104,8 +104,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -113,16 +113,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -174,7 +167,14 @@ pre code {
 <div id="satl_climate_mse" class="section level1">
 <h1>SAtl_Climate_MSE</h1>
 <p>This repository contains scripts used to test various model-based and empirical MPs across nonstationary projections designed to mimic potential climate change impacts. This study follows the “empirical approach” of evaluating MPs across climate uncertainty, wherein trends in key processes are modeled without identification of the underlying causal mechanisms (Punt et al. 2014).</p>
-<p>This project uses <a href="https://openmse.com/">openMSE</a> software (developed by <a href="https://www.bluematterscience.com/">Blue Matter Science</a>) and builds on extensive foundational work led by Nikolai Klibansky (see <a href="https://github.com/nikolaifish/bamExtras">bamExtras</a> and <a href="https://github.com/nikolaifish/bamMSE">bamMSE</a>).</p>
+<p>This project uses <a href="https://openmse.com/">openMSE</a> software (developed by <a href="https://www.bluematterscience.com/">Blue Matter Science</a>) and builds on extensive foundational work led by Nikolai Klibansky (see <a href="https://github.com/nikolaifish/bamExtras">bamExtras</a>, <a href="https://github.com/nikolaifish/bamMSE">bamMSE</a>, and <a href="https://github.com/nikolaifish/SEFSCInterimAnalysis">SEFSCInterimAnalysis</a>).</p>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results.html">Get All Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_SAtl_Climate_MSE_Results.html">Get VS Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_SAtl_Climate_MSE_Results.html">Get BSB Results Here</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_SAtl_Climate_MSE_Results.html">Get RP Results Here</a></p>
+</div>
 <div id="references" class="section level2">
 <h2>References</h2>
 <p>Punt AE. A’mar T. Bond NA. Butterworth DS. de Moor CL. De Oliveira JAA. Haltuch MA. Hollowed AB. Szuwalski C. (2014) Fisheries management under climate and environmental uncertainty: control rules and performance simulation. ICES Journal of Marine Science. 71(8): 2208-2220.</p>
