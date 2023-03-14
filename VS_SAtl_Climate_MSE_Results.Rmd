@@ -94,7 +94,7 @@ assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 
 #### Median Trajectory Plots
 
-```{r echo=FALSE,   fig.cap = "Median SSB / dynSSB0 trajectories"}
+```{r echo=FALSE,  fig.height=9,  fig.cap = "Median SSB / dynSSB0 trajectories"}
 # exercise.setup="PreviousChunk",
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
@@ -103,7 +103,7 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
 ```
 
 
-```{r echo=FALSE, fig.cap = "Median SSB / dynSSB0 trajectories for model MPs"}
+```{r echo=FALSE, fig.height=9, fig.cap = "Median SSB / dynSSB0 trajectories for model MPs"}
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
@@ -112,7 +112,7 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1:5),
 
 ```
 
-```{r echo=FALSE,  fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
+```{r echo=FALSE,   fig.height=9, fig.height=9,fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
@@ -123,7 +123,7 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1,6:12),#subset=c(1,8:1
 
 ```
 
-```{r echo=FALSE,  fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
+```{r echo=FALSE,  fig.height=9, fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 Plot_Catchtraj(fsh=sp)

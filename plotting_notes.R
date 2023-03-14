@@ -59,7 +59,21 @@ SSB <- VS$age0M_hi@SSB[1,1,]
 SSB/SSB_SSBMSY
 
 VS$age0M_hi@OM$SSBMSY[1]
-VS$age0M_hi@RefPoint$SSBMSY[1,1,(length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])-49):length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])]
+SSBMSY<- VS$age0M_hi@RefPoint$SSBMSY[1,1,(length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])-49):length(VS$age0M_hi@RefPoint$SSBMSY[1,1,])]
+SSB / SSBMSY == SSB_SSBMSY
+
+
+get(sp)$age0M_hi@OM$SSBMSY[1]
+get(sp)$age0M_hi@OM$SSBMSY_SSB0[1]
+get(sp)$age0M_hi@RefPoint$ByYear$SSBMSY[1,] / get(sp)$age0M_hi@RefPoint$ByYear$SSB0[1,]
+
+get(sp)$age0M_hi@RefPoint$ByYear$FMSY[1,]
+get(sp)$recdev_hi@F_FMSY[,1,]
+get(sp)$recdev_hi@FM[1,1,]
+get(sp)$recdev_hi@RefPoint$ByYear$FMSY[1,]
+
+get(sp)$recdev_hi@FM[1,1,] / get(sp)$recdev_hi@RefPoint$ByYear$FMSY[1,72:121]  ==
+  get(sp)$recdev_hi@F_FMSY[1,1,]
 
 
 

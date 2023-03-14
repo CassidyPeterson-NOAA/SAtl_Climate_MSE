@@ -151,7 +151,8 @@ assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_MSY(fsh=sp)
 par(mfrow=c(4,3), par.args)
-Plot_SSBtraj_dSSB0(fsh=sp)
+reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_rawSSB(fsh=sp)
 
