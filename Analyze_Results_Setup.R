@@ -645,7 +645,7 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
 Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
                               oMPs=orderedMPs, oScenarios=NULL,
                               colsR=MP_R_col, namesR=MP_namesR_leg,
-                              subset=NULL, ylims=c(0,1.1), refline=NULL){
+                              subset=NULL, ylims=c(0,1.15), refline=NULL){
 
   data<-get(fsh)
   if(is.null(scenarios)){
@@ -701,8 +701,8 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
                        results@RefPoint$Dynamic_Unfished$SSB0[,lngth], 2, median)
       lines(SSBSSB0, type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
-    mtext( paste0(fsh, " ", res), side=3, line=-1.2)
+    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=1)
+    mtext( paste0(fsh, " ", res), side=3, line=-1.1, cex=0.8)
 
     if(save.png==T){
       dev.off()
@@ -912,6 +912,23 @@ PlotCumPM<-function(sp, title=NULL,
   mtext(Pstat, 2, line=1.1)
 }
 
+PlotCumPM_Box<-function(sp, title=NULL,
+                    Pstat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
+                            't10relF','tyield','cyield','PNOF','P100'),
+                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9){
+  dat<-get(paste0(sp,"_PM"))
+  datStat<-get(Pstat, dat)
+
+  boxplot(datStat, col=MPcol, names=NA, ylim=ylims, axes=F)
+  axis(2)
+  axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+  box()
+  abline(h=refline, lty=2)
+  if(is.null(title)) title<-sp
+  mtext(title, 3, line=-1.2)
+  mtext(Pstat, 2, line=1.1)
+}
+
 
 ## violin plots (for PMs relative to base) "trelSSB"   "trelF"     "t10relSSB" "t10relF"   "tyield"    "cyield"
 PlotRelPM<-function(sp, calc='rd', title=NULL,
@@ -961,7 +978,7 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
     mtext(ss, 3, line=-1.1)
     abline(h=refline)
   }# end scenario / OM loop
-  if(is.null(title)) title<-sp
+  if(is.null(title)) title<-species
   mtext(title, 3, line=1, outer=T)
   mtext(Pstat, 3, line=0, outer=T)
 }
