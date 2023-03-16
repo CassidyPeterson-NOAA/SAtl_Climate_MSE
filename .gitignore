@@ -69,8 +69,8 @@ RP_O_SAtl_Climate_MSE_Results_cache
 RP_O_SAtl_Climate_MSE_Results_files
 VS_O_SAtl_Climate_MSE_Results_cache
 VS_O_SAtl_Climate_MSE_Results_files
-SAtl_Climate_MSE_Results_cache
-SAtl_Climate_MSE_Results_files
+SAtl_ClimateMSE_Results_cache
+SAtl_ClimateMSE_Results_files
 
 SAVE_PLOTS_Analyze_Results.R
 
