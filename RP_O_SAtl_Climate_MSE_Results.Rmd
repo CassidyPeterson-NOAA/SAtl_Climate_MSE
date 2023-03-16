@@ -28,10 +28,10 @@ Below are the results for RP.
 
 ##### INPUTS ######
 set.file<-"MSE_obj/"
-species<-"RedPorgy"; sp<-"RP"
+# species<-"RedPorgy"; sp<-"RP"
 # species<-"VermilionSnapper"; sp<-"VS"
 # species<-"BlackSeaBass"; sp<-"BSB"
-# species<-"RedPorgy_Over"; sp<-"RP_O"
+species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 

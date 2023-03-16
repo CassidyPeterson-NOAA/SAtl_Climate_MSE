@@ -199,6 +199,8 @@ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,
             maxylim=c(100, 0, 3.5,    1, 1.5, 0.1, 3,   1,  1, 2, 1.5), #VS
             minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 
+Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
+Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
 ```
 
 #### Cumulative Performance Metrics
@@ -478,6 +480,8 @@ PlotRelPM(sp, calc='rd', Pstat='cyield',
             maxylim=c(100, 0.2, 2.5, 1.5, 5, 0.1, 1.5, 0.5, 0.5, 0.3, 0.3), #BSB
             minylim=c(0, -1, -0.75, -1,  -0.25, -1, -1, -.5, -0.5, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 
+Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
+Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
 ```
 
 #### Cumulative Performance Metrics
@@ -755,6 +759,8 @@ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,
             baserefline=1, refline=0,
             maxylim=c(80, 0.5, 10, 1.5,6, 1, 4, 3, 2, 4, 2), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
+Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
+Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
 
 ```
 
