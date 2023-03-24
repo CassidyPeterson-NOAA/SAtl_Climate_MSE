@@ -9,8 +9,8 @@ source("Analyze_Results_Setup.R")
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
 # species<-"RedPorgy"; sp<-"RP"
-species<-"VermilionSnapper"; sp<-"VS"
-# species<-"BlackSeaBass"; sp<-"BSB"
+# species<-"VermilionSnapper"; sp<-"VS"
+species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
