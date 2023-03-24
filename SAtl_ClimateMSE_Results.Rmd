@@ -1,7 +1,7 @@
 ---
 title: "SAtl_Climate_MSE_Results"
 author: "Cassidy Peterson"
-date: "2/28/2023"
+date: "March 2023"
 output: html_document
 ---
 
@@ -200,7 +200,7 @@ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,
             minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 
 Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
-Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
+Plot_my_cyield(SPP=get(sp), ylims=c(0, 150000))
 ```
 
 #### Cumulative Performance Metrics
@@ -481,7 +481,7 @@ PlotRelPM(sp, calc='rd', Pstat='cyield',
             minylim=c(0, -1, -0.75, -1,  -0.25, -1, -1, -.5, -0.5, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 
 Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
-Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
+Plot_my_cyield(SPP=get(sp), ylims=c(0, 150000))
 ```
 
 #### Cumulative Performance Metrics
@@ -760,7 +760,7 @@ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,
             maxylim=c(80, 0.5, 10, 1.5,6, 1, 4, 3, 2, 4, 2), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
-Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
+Plot_my_cyield(SPP=get(sp), ylims=c(0, 150000))
 
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "SAtl_Climate_MSE_Results"
 author: "Cassidy Peterson"
-date: "2/28/2023"
+date: "March 2023"
 output: html_document
 ---
 
@@ -20,7 +20,7 @@ Here are the results from a South Atlantic MSE exercise testing the behavior of 
 
 
 
-## VS Results
+## VS_Overages Results
 
 ```{r VS-FOUNDATION, setup, include=FALSE, cache=TRUE, cache.lazy=FALSE}
 # knitr::opts_chunk$set(cache = TRUE) # do not re-run if unnecessary
@@ -199,7 +199,7 @@ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,
             maxylim=c(100, 0, 3.5,    1, 1.5, 0.1, 3,   1,  1, 2, 1.5), #VS
             minylim=c(0, -0.75, 0, -0.5,  0, -0.4, -1, -1, -1, -1, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
-Plot_my_cyield(SPP=spec, ylims=c(0, 150000))
+Plot_my_cyield(SPP=get(sp), ylims=c(0, 150000))
 
 ```
 
