@@ -10,15 +10,16 @@ library(bamMSE)
 
 
 # setwd("C:\\Users\\cassidy.peterson\\Documents\\Github\\SEFSCInterimAnalysis\\RunMSE\\SEFSC\\")
-setwd(file.path(filepath, "SAtl_Climate_MSE/"))
-# setwd("D:/SAtl_MSE")
+setwd("D:/SAtl_MSE")
 
 
 rm(list=ls())
 t_list <- Sys.time()
 myseed <- 8675309
 
-filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
+
+filepath <- "C:/Users/cassidy.peterson/Documents/git"
+
 
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
@@ -33,9 +34,8 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 
-
-
 ######
+# Run once to set up overage OM/ MSE objects
 # BSB_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass.rds"))
 # BSBo<-Replace(BSB_init, Overages, Name="BSB_Over")
 # saveRDS(BSBo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_BlackSeaBass_Over.rds"))
@@ -47,20 +47,10 @@ source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 # RP_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy.rds"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
+#########
+ncores <- 20
 
-#
-# Data_BSB<-readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/Data_BlackSeaBass.rds"))
-# Data_BSB@CV_Mort
-# Hist_BSB<-readRDS(file.path(filepath, "SEFSCInterimAnalysis/BuildOM/Hist/SEFSC/Hist_BlackSeaBass.rds"))
-# Hist_BSB@Data@CV_Mort
-# # HIST OBJ CONTAINS INFO ON Data, OM.
-#
-# BSB_init@
-#####
-
-ncores <- 10
-
-nsim <- 48 #250
+nsim <- 250 #250
 runScenarios <- TRUE # Run scenarios to do MSE or just generate historical data?
 runMSE_args <- list("parallel"=TRUE,"extended"=TRUE,"silent"=FALSE)
 lag_Assess_Init <- 2 # Number of years between terminal year of assessment and first year of management. May be modified in scenarios
@@ -80,51 +70,75 @@ OMName_scen_complete <- NA
 
 # validcpars()
 
-MPs_user <- c(
-  #"CC1","SPMSY", # "AvC", "DCAC", "DBSRA", # simple MPs
-  "SCA_1",#"SCA_5","SCA_10",        # assessment only MPs
-  # "iMP_avg_5",    "iMP_avg_10",    # interim average MPs
-  # "iMP_buffer_5", "iMP_buffer_10", # interim buffered MPs
-  "pMP_5","pMP_10" ,                # projection MPs
-  "GB_slope1", #Geromont and Butterworth index slope Harvest Control Rule (https://dlmtool.openmse.com/reference/GB_slope.html)
-  "GB_target1", # tuning parameter (w); Geromont and Butterworth target CPUE and catch MP (https://dlmtool.openmse.com/reference/GB_target.html)
-  "ICI2", # Index Confidence Interval, where ICI is more precautionary and ICI2 is less precautionary (https://dlmtool.openmse.com/reference/ICI.html)
-  "myIratio", #mean index ratio (https://dlmtool.openmse.com/reference/Iratio.html)
-  #"myIslope", #Index Slope Tracking MP -- maintain constant CPUE (https://dlmtool.openmse.com/reference/Islope1.html); Islope1 is the least precautionary
-  "myIT10", #iterative index target MP w/ 10% allowable tac change (https://dlmtool.openmse.com/reference/IT5.html)
-  "myItarget", #Imulti, xx tuning parameters; Incremental index target MP (https://dlmtool.openmse.com/reference/Itarget1.html) 1 is least precautionary
-  "L95target" #Length target TAC MP (https://dlmtool.openmse.com/reference/Ltarget1.html)
+# MPs_user <- c(
+#   #"CC1","SPMSY", # "AvC", "DCAC", "DBSRA", # simple MPs
+#   "SCA_1",#"SCA_5","SCA_10",        # assessment only MPs
+#   # "iMP_avg_5",    "iMP_avg_10",    # interim average MPs
+#   # "iMP_buffer_5", "iMP_buffer_10", # interim buffered MPs
+#   "pMP_5","pMP_10" ,                # projection MPs
+#   "GB_slope1", #Geromont and Butterworth index slope Harvest Control Rule (https://dlmtool.openmse.com/reference/GB_slope.html)
+#   "GB_target1", # tuning parameter (w); Geromont and Butterworth target CPUE and catch MP (https://dlmtool.openmse.com/reference/GB_target.html)
+#   "ICI2", # Index Confidence Interval, where ICI is more precautionary and ICI2 is less precautionary (https://dlmtool.openmse.com/reference/ICI.html)
+#   "myIratio", #mean index ratio (https://dlmtool.openmse.com/reference/Iratio.html)
+#   # "myIslope", #Index Slope Tracking MP -- maintain constant CPUE (https://dlmtool.openmse.com/reference/Islope1.html); Islope1 is the least precautionary
+#   "myIT10", #iterative index target MP w/ 10% allowable tac change (https://dlmtool.openmse.com/reference/IT5.html)
+#   "myItarget", #Imulti, xx tuning parameters; Incremental index target MP (https://dlmtool.openmse.com/reference/Itarget1.html) 1 is least precautionary
+#   "L95target" #Length target TAC MP (https://dlmtool.openmse.com/reference/Ltarget1.html)
+# )
+
+
+
+MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
+                  "GB_target_BSB", "GB_target_BSB2",
+                  "myICI_BSB", "myIratio_BSB",
+                  "myIT10_BSB", "myItarget_BSB" ,
+                  "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
+                  "myIslope_BSB","myIslope_BSB2"
+)
+MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_RP", "GB_target_RP2",
+                 "myICI_RP", "myICI_RP2", "myIratio_RP",
+                 "myIT10_RP", "myItarget_RP",
+                 "GB_slope_RP","GB_slope_RP2",
+                 "myIslope_RP", "myIslope_RP2"
+)
+MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_VS", "GB_target_VS2",
+                 "myICI_VS", "myIratio_VS",
+                 "myIT10_VS", "myItarget_VS", "myItarget_VS2",
+                 "GB_slope_VS", "GB_slope_VS2",
+                 "myIslope_VS", "myIslope_VS2"
 )
 
-MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" , "GB_slope_BSB", "GB_target_BSB",
-                  "myICI_BSB", "myIratio_BSB", "myIslope_BSB", "myIT10_BSB", "myItarget_BSB")
-MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10", "GB_slope_RP", "GB_target_RP", "myICI2_RP", "myIratio",
-                 "myIT10_RP", "myItarget_RP", "myIslope_RP")
-MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10", "GB_slope_VS", "GB_target_VS", "myICI2_VS", "myIratio_VS",
-                 "myIT10_VS", "myItarget_VS", "myIslope_VS")
+
 
 MPs_user2 <- c("SCA_5","SCA_10")
-MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
+# MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
+MPs_user_interval<-c(1, 5, 10, rep(1, 11))
 MPs_user_interval2<-c(5,10)
 
-# MPs_user_test <- c(
-#  "myIratio",
-#   "myIslope",
-#   "myItarget" #Imulti, xx tuning parameters; Incremental index target MP (https
-# )
+
 
 
 # OMName_all <- gsub(".rds","",list.files("OM"))
 # OMName <- OMName_all[!OMName_all%in%OMName_complete]
-OMName <- c(#"OM_BlackSeaBass" #, # Runs
-            #"OM_RedPorgy" #, # Runs,
-            "OM_VermilionSnapper" # Runs
-            # "OM_SnowyGrouper",
-            #"OM_RedGrouper", # 2022-1-19 This took 7 hours just to run the base scenario batch 1 so I interrupted it
-            #,"OM_GagGrouper"#, # Runs
-            #,"OM_GrayTriggerfish" # Problems with lightly fished scenario where "More than 5 % of simulations can't get to the specified level of depletion with these Operating Model parameters"
-            #"OM_RedSnapper" # Seems to run but takes a long time
+OMName <- c("OM_BlackSeaBass" , # Runs
+  "OM_RedPorgy" , # Runs,
+  # "OM_SnowyGrouper",
+   "OM_VermilionSnapper" # Runs
+  #"OM_RedGrouper", # 2022-1-19 This took 7 hours just to run the base scenario batch 1 so I interrupted it
+  #,"OM_GagGrouper"#, # Runs
+  #,"OM_GrayTriggerfish" # Problems with lightly fished scenario where "More than 5 % of simulations can't get to the specified level of depletion with these Operating Model parameters"
+  #"OM_RedSnapper" # Seems to run but takes a long time
 )
+# OMName<-c("OM_VermilionSnapper")
+
+OMName_O <- c("OM_BlackSeaBass_Over" , # Runs
+            "OM_RedPorgy_Over" , # Runs,
+            "OM_VermilionSnapper_Over" # Runs
+)
+
+# OMName_O<-c("OM_VermilionSnapper_Over")
 
 
 
@@ -140,58 +154,15 @@ scenario <- c("base"
               ,"refbias_lo" # ref points biased low
               ,"epiM"  # Red Porgy sometimes has problems getting down to the specified level of depletion
               ,"recdev_hi"     # Regime change
-              ,"recdev_lo"     # Regime change
-              ######
-              #,"hs"
-              #,"hd"
-              #,"vdome" # Assume dome-shaped selectivity of catch in assessments
-              #,"constM"  # M is constant in the operating model
-              #,"catcvlo"
-              #,"ucvhi"
-              #,"ucvlo"
-              #,"ubias"
-              ##,"SCAfree" # TFree up some parameters in the SCA model (Very long run time for Vermilion Snapper)
-              #,"basealt" # Alternative base ("SCAfree" + "catcvlo"). Didn't take very long in Vermilion Snapper
-              #,"dep"
-              #,"lf"
-               #,"lhset"    # set certain life history parameters
-              #,"minerr"   # Minimize error and variation in operating model
-              #,"minrecdev"  # Minimize recruitment deviations
-              #,"Mset"     # set M
-              #,"noempind"
-              #,"nolag"
-              #,"perfobs" # Perfect observations
-              #,"steepset"  # set steepness
-              #,"tachi"
-              #,"taclo"
-
-              #,"vtiv"    # Vulnerability time-invariant in historic period
-              ##,"genfle"   # Generic fleet (kicked out error in RedPorgy "'Len_age' must be array with dimensions: nsim, maxage+1, nyears + proyears.")
-              #####
+              ,"recdev_lo"
 )
+
 
 
 # Nonstationary recruitment
 recns_args <- list("yr1diff"=  0,   # Number of years between the beginning of the projection period and start of change in rec devs
                    "y0"=1,"sd"=5,"mu"=0) # Arguments passed to bamExtras::random_walk
 
-# Set catch cv in SCA models to be very low (like in BAM)
-catcvlo_args <- list("cv"=0.05)
-
-# Set life history parameters
-lhset_args <- list("h"=0.84, "M"=0.2)
-
-# Depletion scenario args
-dep_args <- list("scale"=0.5, "min"=0.05)
-
-# Lightly fished scenario args
-lf_args <- list("scale"=2,"max"=1)
-
-# Hyperstable scenario
-hs_args <- list("min"=1/3,"max"=2/3)
-
-# Hyperdeplete scenario
-hd_args <- list("min"=1.5,"max"=3)
 
 ## Episodic M scenario args
 # yrprop:  Proportion of years to apply a multiplier on M (Huynh used 0.1)
@@ -227,32 +198,22 @@ ubias_args <- list("int"=0,
 # )
 # Regime change scenario args
 recdev_hi_args <-  list("yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
-                        "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
-                        "r2_mult" =  2  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
+                     "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
+                     "r2_mult" =  2  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
 )
 recdev_lo_args <-  list("yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
-                        "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
-                        "r2_mult" =  0.5  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
+                     "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
+                     "r2_mult" =  0.5  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
 )
 
-
 #
-tachi_args <- list("MSY_frac"=1.25)
 
-# Minimum error arguments
-minerr_args <- list("cv_constant"=0.05,"LenCV"=0.05,"Perr"=c(0,0.05))
-
-# SCAfree
-SCAfree_args <- list(fix_h=FALSE,fix_F_equilibrium=FALSE, fix_omega=FALSE, fix_tau=FALSE)
-
-# seeds <- setNames(sample(1:10000,length(OMName),replace = FALSE),OMName)
-
-
-Irefbias_lo_args<-Brefbias_lo_args<-Crefbias_lo_args<-list("min"=-0.75, "max"=-0.5)
+# Refbias scenarios
+Irefbias_lo_args<-list("min"=0.25, "max"=0.5)
 Irefbias_hi_args<-list("min"=1.25, "max"=1.5)
-Brefbias_lo_args<-list("min"=0.5, "max"=0.75)
+Brefbias_lo_args<-list("min"=0.25, "max"=0.5)
 Brefbias_hi_args<-list("min"=1.25, "max"=1.5)
-Crefbias_lo_args<-list("min"=0.5, "max"=0.75)
+Crefbias_lo_args<-list("min"=0.25, "max"=0.5)
 Crefbias_hi_args<-list("min"=1.25, "max"=1.5)
 
 refbias_hi_args<-list(Irefbias_args = Irefbias_hi_args,
@@ -263,13 +224,7 @@ refbias_lo_args<-list(Irefbias_args = Irefbias_lo_args,
                       Crefbias_args = Crefbias_lo_args)
 
 
-# OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,scale_cv = TRUE,args=ucvhi_args)
-# uchi_args = list('scale'=2)
-proj_ucv_args = list('scale'=1,        # hist scale param
-                 'projscale'=2,    # projection scale param
-                 "yr1diff"=  10,   # Number of years between the beginning of the projection period and start of change in rec devs
-                 "transdur"= 10    # Duration (in years) of transition between regime 1 and 2
-)
+
 uobs_lo_args<-list(scale1 = 1, scale2 = 0.5,
                    startyr = 10, transdur = 10)
 uobs_hi_args<-list(scale1 = 1, scale2 = 2,
@@ -282,8 +237,8 @@ age0M_hi_args<- list("yr1diff"= 10, # Number of years between the beginning of t
                      "a0_mult" = 2 # Multiplier on age0 survival for regime 2. (a value of 1 would mean M0 was not changing)
 )
 age0M_lo_args<- list("yr1diff"= 10, # Number of years between the beginning of the projection period and start of change
-                      "transdur"= 10, # Duration (in years) of transition between regime 1 and 2
-                      "a0_mult" = 0.5 # Multiplier on age0 survival for regime 2. (a value of 1 would mean M0 was not changing)
+                     "transdur"= 10, # Duration (in years) of transition between regime 1 and 2
+                     "a0_mult" = 0.5 # Multiplier on age0 survival for regime 2. (a value of 1 would mean M0 was not changing)
 )
 
 # FUNCTION to generate index observation errors
@@ -386,32 +341,35 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
-source('C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R') # Define MPs
-
-
-#
-OMName_k<-OMName[1]
-scenario_i<-scenario[1] #scenario[1]
+source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R"))
 
 
 
 
 
+OMNames<-OMName
+# OMNames<-OMName_O
 
-# for(OMName_k in OMName)       { ######### Loop over operating model
+# OMName_k<-OMNames[1]
+# scenario_i<-scenario[1]
+
+
+for(OMName_k in OMNames)       { ######### Loop over operating model
 
   MSEName_k <- gsub("OM","MSE",OMName_k)
   DataName_k <- gsub("OM","Data",OMName_k)
 
-  OMInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/", paste0(OMName_k, ".rds")))
-  DataInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data/", paste0(DataName_k, ".rds")))
+
+  OMInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM", paste0(OMName_k, ".rds")))
+  DataInit_k <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/Data", paste0(DataName_k, ".rds")))
   Data_k <- DataInit_k
 
-  if(OMName_k=="OM_BlackSeaBass") MPs_user_k <- MPs_user_BSB
-  if(OMName_k=="OM_RedPorgy") MPs_user_k <- MPs_user_RP
-  if(OMName_k=="OM_VermilionSnapper") MPs_user_k <- MPs_user_VS
+  if(OMName_k=="OM_BlackSeaBass" | OMName_k=="OM_BlackSeaBass_Over") MPs_user_k <- MPs_user_BSB
+  if(OMName_k=="OM_RedPorgy" | OMName_k=="OM_RedPorgy_Over") MPs_user_k <- MPs_user_RP
+  if(OMName_k=="OM_VermilionSnapper" | OMName_k=="OM_VermilionSnapper_Over") MPs_user_k <- MPs_user_VS
 
-  # for(scenario_i in scenario) { ######### Loop over scenario
+
+  for(scenario_i in scenario) { ######### Loop over scenario
     set.seed(myseed)
 
     # All scenarios
@@ -437,56 +395,16 @@ scenario_i<-scenario[1] #scenario[1]
 
       #### SCENARIOS #####
 
+      # Initialization
       # M varies with age in the operating model
-      # By default the OMs contain age-varying M but it's usually set to constant since the SCA uses constant M.
-      if(scenario_i=="constM"){
-        OM_k@cpars$M_ageArray[] <- Data_k@Mort
-        M_at_age <-  FALSE
-      }else{
-        M_at_age <- TRUE
-      }
+      M_at_age <- TRUE
+      # Vulnerability
+      vulnerability_Assess <- vulnerability_Assess_Init
+      MSY_frac <- MSY_frac_Init
+      # Add Index using cpars
+      AddInd_val <- AddInd_val_Init
+      AddInd_all_assess <- AddInd_all_assess_Init
 
-      # Set multiple life history parameters
-      if(scenario_i=="lhset"){
-        OM_k@cpars$M_ageArray[] <- lhset_args$M
-        OM_k@cpars$hs[] <- lhset_args$h
-      }
-
-      # Set M
-      if(scenario_i=="Mset"){
-        OM_k@cpars$M_ageArray[] <- lhset_args$M
-      }
-
-      # Set steepness
-      if(scenario_i=="steepset"){
-        OM_k@cpars$hs[] <- lhset_args$h
-      }
-
-      # Hyperstable
-      if(scenario_i == "hs") {#OM_k@beta <- c(1/3, 2/3) # beta values below 1 lead to hyperstability
-        AddInd_dim <- dim(OM_k@cpars$Data@AddInd)
-        AddIbeta <- matrix(1,nrow=AddInd_dim[1],ncol=AddInd_dim[2])
-        AddIbeta[,1] <- runif(n=AddInd_dim[1],min=hs_args$min, max=hs_args$max)
-        OM_k@cpars$AddIbeta <- AddIbeta
-      }
-      # Hyperdeplete
-      if(scenario_i == "hd") {
-        #OM_k@beta <- c(1.5, 3)
-        AddInd_dim <- dim(OM_k@cpars$Data@AddInd)
-        AddIbeta <- matrix(1,nrow=AddInd_dim[1],ncol=AddInd_dim[2])
-        AddIbeta[,1] <- runif(n=AddInd_dim[1],min=hd_args$min, max=hd_args$max)
-        OM_k@cpars$AddIbeta <- AddIbeta
-      }
-
-      # Depleted
-      if(scenario_i == "dep") {
-        OM_k@cpars$D <- pmax(dep_args$scale * OM_k@cpars$D, dep_args$min)
-      }
-
-      # Lightly fished
-      if(scenario_i == "lf")  {
-        OM_k@cpars$D <- pmin(lf_args$scale * OM_k@cpars$D, lf_args$max)
-      }
 
       # Episodic M
       if(scenario_i == "epiM") {
@@ -511,46 +429,11 @@ scenario_i<-scenario[1] #scenario[1]
           M_array_proj <- aperm(array(M_y, dim = c(OM_k@maxage+1,OM_k@nsim, OM_k@proyears)), perm = c(2, 1, 3))
           return(abind::abind(M_array_hist, M_array_proj, along = 3))
         })
-        # hist(OM_k@cpars$M_ageArray)
-        # NK modified this section to apply to M-at-age
-        # OM_k@cpars$M_ageArray <- with(epiM_args,{
-        #   M_mult <- rbinom(OM_k@proyears * OM_k@nsim, 1, yrprop) * pmin(exp(rnorm(OM_k@proyears * OM_k@nsim, 0, 2)), M_mult_max)
-        #   M_mult_age <- rep(M_mult,each=OM_k@maxage+1) # Vector of multipliers repeating for each age
-        #   M_array_hist <- OM_k@cpars$M_ageArray[,,1:OM_k@nyears]
-        #   M_array_proj1 <- OM_k@cpars$M_ageArray[,,-(1:OM_k@nyears)]
-        #   a1 <- as.numeric(aperm(M_array_proj1, perm = c(2, 1, 3))) # vectorize array and rearrange dimensions
-        #   M_y <- a1 * (1 + M_mult_age) # Note that one is added to the multiplier so that the observed M is actually the minimum
-        #   M_array_proj <- aperm(array(M_y, dim = c(OM_k@maxage+1,OM_k@nsim, OM_k@proyears)), perm = c(2, 1, 3))
-        #   return(abind::abind(M_array_hist, M_array_proj, along = 3))
-        # })
       }
-
-      # Index CV high
-      if(scenario_i=="ucvhi"){
-        ## Generate observation error for AddInd
-        OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,scale_cv = TRUE,args=ucvhi_args)
-
-        #### This didn't have the desired effect. It didn't actually seem to change the AddInd in the projection period
-        # CV_AddInd1 <- OM_k@cpars$Data@CV_AddInd[,1,]
-        # CV_AddInd1[!is.na(CV_AddInd1)] <- ucvhi_args$cv
-        # OM_k@cpars$Data@CV_AddInd[,1,] <- CV_AddInd1
-
-      } else if(scenario_i=="ucvlo"){ # Index CV low
-        ## Generate observation error for AddInd
-        OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,scale_cv = TRUE, args=ucvlo_args)
-
-      }
-      if(scenario_i=="proj_ucv"){
-        OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,scale_cv = TRUE, args=proj_ucv_args)
-      } #else {
-      #   ucvreg_args<- list("scale"=1)
-      #   OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,scale_cv = TRUE, args=ucvreg_args)
-      # } # end if - else if - else statement
-
 
 
       # Regime change (change in average recruitment deviations)
-      if(scenario_i=="recdev" | scenario_i=="recdev_hi" | scenario_i=="recdev_lo"){
+      if(scenario_i=="recdev_hi" | scenario_i=="recdev_lo" ){
         args <- get(paste0(scenario_i,"_args"))
         Perr_y <- OM_k@cpars$Perr_y
         years <- dim(Perr_y)[2]
@@ -572,10 +455,9 @@ scenario_i<-scenario[1] #scenario[1]
       }
 
 
-
       # Non-stationary recruitment (random walk in average recruitment deviations)
       # recns_args <- list("yr1diff"=  0,   # Number of years between the beginning of the projection period and start of change in rec devs
-      #                    "y0"=1,"sd"=5,"mu"=0) # Arguments passed to bamExtras::random_walk
+      # "y0"=1,"sd"=5,"mu"=0) # Arguments passed to bamExtras::random_walk
 
       if(scenario_i=="recns"){
         args <- get(paste0(scenario_i,"_args"))
@@ -598,6 +480,7 @@ scenario_i<-scenario[1] #scenario[1]
         # Plot what these values look like
         #matplot(t(Perr_y),type="l",ylim=c(0,4))
       }
+
 
 
       # Index bias trend
@@ -631,13 +514,13 @@ scenario_i<-scenario[1] #scenario[1]
           AIerr[,i, ] <- y
         } # end for loop
 
-
         OM_k@cpars$AddIerr <- AIerr
       }
 
 
 
-      # Mult year 0 survival ########################################################
+
+      # Mult year 0 survival ######
       if(scenario_i == "age0M_hi" | scenario_i=="age0M_lo") {
         # This is the original code for this scenario written by Quang Huynh
         # (slightly modified to account for OM_k@maxage+1 age classes in the current version of openMSE)
@@ -683,8 +566,7 @@ scenario_i<-scenario[1] #scenario[1]
       # AddIbeta -- Beta for each sim and index (matrix[nrow=nsim, ncol=n.ind])
       # Cbias - numeric vector length nsim, catch bias by simulation
       # Cobservation error
-      # refbias_hi_args
-      # refbias_lo_args
+
       if(scenario_i=="refbias_hi" | scenario_i=="refbias_lo"){
         args<-get(paste0(scenario_i,"_args"))
 
@@ -704,91 +586,6 @@ scenario_i<-scenario[1] #scenario[1]
 
 
 
-      # Vulnerability time-invariant during historic years. Default is constant across historic years
-      if(scenario_i=="vtiv"){
-        OM_k@cpars$V <- local({
-          V <- OM_k@cpars$V
-          V2 <- aperm(V, perm = c(2, 1, 3))
-          Vc <- V[1,,OM_k@nyears+1]
-          V3 <- array(Vc,dim=dim(V2))
-          aperm(V3, perm = c(2, 1, 3))
-        })
-      }
-
-      # Vulnerability dome shaped in stock assessments
-      if(scenario_i=="vdome"){
-        vulnerability_Assess <- "dome"
-      }else{
-        vulnerability_Assess <- vulnerability_Assess_Init
-      }
-
-      # Perfect observation
-      if(scenario_i=="perfobs"){
-        OM_k <- Replace(OM_k, Perfect_Info)
-      }
-
-      # Generic fleet
-      if(scenario_i=="genfle"){
-        OM_k <- Replace(OM_k, Generic_Fleet)
-      }
-
-      if(scenario_i=="minerr"){
-        # Minimize observation error
-        OM_k <- Replace(OM_k, Perfect_Info)
-        ## Minimize other sources of error (but don't reduce to zero)
-        OM_k@cpars <- OM_k@cpars[names(OM_k@cpars)!="Perr_y"]
-        OM_k@Perr <- minerr_args$Perr
-        # OM_k@cpars$Data@CV_AddInd[!is.na(OM_k@cpars$Data@CV_AddInd)] <- 0.05
-        OM_k@cpars$AddIerr <- gen_AddIerr(OM_k, fix_cv = TRUE, cv_constant = minerr_args$cv_constant)
-        OM_k@cpars$LenCV[!is.na(OM_k@cpars$LenCV)] <- minerr_args$LenCV
-
-        # Make vulnerability constant (during historic and projection years)
-        OM_k@cpars$V <- local({
-          V <- OM_k@cpars$V
-          V2 <- aperm(V, perm = c(2, 1, 3))
-          Vc <- V[1,,OM_k@nyears+1]
-          V3 <- array(Vc,dim=dim(V2))
-          aperm(V3, perm = c(2, 1, 3))
-        })
-      }
-
-      if(scenario_i=="minrecdev"){
-        ## Minimize recruitment deviation
-        OM_k@cpars <- OM_k@cpars[names(OM_k@cpars)!="Perr_y"]
-        OM_k@Perr <- c(0,0.05)
-      }
-
-      if(scenario_i=="minrecac"){
-        # Minimize recruitment autocorrelation
-        OM_k@AC <- c(0,0.05)
-      }
-
-      if(scenario_i=="tachi"){
-        # Set TAC to high value
-        MSY_frac <- tachi_args$MSY_frac
-      }else{
-        MSY_frac <- MSY_frac_Init
-      }
-
-
-      if(scenario_i=="noempind"){
-        # Clear AddInd and related slots from OM_k$cpars$Data
-        # Data_e <- Data_empty()
-        # # OM_k@cpars$Data
-        # for(slotName_m in c("AddInd","CV_AddInd","AddIndV","AddIndType","AddIunits")){
-        # slot(OM_k@cpars$Data,slotName_m) <- slot(Data_e,slotName_m)
-        # }
-        # Just remove the Data which contains only
-        #OM_k@cpars <- OM_k@cpars[names(OM_k@cpars)[names(OM_k@cpars)!="Data"]]
-
-        # Actually, AddInd needs to exist because of the way SCA_NK is coded, but in
-        # case it will be generated by the operating model but not used by SCA or the interim approaches
-        AddInd_val <- "VB"
-        AddInd_all_assess <- FALSE
-      }else{
-        AddInd_val <- AddInd_val_Init
-        AddInd_all_assess <- AddInd_all_assess_Init
-      }
 
       # No lag between stock assessment and management
       if(scenario_i=="nolag"){
@@ -857,99 +654,21 @@ scenario_i<-scenario[1] #scenario[1]
       sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac",MPs_user_k))
 
 
-
-      # OM_VS_Base<-OM_k
-      # OM_VS_recdevlo<- OM_k
-      # OM_VS_recdevhi<- OM_k
-      # OM_BSB_Base<- OM_k
-      # OM_BSB_recdevhi<- OM_k
-      # OM_BSB_recdevlo<- OM_k
-      # OM_RP_Base<- OM_k
-      # OM_RP_recdevlo<- OM_k
-      # OM_RP_recdevhi<- OM_k
+      MSE_batch_1 <- runMSE(OM_k,
+                            MPs = MPs_user_k,
+                            parallel = runMSE_args$parallel,
+                            extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
-
-      # MSE_batch_1 <- runMSE(OM_k,
-      #                       MPs = MPs_user_k,
-      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      #
-      # OM_k@interval <- MPs_user_interval2
-      # set.seed(myseed)
-      # MSE_batch_2 <- runMSE(OM_k,
-      #                       MPs = MPs_user2,
-      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      #
-      # MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
-
-
-      # ##### TESTING CMPS ##############
-      # OM_k<-OM_VS_recdevlo  #recdevhi #Base #recdevlo
-      # OM_k<-OM_VS_Base #recdevhi #Base #recdevlo
-      OM_k@interval <- 1
+      OM_k@interval <- MPs_user_interval2
       set.seed(myseed)
-      MSE <- runMSE(OM_k,MPs = "myIT10_VS2", #SCA_1, myIT10_VS, myIratio_VS, GB_target_VS
-                    parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
+      MSE_batch_2 <- runMSE(OM_k,
+                            MPs = MPs_user2,
+                            parallel = runMSE_args$parallel,
+                            extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
-
-      # dim(MSE1@SB_SBMSY)
-      plot(apply(MSE@SB_SBMSY[,1,], 2, median), type='l', lwd=2, ylab="SSB/SSB_MSY", xlab="Proj years", ylim=c(0, 2))
-      abline(h=1)
-      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='orchid', lwd=2, lty=2)
-      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='skyblue2', lwd=2)
-      lines(apply(MSE@SB_SBMSY[,1,], 2, median), col='gray', lwd=2)
-
-      #SCA_1 = black, myIT10_VS=lightgreen, myIratio_VS=lightblue, GB_target_VS=orchid
-
-#MSE_refbias_hi<- MSE
-# MSE_refbias_lo<-MSE
-      MSE_refbias_hi@SB_SBMSY[1,,] == MSE_refbias_lo@SB_SBMSY[1,,]
-
-    # ## Example for figure.
-      # OM_k@interval <- 1
-      # set.seed(myseed)
-      # MSE_VSdefault <- runMSE(OM_k,MPs = "Itarget1",
-      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      # OM_k@interval <- 1
-      # set.seed(myseed)
-      # MSE_VStuned <- runMSE(OM_k,MPs = "myItarget_VS",
-      #                       parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      # plot(apply(MSE_VSdefault@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, 2), lwd=2, ylab="SSB/SSB_MSY", xlab="Projection years")
-      # abline(h=1)
-      # lines(apply(MSE_VStuned@SB_SBMSY[,1,], 2, median), col='deepskyblue', lwd=2)
-      # legend("bottomright", c("Default", "Tuned"), lwd=2, col=c('black','deepskyblue'), bty='n')
-      # mtext("Vermilion Snapper Itarget Tuning", 3, line=1.2)
-
-
-      # plot(apply(MSE1@Catch[,1,], 2, median), type='b', ylim=c(0, 2500))
-      # lines(apply(MSE@Catch[,2,], 2, median), col='blue')
-      # lines(MSE@Catch[1,1,], col='blue')
-      # lines(MSE@Catch[1,2,], col='blue')
-      # lines(MSE@Catch[1,3,], col='red')
-      # # MSE1@PPD[[1]]
-      # # > MSE1@PPD[[1]]@AddInd[,1,]
-      #
-      # MSE@SSB_hist / MSE@OM$SSBMSY[1:46]
-      # # set.seed(myseed)
-      # OM_k@interval<-1
-      # MSE1<-runMSE(OM_k,MPs="myIslope",
-      #              parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      # set.seed(myseed)
-      # OM_k@interval<-5
-      # MSE5<-runMSE(OM_k,MPs="SCA_5",
-      #              parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      # set.seed(myseed)
-      # OM_k@interval<-10
-      # MSE10<-runMSE(OM_k,MPs="SCA_10",
-      #              parallel = runMSE_args$parallel, extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      # MSE<-merge_MSE(MSE1, MSE5, MSE10)
-      #
-
+      MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
 
 
       t_list <- c(t_list,Sys.time())
@@ -961,33 +680,11 @@ scenario_i<-scenario[1] #scenario[1]
 
       saveRDS(res,file = paste0("MSE_obj/", MSEName_k, "_", scenario_i, ".rds"))
     # } #end if OMName_scen is not complete
-  # }
-# }
+  }
+}
 
 # save.image("run_script.RData")
 
 sfStop()
 
-#
-save.image(file="OMs_loaded.RData")
 
-
-saveRDS(OM_VS_Base, file="OM_VS_Base.RDS")
-saveRDS(OM_VS_recdevlo, file="OM_VS_recdevlo.RDS")
-saveRDS(OM_VS_recdevhi, file="OM_VS_recdevhi.RDS")
-saveRDS(OM_BSB_Base, file="OM_BSB_Base.RDS")
-saveRDS(OM_BSB_recdevlo, file="OM_BSB_recdevlo.RDS")
-saveRDS(OM_BSB_recdevhi, file="OM_BSB_recdevhi.RDS")
-saveRDS(OM_RP_Base, file="OM_RP_Base.RDS")
-saveRDS(OM_RP_recdevlo, file="OM_RP_recdevlo.RDS")
-saveRDS(OM_RP_recdevhi, file="OM_RP_recdevhi.RDS")
-
-OM_VS_Base<-readRDS("OM_VS_Base.RDS")
-OM_VS_recdevlo<-readRDS("OM_VS_recdevlo.RDS")
-OM_VS_recdevhi<-readRDS("OM_VS_recdevhi.RDS")
-OM_BSB_Base<-readRDS("OM_BSB_Base.RDS")
-OM_BSB_recdevlo<-readRDS("OM_BSB_recdevlo.RDS")
-OM_BSB_recdevhi<-readRDS("OM_BSB_recdevhi.RDS")
-OM_RP_Base<-readRDS("OM_RP_Base.RDS")
-OM_RP_recdevlo<-readRDS("OM_RP_recdevlo.RDS")
-OM_RP_recdevhi<-readRDS("OM_RP_recdevhi.RDS")
