@@ -39,13 +39,13 @@ class(myGB_target)<-"MP"
 
 # BSB
 
-GB_target_BSB<-myGB_target
+GB_target_BSB<-myGB_target # THIS ONE SELECTED FOR RESULTS
 formals(GB_target_BSB)$w<-0.1      # 0.5
 formals(GB_target_BSB)$c0<-0.2    # 0.35
 formals(GB_target_BSB)$delta<-0.3  # 0.2
 class(GB_target_BSB)<-"MP"
 
-GB_target_BSB2<-myGB_target
+GB_target_BSB2<-myGB_target # TESTED BUT NOT PRESENTED
 formals(GB_target_BSB2)$w<-0.5      # 0.5
 formals(GB_target_BSB2)$c0<-0.35    # 0.35
 formals(GB_target_BSB2)$delta<-0.2  # 0.2
@@ -54,13 +54,13 @@ class(GB_target_BSB2)<-"MP"
 
 # RP
 
-GB_target_RP<-myGB_target
+GB_target_RP<-myGB_target # TESTED BUT NOT PRESENTED
 formals(GB_target_RP)$w<-0.1     #0.25
 formals(GB_target_RP)$c0<-0.941   #0.955
 formals(GB_target_RP)$delta<-0.3  #0.2
 class(GB_target_RP)<-"MP"
 
-GB_target_RP2<-myGB_target
+GB_target_RP2<-myGB_target # THIS ONE SELECTED FOR RESULTS
 formals(GB_target_RP2)$w<-0.5      # 0.5
 formals(GB_target_RP2)$c0<-1    # 1
 formals(GB_target_RP2)$delta<-0.2  # 0.2
@@ -71,7 +71,7 @@ class(GB_target_RP2)<-"MP"
 
 
 # VS
-GB_target_VS<-myGB_target
+GB_target_VS<-myGB_target # TESTED BUT NOT PRESENTED
 formals(GB_target_VS)$w<-0.1      # 0.1
 formals(GB_target_VS)$c0<-0.49    # 0.49
 formals(GB_target_VS)$delta<-0.3  # 0.3
@@ -79,7 +79,7 @@ class(GB_target_VS)<-"MP"
 
 
 # less responsive GBtarget_VS
-GB_target_VS2<-GB_target_VS
+GB_target_VS2<-GB_target_VS # THIS ONE SELECTED IN RESULTS
 formals(GB_target_VS2)$w<-0.25
 formals(GB_target_VS2)$delta<-0.2
 class(GB_target_VS2)<-"MP"
