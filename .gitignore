@@ -43,6 +43,7 @@ vignettes/*.pdf
 MSE_obj
 Plots
 run_script_CPTest2_AllScenarios.R
+run_script_CPTest2_AllScenarios_SUPERCOMP.R
 OLD_MSE_obj
 OM_BSB_Base.RDS
 OM_BSB_recdevhi.RDS
