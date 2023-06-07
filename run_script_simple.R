@@ -21,18 +21,18 @@ myseed <- 8675309
 filepath <- "C:/Users/cassidy.peterson/Documents/git"
 
 
-
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_interim_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_projection_MP_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/SCA_NK.R"))
-source("GB_target1.R")
-source("GB_slope1.R")
-source("myIslope.R")
-source("myIT10.R")
-source("myItarget.R")
-source("myIratio.R"   )
+source(file.path(filepath,"SAtl_Climate_MSE/GB_slope1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/GB_target1.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myICI2.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 
 ######
 # Run once to set up overage OM/ MSE objects
@@ -47,9 +47,9 @@ source("myIratio.R"   )
 # RP_init <- readRDS(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy.rds"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
-
 #########
 ncores <- 20
+
 nsim <- 250 #250
 runScenarios <- TRUE # Run scenarios to do MSE or just generate historical data?
 runMSE_args <- list("parallel"=TRUE,"extended"=TRUE,"silent"=FALSE)
@@ -122,7 +122,6 @@ MPs_user_interval2<-c(5,10)
 
 # OMName_all <- gsub(".rds","",list.files("OM"))
 # OMName <- OMName_all[!OMName_all%in%OMName_complete]
-
 OMName <- c("OM_BlackSeaBass" , # Runs
   "OM_RedPorgy" , # Runs,
   # "OM_SnowyGrouper",
@@ -206,8 +205,8 @@ recdev_lo_args <-  list("yr1diff"=  10,   # Number of years between the beginnin
                      "transdur"= 10,   # Duration (in years) of transition between regime 1 and 2
                      "r2_mult" =  0.5  # Multiplier on rec devs for regime 2. (a value of 1 would mean recruitment was not changing)
 )
-#
 
+#
 
 # Refbias scenarios
 Irefbias_lo_args<-list("min"=0.25, "max"=0.5)
@@ -350,6 +349,9 @@ source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R"))
 
 OMNames<-OMName
 # OMNames<-OMName_O
+
+# OMName_k<-OMNames[1]
+# scenario_i<-scenario[1]
 
 
 for(OMName_k in OMNames)       { ######### Loop over operating model
@@ -611,7 +613,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
         BAM_SCA_args$control <- list("omega"=catcvlo_args$cv)
       }
 
-      source('C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R') # Define MPs
+      source(file.path(filepath,'SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R')) # Define MPs
 
 
       OM_k@nsim <- nsim
