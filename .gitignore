@@ -4,6 +4,7 @@
 
 # Session Data files
 .RData
+.RDataTmp
 
 # User-specific files
 .Ruserdata
@@ -42,6 +43,7 @@ vignettes/*.pdf
 MSE_obj
 Plots
 run_script_CPTest2_AllScenarios.R
+run_script_CPTest2_AllScenarios_SUPERCOMP.R
 OLD_MSE_obj
 OM_BSB_Base.RDS
 OM_BSB_recdevhi.RDS
@@ -53,6 +55,23 @@ OM_VS_Base.RDS
 OM_VS_recdevhi.RDS
 OM_VS_recdevlo.RDS
 OMs_loaded.RData
+SP_PMs.RData
+SP_PMs_nest.RData
+SP_temp.RData
+BSB_SAtl_Climate_MSE_Results_cache
+BSB_SAtl_Climate_MSE_Results_files
+RP_SAtl_Climate_MSE_Results_cache
+RP_SAtl_Climate_MSE_Results_files
+VS_SAtl_Climate_MSE_Results_cache
+VS_SAtl_Climate_MSE_Results_files
+BSB_O_SAtl_Climate_MSE_Results_cache
+BSB_O_SAtl_Climate_MSE_Results_files
+RP_O_SAtl_Climate_MSE_Results_cache
+RP_O_SAtl_Climate_MSE_Results_files
+VS_O_SAtl_Climate_MSE_Results_cache
+VS_O_SAtl_Climate_MSE_Results_files
+SAtl_ClimateMSE_Results_cache
+SAtl_ClimateMSE_Results_files
 
 SAVE_PLOTS_Analyze_Results.R
 

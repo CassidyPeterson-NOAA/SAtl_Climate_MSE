@@ -39,21 +39,21 @@ class(myGB_slope)<-"MP"
 
 
 #BSB
-GB_slope_BSB<-myGB_slope          #| OLD: lambda=0.7, const=1.05 | NEW: lambda=0.9, const=1.0525
+GB_slope_BSB<-myGB_slope         # SELECTED FOR RESULTS ANALYSIS  #| OLD: lambda=0.7, const=1.05 | NEW: lambda=0.9, const=1.0525
 formals(GB_slope_BSB)$lambda<-1.5   # 0.9
 formals(GB_slope_BSB)$const<-1.1 #1.0525
 formals(GB_slope_BSB)$delta<-0.3    #0.2
 class(GB_slope_BSB)<-"MP"
 
 #BSB
-GB_slope_BSB1<-myGB_slope          #| OLD: lambda=0.7, const=1.05 | NEW: lambda=0.9, const=1.0525
+GB_slope_BSB1<-myGB_slope         # TESTED BUT NOT USED #| OLD: lambda=0.7, const=1.05 | NEW: lambda=0.9, const=1.0525
 formals(GB_slope_BSB1)$lambda<-0.9   # 0.9
 formals(GB_slope_BSB1)$const<-1.0525 #1.0525
 formals(GB_slope_BSB1)$delta<-0.2    #0.2
 class(GB_slope_BSB1)<-"MP"
 
 
-GB_slope_BSB2<-myGB_slope
+GB_slope_BSB2<-myGB_slope      # TESTED BUT NOT USED
 formals(GB_slope_BSB2)$lambda<-0.5
 formals(GB_slope_BSB2)$const<-1.03
 formals(GB_slope_BSB2)$delta<-0.2    #0.2
@@ -61,17 +61,15 @@ class(GB_slope_BSB2)<-"MP"
 
 
 
-
-
 #RP
-GB_slope_RP<-myGB_slope
+GB_slope_RP<-myGB_slope      # TESTED BUT NOT USED
 formals(GB_slope_RP)$lambda<-1.65   # 1.8 | 1.65 when delta=0.3 & const=1
 formals(GB_slope_RP)$const<-1      #1
 formals(GB_slope_RP)$delta<-0.3    #0.2
 class(GB_slope_RP)<-"MP"
 
 
-GB_slope_RP2<-myGB_slope
+GB_slope_RP2<-myGB_slope         # SELECTED FOR RESULTS ANALYSIS
 formals(GB_slope_RP2)$lambda<-1.8   # 1.8
 formals(GB_slope_RP2)$const<-1      #1
 formals(GB_slope_RP2)$delta<-0.2    #0.2
@@ -79,16 +77,14 @@ class(GB_slope_RP2)<-"MP"
 
 
 
-
-
 #VS
-GB_slope_VS<-myGB_slope
+GB_slope_VS<-myGB_slope         # SELECTED FOR RESULTS ANALYSIS
 formals(GB_slope_VS)$lambda<-1   # 1
 formals(GB_slope_VS)$const<-1.055      #1.055
 formals(GB_slope_VS)$delta<-0.3    #0.3
 class(GB_slope_VS)<-"MP"
 
-GB_slope_VS2<-myGB_slope
+GB_slope_VS2<-myGB_slope       # TESTED BUT NOT USED
  formals(GB_slope_VS2)$lambda<-0.5
  formals(GB_slope_VS2)$const<-1.02
  class(GB_slope_VS2)<-"MP"

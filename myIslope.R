@@ -51,7 +51,7 @@ class(myIslope)<-"MP"
 
 # VS
 
-myIslope_VS<-myIslope
+myIslope_VS<-myIslope            # TESTED BUT NOT USED
 formals(myIslope_VS)$lambda<-0.45 #0.9 | 0.4
 formals(myIslope_VS)$xx<-0.05    # 0.05
 formals(myIslope_VS)$c1<-1       # 1
@@ -59,7 +59,7 @@ formals(myIslope_VS)$c1<-1       # 1
 class(myIslope_VS)<-"MP"
 
 
-myIslope_VS2<-myIslope
+myIslope_VS2<-myIslope          # THIS ONE USED IN RESULTS
 formals(myIslope_VS2)$lambda<-1 #0.45
 formals(myIslope_VS2)$xx<- 0.33    # 0.05
 formals(myIslope_VS2)$c1<-1.02       # 1
@@ -68,7 +68,7 @@ class(myIslope_VS2)<-"MP"
 
 
 # BSB
-myIslope_BSB2<-myIslope
+myIslope_BSB2<-myIslope          # THIS ONE USED IN RESULTS
 formals(myIslope_BSB2)$lambda<-0.4   #0.4
 formals(myIslope_BSB2)$xx<- -0.55     # -0.55 | 0.05
 formals(myIslope_BSB2)$c1<-1.01         # 1.01 | 1.02
@@ -77,7 +77,7 @@ class(myIslope_BSB2)<-"MP"
 
 
 
-myIslope_BSB<-myIslope
+myIslope_BSB<-myIslope            # TESTED BUT NOT USED
 formals(myIslope_BSB)$lambda<-1   #0.4
 formals(myIslope_BSB)$xx<- -1     # -0.55 | 0.05
 formals(myIslope_BSB)$c1<-1.06         # 1.01 | 1.02
@@ -88,14 +88,14 @@ class(myIslope_BSB)<-"MP"
 
 
 # RP
-myIslope_RP2<-myIslope
+myIslope_RP2<-myIslope          # THIS ONE USED IN RESULTS
 formals(myIslope_RP2)$lambda<-0.4
 formals(myIslope_RP2)$xx<-0.45
 formals(myIslope_RP2)$c1<-1
 
 class(myIslope_RP2)<-"MP"
 
-myIslope_RP<-myIslope
+myIslope_RP<-myIslope            # TESTED BUT NOT USED
 formals(myIslope_RP)$lambda<-1
 formals(myIslope_RP)$xx<-0.5 #0.425 when c1=1
 formals(myIslope_RP)$c1<-1.01

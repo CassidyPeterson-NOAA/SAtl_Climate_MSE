@@ -49,12 +49,12 @@ formals(myICI_BSB)$csd<- 1 #
 class(myICI_BSB)<-"MP"
 
 # RP
-myICI_RP<-myICI
+myICI_RP<-myICI            # TESTED BUT NOT USED
 formals(myICI_RP)$cmu<-0.9125 # 0.9175
 formals(myICI_RP)$csd<- 0.1 # 1
 class(myICI_RP)<-"MP"
 #RP
-myICI_RP2<-myICI
+myICI_RP2<-myICI            # THIS ONE USED FOR RESULTS
 formals(myICI_RP2)$cmu<-0.9175 # 0.9175
 formals(myICI_RP2)$csd<- 1 # 1
 class(myICI_RP2)<-"MP"
