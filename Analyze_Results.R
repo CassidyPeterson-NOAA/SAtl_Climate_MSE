@@ -16,27 +16,30 @@ species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
 
-# MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
-#                   "GB_target_BSB", "GB_target_BSB2",
-#                   "myICI_BSB", "myIratio_BSB",
-#                   "myIT10_BSB", "myItarget_BSB" ,
-#                   "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
-#                   "myIslope_BSB","myIslope_BSB2"
-# )
-# MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
-#                  "GB_target_RP", "GB_target_RP2",
-#                  "myICI_RP", "myICI_RP2", "myIratio_RP",
-#                  "myIT10_RP", "myItarget_RP",
-#                  "GB_slope_RP","GB_slope_RP2",
-#                  "myIslope_RP", "myIslope_RP2"
-# )
-# MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
-#                  "GB_target_VS", "GB_target_VS2",
-#                  "myICI_VS", "myIratio_VS",
-#                  "myIT10_VS", "myItarget_VS", "myItarget_VS2",
-#                  "GB_slope_VS", "GB_slope_VS2",
-#                  "myIslope_VS", "myIslope_VS2"
-# )
+MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
+                  "GB_target_BSB", "GB_target_BSB2",
+                  "myICI_BSB", "myIratio_BSB",
+                  "myIT10_BSB", "myItarget_BSB" ,
+                  "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
+                  "myIslope_BSB","myIslope_BSB2",
+                  "SCA_5","SCA_10"
+)
+MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_RP", "GB_target_RP2",
+                 "myICI_RP", "myICI_RP2", "myIratio_RP",
+                 "myIT10_RP", "myItarget_RP",
+                 "GB_slope_RP","GB_slope_RP2",
+                 "myIslope_RP", "myIslope_RP2",
+                 "SCA_5","SCA_10"
+)
+MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
+                 "GB_target_VS", "GB_target_VS2",
+                 "myICI_VS", "myIratio_VS",
+                 "myIT10_VS", "myItarget_VS", "myItarget_VS2",
+                 "GB_slope_VS", "GB_slope_VS2",
+                 "myIslope_VS", "myIslope_VS2",
+                 "SCA_5","SCA_10"
+)
 
 abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
 
@@ -53,7 +56,7 @@ if(sp=="VS" | sp=="VS_O") {
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
+                        "ICI","Ir","I10","It","GBs","Is")
   }#end if abbrev==TRUE
 
   if(abbrev==FALSE){
@@ -80,7 +83,7 @@ if(sp=="RP" | sp=="RP_O") {
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
+                        "ICI","Ir","I10","It","GBs","Is")
   }#end abbrev=T
 }# end RP
 
@@ -99,7 +102,7 @@ if(sp=="BSB" | sp=="BSB_O") {
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
+                        "ICI","Ir","I10","It","GBs","Is")
   }# end abbrev=T
 
   } #end BSB

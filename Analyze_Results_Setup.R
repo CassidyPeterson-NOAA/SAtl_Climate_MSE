@@ -646,7 +646,7 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
 Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
                               oMPs=orderedMPs, oScenarios=NULL,
                               colsR=MP_R_col, namesR=MP_namesR_leg,
-                              subset=NULL, ylims=c(0,1.15), refline=NULL){
+                              subset=NULL, ylims=c(0,1.15), refline=NULL, labline=-1.1){
 
   data<-get(fsh)
   if(is.null(scenarios)){
@@ -703,7 +703,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
       lines(SSBSSB0, type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
     if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=1)
-    mtext( paste0(fsh, " ", res), side=3, line=-1.1, cex=0.8)
+    mtext( paste0(fsh, " ", res), side=3, line=labline, cex=0.8)
 
     if(save.png==T){
       dev.off()
@@ -846,7 +846,8 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
 myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","treldSSB0", "trelF","t10relSSB",
                                          "t10reldSSB0","t10relF", "tyield", "cyield", "PNOF", "P100" ),
                         ylims=c(NULL), ylimsEpiM=c(NULL), MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                        mf=c(4,3), xlab.cex=0.79, refline1=1, refline2=NULL){
+                        mf=c(4,3), xlab.cex=0.79, refline1=1, refline2=NULL, ylabs=NULL,
+                        namesR=MP_namesR_leg){
   par(mfrow=mf)
   data<-SPP_nest[[stat]]
   for(ii in names(data)){
@@ -861,13 +862,18 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","treldSSB0", "trelF","
     box(); abline(h=refline1); if(!is.null(refline2)){abline(h=refline2, lty=2)}
 
     mtext(ii, 3, line=-1.2)
-    mtext(stat, 2, line=1.1)
+    if(is.null(ylabs)) ylabs=stat
+    mtext(ylabs, 2, line=0.99)
   }# end for loop
+
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
 }
 
 ## NOTE YIELD IS CALCULATED RELATIVE TO REFERENCE YIELD IF FISHERY WERE BEING EXPLOITED AT FMSY
 Plot_my_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                         mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs){
+                         mf=c(4,3), xlab.cex=0.79, oMPs=orderedMPs, namesR=MP_namesR_leg){
   par(mfrow=mf)
   for(ii in 1:length(names(SPP))){
     vioplot(myYield(SPP[[ii]], Yrs=-1)@Stat[,oMPs], col=MPcol, names=NA, ylim=ylims, axes=F)
@@ -877,9 +883,13 @@ Plot_my_tyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbre
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
+
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
 }
 Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
-                         oMPs=orderedMPs, mf=c(4,3), xlab.cex=0.79){
+                         oMPs=orderedMPs, mf=c(4,3), xlab.cex=0.79, namesR=MP_namesR_leg){
   par(mfrow=mf)
   dat<-lapply(SPP, SumMyYieldMP)
   for(ii in 1:length(names(SPP))){
@@ -890,6 +900,10 @@ Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbre
     mtext(names(SPP)[ii], 3, line=-1.2)
     mtext("tYield", 2, line=1.1)
   }# end for loop
+
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
 }
 
 
@@ -936,12 +950,12 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
                     Pstat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
                             't10relF','tyield','cyield','PNOF','P100','P90'),
                     ylims=c(NULL), baserefline=NULL, refline=NULL, MPnam=MP_namesR_abbrev,
-                    MPcol=MP_R_col, mf=c(4,3), oMPs=orderedMPs, minylim=NULL, maxylim=NULL,
-                    xlab.cex=0.79){
+                    MPcol=MP_R_col, setu=TRUE, mf=c(4,3),omas=c(0,0,2.4,0), oMPs=orderedMPs,
+                    minylim=NULL, maxylim=NULL, xlab.cex=0.79, ylabs=NULL, namesR=MP_namesR_leg){
   # par(cex.axis=1)
   dat<-get(paste(sp,'RelPM',calc, sep="_"))
   datStat<-get(Pstat, dat)
-  par(mfrow=mf, oma=c(0,0,2.2,0))
+  if(setu==T) par(mfrow=mf, oma=omas)
 
   ## get Base Results
   BaseRes<-get(paste0(sp,"_PM"))[[Pstat]]
@@ -957,7 +971,8 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
   box()
   abline(h=baserefline)
   mtext("Base Results", 3, line=-1.1)
-  mtext(Pstat, 2, line=1.1)
+  if(is.null(ylabs)) ylabs=Pstat
+  mtext(ylabs, 2, line=1)
 
   # plot differences for each
   for(ss in names(datStat)){
@@ -980,8 +995,13 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
     abline(h=refline)
   }# end scenario / OM loop
   if(is.null(title)) title<-species
-  mtext(title, 3, line=1, outer=T)
-  mtext(Pstat, 3, line=0, outer=T)
+  mtext(title, 3, line=1.4, outer=T)
+  mtext(ylabs, 3, line=-0.2, outer=T)
+
+
+  plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
+  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
+
 }
 
 

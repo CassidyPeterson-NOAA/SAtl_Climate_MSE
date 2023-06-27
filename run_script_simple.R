@@ -605,13 +605,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
                            CAA_dist = "multinomial",
                            lag=lag_Assess,
                            M_at_age=M_at_age)
-      if(scenario_i %in% c("SCAfree","basealt")){
-        BAM_SCA_args <- c(BAM_SCA_args,SCAfree_args)
-      }
 
-      if(scenario_i %in% c("catcvlo","basealt")) {
-        BAM_SCA_args$control <- list("omega"=catcvlo_args$cv)
-      }
 
       source(file.path(filepath,'SEFSCInterimAnalysis/RunMSE/SEFSC/fn/iMP.R')) # Define MPs
 
