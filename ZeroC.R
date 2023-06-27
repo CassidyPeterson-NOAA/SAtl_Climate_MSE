@@ -3,3 +3,5 @@ ZeroC<-function(x, Data, reps = 100){
   Rec@TAC <- rep(0, reps)
   Rec
 }
+
+class(ZeroC) <- "MP"
