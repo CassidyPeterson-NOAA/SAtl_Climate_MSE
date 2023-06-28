@@ -33,6 +33,7 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 
 ######
 # Run once to set up overage OM/ MSE objects
@@ -48,9 +49,9 @@ source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
 #########
-ncores <- 20
+ncores <- 10
 
-nsim <- 250 #250
+nsim <- 48 #250
 runScenarios <- TRUE # Run scenarios to do MSE or just generate historical data?
 runMSE_args <- list("parallel"=TRUE,"extended"=TRUE,"silent"=FALSE)
 lag_Assess_Init <- 2 # Number of years between terminal year of assessment and first year of management. May be modified in scenarios
@@ -58,7 +59,7 @@ vulnerability_Assess_Init <- "logistic" # Functional form of vulnerability of ca
 MSY_frac_Init <- 1 # Fraction of MSY for setting TAC. May be modified in scenarios
 AddInd_val_Init <- 1  # Index used in interim procedures and possibly assessments. May be modified in scenarios
 AddInd_all_assess_Init <- TRUE # Should all available indices be used in assessments? Only works with SCA_NK() May be modified in scenarios
-MP_diagnostic <- "min"
+MP_diagnostic <- "min" #min, none, full
 maxF <- 3 # set maximum F allowed in simulations
 
 OMName_scen_complete <- NA
@@ -88,34 +89,45 @@ OMName_scen_complete <- NA
 
 
 
-MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
-                  "GB_target_BSB", "GB_target_BSB2",
+
+
+MPs_user_BSB <- c("ZeroC",
+                  "SCA_1", "SCA_5", "SCA_10",
+                  "pMP_5","pMP_10" ,
+                  "GB_target_BSB", # "GB_target_BSB2",
                   "myICI_BSB", "myIratio_BSB",
                   "myIT10_BSB", "myItarget_BSB" ,
-                  "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
-                  "myIslope_BSB","myIslope_BSB2"
+                  "GB_slope_BSB",#"GB_slope_BSB1","GB_slope_BSB2",
+                  "myIslope_BSB2" # "myIslope_BSB",
 )
-MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
-                 "GB_target_RP", "GB_target_RP2",
-                 "myICI_RP", "myICI_RP2", "myIratio_RP",
+MPs_user_RP <- c("ZeroC",
+                 "SCA_1", "SCA_5", "SCA_10",
+                 "pMP_5","pMP_10" ,
+                 "GB_target_RP2", #"GB_target_RP",
+                 "myICI2_RP", #"myICI_RP",
+                 "myIratio_RP",
                  "myIT10_RP", "myItarget_RP",
-                 "GB_slope_RP","GB_slope_RP2",
-                 "myIslope_RP", "myIslope_RP2"
+                 "GB_slope_RP2",#"GB_slope_RP",
+                 "myIslope_RP2" #"myIslope_RP",
 )
-MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
-                 "GB_target_VS", "GB_target_VS2",
+MPs_user_VS <- c("ZeroC",
+                 "SCA_1", "SCA_5", "SCA_10",
+                 "pMP_5","pMP_10" ,
+                 "GB_target_VS2", #"GB_target_VS",
                  "myICI_VS", "myIratio_VS",
-                 "myIT10_VS", "myItarget_VS", "myItarget_VS2",
-                 "GB_slope_VS", "GB_slope_VS2",
-                 "myIslope_VS", "myIslope_VS2"
+                 "myIT10_VS", "myItarget_VS",
+                 "GB_slope_VS", # "GB_slope_VS2",
+                 "myIslope_VS2" #"myIslope_VS",
 )
 
 
 
-MPs_user2 <- c("SCA_5","SCA_10")
-# MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
-MPs_user_interval<-c(1, 5, 10, rep(1, 11))
-MPs_user_interval2<-c(5,10)
+
+MPs_user_interval<-c(1, 1, 5, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+# MPs_user2 <- c("SCA_5","SCA_10")
+# # MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
+# MPs_user_interval<-c(1, 5, 10, rep(1, 11))
+# MPs_user_interval2<-c(5,10)
 
 
 
@@ -240,6 +252,11 @@ age0M_lo_args<- list("yr1diff"= 10, # Number of years between the beginning of t
                      "transdur"= 10, # Duration (in years) of transition between regime 1 and 2
                      "a0_mult" = 0.5 # Multiplier on age0 survival for regime 2. (a value of 1 would mean M0 was not changing)
 )
+# Index bias scenario args
+ubias_args <- list("int"=0,
+                   "slope"=-0.01, # Slope of change in index error per year
+                   "yr1diff"=10  # Number of years between the beginning of the projection period and start of change in errors
+)
 
 # FUNCTION to generate index observation errors
 # gen_AddIerr()
@@ -342,6 +359,7 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 
 
 
@@ -654,15 +672,16 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
                             extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
-      OM_k@interval <- MPs_user_interval2
-      set.seed(myseed)
-      MSE_batch_2 <- runMSE(OM_k,
-                            MPs = MPs_user2,
-                            parallel = runMSE_args$parallel,
-                            extended=runMSE_args$extended, silent=runMSE_args$silent)
-
-
-      MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
+      # OM_k@interval <- MPs_user_interval2
+      # set.seed(myseed)
+      # MSE_batch_2 <- runMSE(OM_k,
+      #                       MPs = MPs_user2,
+      #                       parallel = runMSE_args$parallel,
+      #                       extended=runMSE_args$extended, silent=runMSE_args$silent)
+      #
+      #
+      # MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
+      MSE_batch<-MSE_batch_1
 
 
       t_list <- c(t_list,Sys.time())
