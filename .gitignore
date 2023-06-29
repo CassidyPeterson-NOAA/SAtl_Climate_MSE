@@ -73,6 +73,7 @@ VS_O_SAtl_Climate_MSE_Results_files
 SAtl_ClimateMSE_Results_cache
 SAtl_ClimateMSE_Results_files
 HelperFile.R
+run_script_simple_FullDiag.R
 
 SAVE_PLOTS_Analyze_Results.R
 
