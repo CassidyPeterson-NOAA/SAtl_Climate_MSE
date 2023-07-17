@@ -49,9 +49,10 @@ source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
 #########
-ncores <- 1
 
-nsim <- 48 #250
+ncores <- 5
+
+nsim <- 250 #250
 runScenarios <- TRUE # Run scenarios to do MSE or just generate historical data?
 runMSE_args <- list("parallel"=TRUE,"extended"=TRUE,"silent"=FALSE)
 lag_Assess_Init <- 2 # Number of years between terminal year of assessment and first year of management. May be modified in scenarios
@@ -92,7 +93,7 @@ OMName_scen_complete <- NA
 
 
 MPs_user_BSB <- c("ZeroC",
-                  "SCA_1", "SCA_5", "SCA_10",
+                  "SCA_1", #"SCA_5", "SCA_10",
                   "pMP_5","pMP_10" ,
                   "GB_target_BSB", # "GB_target_BSB2",
                   "myICI_BSB", "myIratio_BSB",
@@ -101,17 +102,17 @@ MPs_user_BSB <- c("ZeroC",
                   "myIslope_BSB2" # "myIslope_BSB",
 )
 MPs_user_RP <- c("ZeroC",
-                 "SCA_1", "SCA_5", "SCA_10",
+                 "SCA_1", #"SCA_5", "SCA_10",
                  "pMP_5","pMP_10" ,
                  "GB_target_RP2", #"GB_target_RP",
-                 "myICI2_RP", #"myICI_RP",
+                 "myICI_RP2", #"myICI_RP",
                  "myIratio_RP",
                  "myIT10_RP", "myItarget_RP",
                  "GB_slope_RP2",#"GB_slope_RP",
                  "myIslope_RP2" #"myIslope_RP",
 )
 MPs_user_VS <- c("ZeroC",
-                 "SCA_1", "SCA_5", "SCA_10",
+                 "SCA_1", #"SCA_5", "SCA_10",
                  "pMP_5","pMP_10" ,
                  "GB_target_VS2", #"GB_target_VS",
                  "myICI_VS", "myIratio_VS",
@@ -123,11 +124,11 @@ MPs_user_VS <- c("ZeroC",
 
 
 
-MPs_user_interval<-c(1, 1, 5, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-# MPs_user2 <- c("SCA_5","SCA_10")
+MPs_user_interval<-c(1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 1)
+MPs_user2 <- c("SCA_5","SCA_10")
+MPs_user_interval2<-c(5,10)
 # # MPs_user_interval<-c(1, 5, 10, 1, 1, 1, 1, 1, 1, 1)
 # MPs_user_interval<-c(1, 5, 10, rep(1, 11))
-# MPs_user_interval2<-c(5,10)
 
 
 
@@ -358,7 +359,7 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
-source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/merge_MSE_CP.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 
 
@@ -663,7 +664,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
       message(paste0("at: ",tail(t_list,1),".(",round(diff(tail(t_list,2)),2)," since start)"))
       # Run all MPs together so that the Hist objects are always identical
       set.seed(myseed)
-      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac",MPs_user_k))
+      sfExport(list = c("Assess_diagnostic_NK","SCA_NK","MSY_frac",MPs_user_k,"merge_MSE"))
 
 
       MSE_batch_1 <- runMSE(OM_k,
@@ -672,16 +673,16 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
                             extended=runMSE_args$extended, silent=runMSE_args$silent)
 
 
-      # OM_k@interval <- MPs_user_interval2
-      # set.seed(myseed)
-      # MSE_batch_2 <- runMSE(OM_k,
-      #                       MPs = MPs_user2,
-      #                       parallel = runMSE_args$parallel,
-      #                       extended=runMSE_args$extended, silent=runMSE_args$silent)
-      #
-      #
-      # MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
-      MSE_batch<-MSE_batch_1
+      OM_k@interval <- MPs_user_interval2
+      set.seed(myseed)
+      MSE_batch_2 <- runMSE(OM_k,
+                            MPs = MPs_user2,
+                            parallel = runMSE_args$parallel,
+                            extended=runMSE_args$extended, silent=runMSE_args$silent)
+
+
+      MSE_batch<-merge_MSE(MSE_batch_1, MSE_batch_2)
+      # MSE_batch<-MSE_batch_1
 
 
       t_list <- c(t_list,Sys.time())
@@ -694,6 +695,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
       saveRDS(res,file = paste0("MSE_obj/", MSEName_k, "_", scenario_i, ".rds"))
     # } #end if OMName_scen is not complete
   }
+
 }
 
 # save.image("run_script.RData")
