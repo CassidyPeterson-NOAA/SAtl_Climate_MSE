@@ -74,6 +74,7 @@ SAtl_ClimateMSE_Results_cache
 SAtl_ClimateMSE_Results_files
 HelperFile.R
 run_script_simple_FullDiag.R
-
+Analyze_Results_OldJan2023.R
+SCAtest/
 SAVE_PLOTS_Analyze_Results.R
 
