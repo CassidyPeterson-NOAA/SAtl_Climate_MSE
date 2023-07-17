@@ -1,7 +1,7 @@
 # install.packages('TMB', type = 'source')
 # devtools::install_github("Blue-Matter/openMSE")
-# devtools::install_github("nikolaifish/bamExtras", build_vignettes = TRUE)
-# devtools::install_github("nikolaifish/bamMSE", build_vignettes = TRUE)
+# devtools::install_github("nikolaifish/bamExtras") #, build_vignettes = TRUE)
+# devtools::install_github("nikolaifish/bamMSE") #, build_vignettes = TRUE)
 library(abind)
 library(magrittr)
 library(openMSE)
@@ -10,7 +10,7 @@ library(bamMSE)
 
 
 # setwd("C:\\Users\\cassidy.peterson\\Documents\\Github\\SEFSCInterimAnalysis\\RunMSE\\SEFSC\\")
-setwd("D:/SAtl_MSE")
+# setwd("D:/SAtl_MSE")
 
 
 rm(list=ls())
@@ -18,8 +18,8 @@ t_list <- Sys.time()
 myseed <- 8675309
 
 
-filepath <- "C:/Users/cassidy.peterson/Documents/git"
-
+# filepath <- "C:/Users/cassidy.peterson/Documents/git"
+filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
@@ -49,7 +49,7 @@ source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 # RPo<-Replace(RP_init, Overages, Name="RP_Over")
 # saveRDS(RPo,file = file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/OM/OM_RedPorgy_Over.rds"))
 #########
-ncores <- 10
+ncores <- 1
 
 nsim <- 48 #250
 runScenarios <- TRUE # Run scenarios to do MSE or just generate historical data?
