@@ -619,7 +619,9 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
     for(ii in 1:dim(results@SB_SBMSY)[2]){
       max_y<-max(max_y, apply(results@SB_SBMSY[,ii,], 2, median) )
     }
-    plot(apply(results@SB_SBMSY[,1,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2,
+
+    index<-ifelse(is.null(subset),1,subset[1])
+    plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2,
          ylab=expression("SSB / SSB"['MSY']), xlab="Projected Years")
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
@@ -681,10 +683,11 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
       par(mfrow=c(1,1), mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
     } # end save.png
 
+    index<-ifelse(is.null(subset),1,subset[1])
 
     # SSBtmp<-cbind(results@SSB_hist, results@SSB[,1,]) / results@RefPoint$Dynamic_Unfished$SSB0
     lngth<-(dim(results@SSB_hist)[2]+1):dim(results@RefPoint$Dynamic_Unfished$SSB0)[2]
-    SSBtmp<-results@SSB[,1,] / results@RefPoint$Dynamic_Unfished$SSB0[,lngth]
+    SSBtmp<-results@SSB[,index,] / results@RefPoint$Dynamic_Unfished$SSB0[,lngth]
     SSBSSB0<-apply(SSBtmp, 2, median)
 
     plot(SSBSSB0, type='l', ylim=ylims, lwd=2,
@@ -759,7 +762,8 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
       max_y<-max(max_y, apply(results@SSB[,ii,], 2, median) )
     }
 
-    plot(apply(results@SSB[,1,], 2, median), type='l', ylim=c(0, max_y*0.95), lwd=2,
+    index<-ifelse(is.null(subset),1,subset[1])
+    plot(apply(results@SSB[,index,], 2, median), type='l', ylim=c(0, max_y*0.95), lwd=2,
          ylab="SSB" , xlab="Projected Years")
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
@@ -820,7 +824,9 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
     for(ii in 1:dim(results@Catch)[2]){
       max_y<-max(max_y, apply(results@Catch[,ii,], 2, median) )
     }
-    plot(apply(results@Catch[,1,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years")
+
+    index<-ifelse(is.null(subset),1,subset[1])
+    plot(apply(results@Catch[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years")
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
