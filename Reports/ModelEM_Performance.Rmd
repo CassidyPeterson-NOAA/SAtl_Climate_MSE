@@ -1,0 +1,128 @@
+---
+title: "ModelEM_Performance"
+author: "Cassidy Peterson"
+date: "July 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# library(knitr)
+knitr::opts_chunk$set(echo = TRUE, autodep = TRUE)#, cache=TRUE)
+# library(openMSE)
+# library(vioplot)
+source("../get_testEM_results.R")
+
+```
+
+## Background
+
+This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)).
+
+
+
+
+## VS Model-EM Results
+
+```{r VS-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "VS OM Recruitment Dynamics"}
+
+# testOM<-testOM_BlackSeaBass
+# testEM<-testEM_BlackSeaBass
+# sp<-"BSB"
+testOM<-testOM_VermilionSnapper
+testEM<-testEM_VermilionSnapper
+sp<-"VS"
+# testOM<-testOM_RedPorgy
+# testEM<-testEM_RedPorgy
+# sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r VS-EM, echo=FALSE, fig.height=8, fig.cap = "VS EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
+
+
+## BSB Model-EM Results
+
+
+```{r BSB-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "BSB OM Recruitment Dynamics"}
+
+testOM<-testOM_BlackSeaBass
+testEM<-testEM_BlackSeaBass
+sp<-"BSB"
+# testOM<-testOM_VermilionSnapper
+# testEM<-testEM_VermilionSnapper
+# sp<-"VS"
+# testOM<-testOM_RedPorgy
+# testEM<-testEM_RedPorgy
+# sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r BSB-EM, echo=FALSE, fig.height=8, fig.cap = "BSB EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
+
+
+## RP Model-EM Results
+
+
+```{r RP-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "RP OM Recruitment Dynamics"}
+
+# testOM<-testOM_BlackSeaBass
+# testEM<-testEM_BlackSeaBass
+# sp<-"BSB"
+# testOM<-testOM_VermilionSnapper
+# testEM<-testEM_VermilionSnapper
+# sp<-"VS"
+testOM<-testOM_RedPorgy
+testEM<-testEM_RedPorgy
+sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r RP-EM, echo=FALSE, fig.height=8,  fig.cap = "RP EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
