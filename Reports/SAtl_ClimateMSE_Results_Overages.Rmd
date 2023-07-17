@@ -11,7 +11,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, autodep = TRUE)#, cache=TRUE)
 # library(openMSE)
 # library(vioplot)
-source("Analyze_Results_Setup.R")
+source("../Analyze_Results_Setup.R")
 
 ```
 
