@@ -10,20 +10,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, autodep = TRUE)#, cache=TRUE)
 # library(openMSE)
 # library(vioplot)
-source("../get_testEM_results.R")
+setwd('C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
+source("get_testEM_results.R")
 
 ```
 
 ## Background
 
-This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)).
+This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)). Analyses are based on the base-case OM scenario at the end of the historical period compared to the first application of the EM. 
 
 
 
 
 ## VS Model-EM Results
 
-```{r VS-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "VS OM Recruitment Dynamics"}
+```{r VS-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "VS OM Recruitment Dynamics"}
 
 # testOM<-testOM_BlackSeaBass
 # testEM<-testEM_BlackSeaBass
@@ -59,7 +60,7 @@ for(i in 1:length(evalEM_)){
 ## BSB Model-EM Results
 
 
-```{r BSB-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "BSB OM Recruitment Dynamics"}
+```{r BSB-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "BSB OM Recruitment Dynamics"}
 
 testOM<-testOM_BlackSeaBass
 testEM<-testEM_BlackSeaBass
@@ -95,7 +96,7 @@ for(i in 1:length(evalEM_)){
 ## RP Model-EM Results
 
 
-```{r RP-OMRec, echo=FALSE, fig.height=5, cache=TRUE,  fig.cap = "RP OM Recruitment Dynamics"}
+```{r RP-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "RP OM Recruitment Dynamics"}
 
 # testOM<-testOM_BlackSeaBass
 # testEM<-testEM_BlackSeaBass
