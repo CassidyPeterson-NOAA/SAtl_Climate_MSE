@@ -1,16 +1,18 @@
 ---
 title: "SAtl_Climate_MSE_Results"
 author: "Cassidy Peterson"
-date: "March 2023"
+date: "July 2023"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 # library(knitr)
 knitr::opts_chunk$set(echo = TRUE, autodep = TRUE)#, cache=TRUE)
+# knitr::opts_knit$set(root.dir="..")
+setwd('C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
 # library(openMSE)
 # library(vioplot)
-source("../Analyze_Results_Setup.R")
+source("Analyze_Results_Setup.R")
 
 ```
 
@@ -35,83 +37,25 @@ species<-"RedPorgy"; sp<-"RP"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 
-abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
 
-orderedMPs<- c(1, 15:16, 2:14) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedMPs<- c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
 orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
-# get(sp)$base@MPs
-if(sp=="VS" | sp=="VS_O") {
-  if(abbrev==TRUE){
-    # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
-    orderedMPs<-c(1,15:16,2:3,5:8,10:11,14)
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+
+MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
-  }#end if abbrev==TRUE
+MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "GBt",
+                        "ICI","Ir","I10","It","GBs","Is")
 
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","Itarg2",
-                     "GBslope","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","Ira","I10","Ita","It2","GBs","Gs2","Isl","Is2")
-  }#end if abbrev==False
-} # end if sp==VS
-
-if(sp=="RP" | sp=="RP_O") {
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","ICI2","Irat","IT10","Itarg",
-                     "GBslope","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","IC2","Ira","I10","Ita","GBs","Gs2","Isl","Is2")
-  }#end abbrev=F
-  if(abbrev==TRUE){
-    # RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
-    orderedMPs<- c(1, 15:16, 2:3, 5, 7:10, 12, 14)
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","ICI","Irat","IT10","Itarg",
-                     "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
-  }#end abbrev=T
-}# end RP
-
-if(sp=="BSB" | sp=="BSB_O") {
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg",
-                     "GBslope","GBslope1","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","Ira","I10","Ita","GBs","Gs1","Gs2","Isl","Is2")
-  }# end abbrev=F
-  if(abbrev==TRUE){
-    orderedMPs<- c(1, 15:16, 2:4, 6:10, 13)
-    # BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","ICI","Irat","IT10","Itarg",
-                     "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ira","I10","Ita","GBs","Isl")
-  }# end abbrev=T
-
-  } #end BSB
-
-
-if(abbrev==FALSE){
-  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
-}
-if(abbrev==TRUE){
-  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
-}
+MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
 
 # par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par.args<-list(mar=c(0.5, 0.5, 0.2, 0.2), mgp=c(0.7, 0.25, 0), tck=-0.01, cex.axis=1)
 par(par.args)
+
+
 
 
 ### Run FUNCTIONS for input species #####
@@ -138,13 +82,14 @@ assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
 # # save(temp_PM, file="SP_PMs.RData")
 # # save(temp_PM_nest, file="SP_PMs_nest.RData")
 ```
+
 #### Median Trajectory Plots
 
 ```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSB / dynSSB0 trajectories"}
 # exercise.setup="PreviousChunk",
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1:13))
 
 ```
 
@@ -153,7 +98,7 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1,6:12),#subset=c(1,8:13),
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2,7:13),#subset=c(1,8:13),
                    colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue', 'orchid'))
 # ,'blue','pink','green','orchid','cyan'))
 
@@ -163,15 +108,21 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1,6:12),#subset=c(1,8:1
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1:5),
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2:6),
                    colsR=c('black','deepskyblue','steelblue','deeppink','darkorange'))
 
 ```
 
-```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSB / static SSBMSY trajectories"}
+par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+Plot_SSBtraj_MSY(fsh=sp)
+
+```
+
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median catch trajectories"}
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-Plot_Catchtraj(fsh=sp)
+Plot_Catchtraj(fsh=sp, subset=c(2:13))
 
 ```
 
@@ -185,15 +136,15 @@ par(mfrow=c(3,4), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
 
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='treldSSB0', ylims=c(0,1.1), refline2=reflinetemp)
-  PlotRelPM(sp, calc='rd', Pstat='treldSSB0',
-            baserefline=1, refline=0,
+ PlotRelPM(sp, calc='rd', Pstat='treldSSB0',
+            baserefline=c(1,reflinetemp), refline=0,
             maxylim=c(1.1, 300, -0.5, 1, -0.0, 30, 10, 3, 35, 4, 5), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
  
  
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='t10reldSSB0', ylims=c(0,1.1), refline2=reflinetemp)
   PlotRelPM(sp, calc='rd', Pstat='t10reldSSB0',
-            baserefline=1, refline=0,
+            baserefline=c(1, reflinetemp), refline=0,
             maxylim=c(1.1, 100, -0.5, 1, -0.0, 15, 3, 2, 35, 4, 4), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
   
@@ -217,13 +168,13 @@ PlotRelPM(sp, calc='rd', Pstat='trelF',
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='t10relF', ylimsEpiM=c(0,4))
- PlotRelPM(sp, calc='rd', Pstat='t10relF',         ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
+ PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
             baserefline=1, refline=0,
             maxylim=c(10, 3, 50, 150, 150, 1.5, 3, 50, 5, 10, 5), # RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
  
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='PNOF', ylims=c(0,1.1), refline2=0.5)
- PlotRelPM(sp, calc='rd', Pstat='PNOF',
+PlotRelPM(sp, calc='rd', Pstat='PNOF',
             baserefline=1, refline=0,
             maxylim=c(1.1, 10, 0.1, 0.1, 0.1, 30, 2, 3, 35, 2.5, 2.5), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
@@ -240,8 +191,8 @@ par(mfrow=c(3,4), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='AAVY', ylims=c(0,1.5))
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='tyield', ylims=c(0,3))
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,150))
- PlotRelPM(sp, calc='rd', Pstat='cyield',
-            baserefline=1, refline=0,
+PlotRelPM(sp, calc='rd', Pstat='cyield',
+            baserefline=50, refline=0,
             maxylim=c(80, 0.5, 10, 1.5,6, 1, 4, 3, 2, 4, 2), #RP
             minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
 Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
@@ -280,7 +231,7 @@ TOff_Plot(SPP_PM=spp_pm, PMy='t10reldSSB0', PMx='AAVY', errbars=F); abline(h=ref
 ```{r RP-worm-plots, echo=FALSE, fig.height=5, fig.cap = "MP performance across OMs"}
 nms<-get(sp)$base@MPs
 # cbind(MP_namesR_leg,orderedMPs)
-mpnms<-nms[c(1,7,8)]
+mpnms<-nms[c(2,8,9)]
 # names(get(sp))
 
 # par(mfrow=c(1,4))
@@ -295,4 +246,26 @@ myWorm(sp, OM="epiM", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
 mtext(species, 3, outer=TRUE, line=0)
 
 
+```
+
+
+#### Other
+Compare observed indices in uobs_hi and uobs_lo scenarios. Note that when index observation error increases, observed index values reach greater values, indicating a higher relative abundance. This translates to higher TACs and higher fishing pressure, resulting in lower abundances. 
+
+```{r RP-indices-plots, echo=FALSE, fig.height=5, fig.cap = "Observed indices of abundance"}
+base<-get(sp)[["base"]]
+uobsHi<-get(sp)[["uobs_hi"]]
+uobsLo<-get(sp)[["uobs_lo"]]
+par(mfrow=c(4,3), oma=c(0,1.2,1.2,0), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+for(i in 100:111){
+  plot(uobsHi@PPD$SCA_1@AddInd[i,1,], type='l', col='red', ylab="Index",xlab="Year")
+  lines(uobsLo@PPD$SCA_1@AddInd[i,1,], type='l', col='deepskyblue')
+  lines(base@PPD$SCA_1@AddInd[i,1,], type='l')
+}
+
+par(mfrow=c(1,2))
+boxplot(c(uobsHi@PPD$SCA_1@AddInd[,1,59:88]), c(base@PPD$SCA_1@AddInd[,1,59:88]), c(uobsLo@PPD$SCA_1@AddInd[,1,59:88]), 
+        col=c('red','grey','deepskyblue'),ylab="Index (last 30 years)", names=c("uobs_Hi","base","uobs_Lo"))
+boxplot(c(uobsHi@TAC[,2,21:50]), c(base@TAC[,2,21:50]), c(uobsLo@TAC[,2,21:50]), 
+        col=c('red','grey','deepskyblue'),ylab="TAC (last 30 years)", ylim=c(0,7500), names=c("uobs_Hi","base","uobs_Lo"))
 ```
