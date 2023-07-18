@@ -9,7 +9,7 @@ library(rlang)
 # library(paletteer)
 
 avail("PM")
-source("C:/Users/cassidy.peterson/Documents/Github/SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R")
+# source("merge_MSE_CP.R")
 
 
 
@@ -590,15 +590,15 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
       scenarios<-names(data)
     } # end if-else ; define scenarios
   } # end get scenarios
+  if(is.null(subset)){subset<-c(1:data[[1]]@nMPs)
+  }else{ subset<-subset }
 
   for(res in scenarios){
     results<-get(res,data)
 
     MP_names<-data[[1]]@MPs
     MP_namesR<-c(MP_names[oMPs])
-    if(!is.null(subset)){
-      MP_namesR<-MP_namesR[subset]
-      namesR<-MP_namesR_leg[subset]}
+
 
 
     ## SSB/SSBMSY
@@ -620,16 +620,16 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
       max_y<-max(max_y, apply(results@SB_SBMSY[,ii,], 2, median) )
     }
 
-    index<-ifelse(is.null(subset),1,subset[1])
+    index<-subset[1]
     plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2,
-         ylab=expression("SSB / SSB"['MSY']), xlab="Projected Years")
+         ylab=expression("SSB / SSB"['MSY']), xlab="Projected Years", col=colsR[index])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@SB_SBMSY[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -639,7 +639,7 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
 
 } # end function
 
@@ -658,15 +658,14 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
       scenarios<-names(data)
     } # end if-else ; define scenarios
   } # end get scenarios
+  if(is.null(subset)){subset<-c(1:data[[1]]@nMPs)
+  }else{ subset<-subset }
 
   for(res in scenarios){
     results<-get(res,data)
 
     MP_names<-data[[1]]@MPs
-    MP_namesR<-c(MP_names[oMPs])
-    if(!is.null(subset)){
-      MP_namesR<-MP_namesR[subset]
-      namesR<-MP_namesR_leg[subset]}
+    MP_namesR<-c(MP_names[oMPs])[subset]
 
 
     ## SSB/SSBMSY
@@ -683,15 +682,14 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
       par(mfrow=c(1,1), mar=c(2.6, 2.6, 0.6, 0.6), mgp=c(1.3, 0.25, 0), tck=-0.01)
     } # end save.png
 
-    index<-ifelse(is.null(subset),1,subset[1])
-
+    index<-subset[1]
     # SSBtmp<-cbind(results@SSB_hist, results@SSB[,1,]) / results@RefPoint$Dynamic_Unfished$SSB0
     lngth<-(dim(results@SSB_hist)[2]+1):dim(results@RefPoint$Dynamic_Unfished$SSB0)[2]
     SSBtmp<-results@SSB[,index,] / results@RefPoint$Dynamic_Unfished$SSB0[,lngth]
     SSBSSB0<-apply(SSBtmp, 2, median)
 
     plot(SSBSSB0, type='l', ylim=ylims, lwd=2,
-         ylab=expression("SSB / dSSB"['0']), xlab="Projected Years")
+         ylab=expression("SSB / dSSB"['0']), xlab="Projected Years", col=colsR[index])
 
     abline(h=1)
     abline(h=refline, lty=2)
@@ -705,7 +703,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
                        results@RefPoint$Dynamic_Unfished$SSB0[,lngth], 2, median)
       lines(SSBSSB0, type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=1)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=1)
     mtext( paste0(fsh, " ", res), side=3, line=labline, cex=0.8)
 
     if(save.png==T){
@@ -715,7 +713,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
 
 } # end function
 
@@ -732,15 +730,15 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
       scenarios<-names(data)
     } # end if-else ; define scenarios
   } # end get scenarios
+  if(is.null(subset)){subset<-c(1:data[[1]]@nMPs)
+  }else{ subset<-subset }
 
   for(res in scenarios){
     results<-get(res,data)
 
     MP_names<-data[[1]]@MPs
-    MP_namesR<-c(MP_names[oMPs])
-    if(!is.null(subset)){
-      MP_namesR<-MP_namesR[subset]
-      namesR<-MP_namesR_leg[subset]}
+    MP_namesR<-c(MP_names[oMPs])[subset]
+
 
 
     ## SSB/SSBMSY
@@ -762,16 +760,16 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
       max_y<-max(max_y, apply(results@SSB[,ii,], 2, median) )
     }
 
-    index<-ifelse(is.null(subset),1,subset[1])
+    index<-subset[1]
     plot(apply(results@SSB[,index,], 2, median), type='l', ylim=c(0, max_y*0.95), lwd=2,
-         ylab="SSB" , xlab="Projected Years")
+         ylab="SSB" , xlab="Projected Years", col=colsR[index])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@SSB[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -781,16 +779,18 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
 
 } # end function
 
 
 Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
                           oMPs=orderedMPs, oScenarios=NULL,
-                          colsR=MP_R_col, namesR=MP_namesR_leg){
+                          colsR=MP_R_col, namesR=MP_namesR_leg,
+                          subset=NULL){
 
   data<-get(fsh)
+
   if(is.null(scenarios)){
     if(!is.null(oScenarios)){
       scenarios<-names(data)[oScenarios]
@@ -798,12 +798,14 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
       scenarios<-names(data)
     } # end if-else ; define scenarios
   } # end get scenarios
+  if(is.null(subset)){subset<-c(1:data[[1]]@nMPs)
+  }else{ subset<-subset }
 
   for(res in scenarios){
     results<-get(res,data)
 
     MP_names<-data[[1]]@MPs
-    MP_namesR<-c(MP_names[oMPs])
+    MP_namesR<-c(MP_names[oMPs])[subset]
 
 
     ## SSB/SSBMSY
@@ -825,15 +827,15 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
       max_y<-max(max_y, apply(results@Catch[,ii,], 2, median) )
     }
 
-    index<-ifelse(is.null(subset),1,subset[1])
-    plot(apply(results@Catch[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years")
+    index<-subset[1]
+    plot(apply(results@Catch[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years", col=colsR[index])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@Catch[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -843,7 +845,7 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR, lwd=2, lty=1:length(namesR), col=colsR, bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
 
 } # end function
 
@@ -853,8 +855,11 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","treldSSB0", "trelF","
                                          "t10reldSSB0","t10relF", "tyield", "cyield", "PNOF", "P100" ),
                         ylims=c(NULL), ylimsEpiM=c(NULL), MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
                         mf=c(4,3), xlab.cex=0.79, refline1=1, refline2=NULL, ylabs=NULL,
-                        namesR=MP_namesR_leg){
+                        namesR=MP_namesR_leg, subset=c(2:13)){
   par(mfrow=mf)
+  if(is.null(subset)){subset<-c(1:dim(SPP_nest[[1]][[1]])[2])
+  }else{ subset<-subset }
+
   data<-SPP_nest[[stat]]
   for(ii in names(data)){
     if(ii=='epiM'){
@@ -862,9 +867,9 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","treldSSB0", "trelF","
       if(is.null(ylimsEpiM) & !is.null(ylims)){ylims1=ylims}
     }#end if epiM
     if(ii!='epiM'){ylims1=ylims}
-    vioplot(data[[ii]], col=MPcol, names=NA, ylim=ylims1, axes=F)
+    vioplot(data[[ii]][,subset], col=MPcol[subset], names=NA, ylim=ylims1, axes=F)
     axis(2)
-    axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+    axis(1, at=1:length(MPnam[subset]), labels=MPnam[subset], cex.axis=xlab.cex)
     box(); abline(h=refline1); if(!is.null(refline2)){abline(h=refline2, lty=2)}
 
     mtext(ii, 3, line=-1.2)
@@ -874,7 +879,7 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","treldSSB0", "trelF","
 
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
+  legend("center", namesR[subset],  pch=15, pt.cex = 2, col=MPcol[subset], bty='n', ncol=2, cex=1)
 }
 
 ## NOTE YIELD IS CALCULATED RELATIVE TO REFERENCE YIELD IF FISHERY WERE BEING EXPLOITED AT FMSY
@@ -919,13 +924,16 @@ Plot_my_cyield<-function(SPP, ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbre
 PlotCumPM<-function(sp, title=NULL,
                     Pstat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
                             't10relF','tyield','cyield','PNOF','P100'),
-                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9){
+                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9,
+                    subset=c(2:13)){
   dat<-get(paste0(sp,"_PM"))
   datStat<-get(Pstat, dat)
+  if(is.null(subset)){subset<-c(1:dim(datStat)[2])
+  }else{ subset<-subset }
 
-  vioplot(datStat, col=MPcol, names=NA, ylim=ylims, axes=F)
+  vioplot(datStat[,subset], col=MPcol[subset], names=NA, ylim=ylims, axes=F)
   axis(2)
-  axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+  axis(1, at=1:length(MPnam[subset]), labels=MPnam[subset], cex.axis=xlab.cex)
   box()
   abline(h=refline, lty=2)
   if(is.null(title)) title<-sp
@@ -936,13 +944,16 @@ PlotCumPM<-function(sp, title=NULL,
 PlotCumPM_Box<-function(sp, title=NULL,
                     Pstat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
                             't10relF','tyield','cyield','PNOF','P100'),
-                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9){
+                    ylims=c(NULL), refline=NULL, MPnam=MP_namesR_abbrev, MPcol=MP_R_col, xlab.cex=0.9,
+                    subset=c(2:13)){
   dat<-get(paste0(sp,"_PM"))
   datStat<-get(Pstat, dat)
+  if(is.null(subset)){subset<-c(1:dim(SPP_nest[[1]][[1]])[2])
+  }else{ subset<-subset }
 
-  boxplot(datStat, col=MPcol, names=NA, ylim=ylims, axes=F)
+  boxplot(datStat[,subset], col=MPcol[subset], names=NA, ylim=ylims, axes=F)
   axis(2)
-  axis(1, at=1:length(MPnam), labels=MPnam, cex.axis=xlab.cex)
+  axis(1, at=1:length(MPnam[subset]), labels=MPnam[subset], cex.axis=xlab.cex)
   box()
   abline(h=refline, lty=2)
   if(is.null(title)) title<-sp
@@ -957,11 +968,15 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
                             't10relF','tyield','cyield','PNOF','P100','P90'),
                     ylims=c(NULL), baserefline=NULL, refline=NULL, MPnam=MP_namesR_abbrev,
                     MPcol=MP_R_col, setu=TRUE, mf=c(4,3),omas=c(0,0,2.4,0), oMPs=orderedMPs,
-                    minylim=NULL, maxylim=NULL, xlab.cex=0.79, ylabs=NULL, namesR=MP_namesR_leg){
+                    minylim=NULL, maxylim=NULL, xlab.cex=0.79, ylabs=NULL, namesR=MP_namesR_leg,
+                    subset=c(2:13)){
   # par(cex.axis=1)
   dat<-get(paste(sp,'RelPM',calc, sep="_"))
   datStat<-get(Pstat, dat)
   if(setu==T) par(mfrow=mf, oma=omas)
+
+  if(is.null(subset)){subset<-c(1:dim(datStat)[2])
+  }else{ subset<-subset }
 
   ## get Base Results
   BaseRes<-get(paste0(sp,"_PM"))[[Pstat]]
@@ -969,9 +984,9 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
   # Plot BaseRes
   ylims1=c(minylim[1],maxylim[1])    # get ylims
   # boxplot(BaseRes, col=MPcol, names=MPnam, ylim=ylims1)
-  boxplot(BaseRes, col=MPcol, names=MPnam, ylim=ylims1, axes=F)
+  boxplot(BaseRes[,subset], col=MPcol[subset], names=MPnam[subset], ylim=ylims1, axes=F)
   axis(2)
-  axis(1, at=1:dim(BaseRes)[2], labels=MPnam, cex.axis=xlab.cex)
+  axis(1, at=1:dim(BaseRes[,subset])[2], labels=MPnam[subset], cex.axis=xlab.cex)
   # axis(1, at=1:dim(BaseRes)[2], labels=F)
   # text(x=1:dim(BaseRes)[2]-0.1, y=par("usr")[3]-0.25, xpd=NA, labels=MPnam, srt=35, cex=xlab.cex)
   box()
@@ -990,9 +1005,9 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
     }else{ ylims1<-ylims} # end outer if-else
 
     # boxplot(get(ss,datStat), col=MPcol, names=MPnam, ylim=ylims1, na.rm=T)
-    boxplot(get(ss,datStat), col=MPcol, names=MPnam, ylim=ylims1, na.rm=T, axes=F)
+    boxplot(get(ss,datStat)[,subset], col=MPcol[subset], names=MPnam[subset], ylim=ylims1, na.rm=T, axes=F)
     axis(2)
-    axis(1, at=1:dim(BaseRes)[2], labels=MPnam, cex.axis=xlab.cex)
+    axis(1, at=1:dim(BaseRes[,subset])[2], labels=MPnam[subset], cex.axis=xlab.cex)
     # axis(1, at=1:dim(BaseRes)[2], labels=F)
     # text(x=1:dim(BaseRes)[2]-0.1, y=par("usr")[3]-0.25, xpd=NA, labels=MPnam, srt=35, cex=xlab.cex)
     box()
@@ -1006,7 +1021,7 @@ PlotRelPM<-function(sp, calc='rd', title=NULL,
 
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR,  pch=15, pt.cex = 2, col=MPcol, bty='n', ncol=2, cex=1)
+  legend("center", namesR[subset],  pch=15, pt.cex = 2, col=MPcol[subset], bty='n', ncol=2, cex=1)
 
 }
 

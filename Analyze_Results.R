@@ -9,8 +9,8 @@ source("Analyze_Results_Setup.R")
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
 # species<-"RedPorgy"; sp<-"RP"
-# species<-"VermilionSnapper"; sp<-"VS"
-species<-"BlackSeaBass"; sp<-"BSB"
+species<-"VermilionSnapper"; sp<-"VS"
+# species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
@@ -47,7 +47,7 @@ MPs_user_VS <- c("ZeroC",
 
 # abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
 
-orderedMPs<- 1:length(MPs_user_BSB) #c(1, 15:16, 2:14) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedMPs<- c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
 orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
@@ -159,12 +159,12 @@ par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_MSY(fsh=sp)
 par(mfrow=c(4,3), par.args)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2:13))
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_rawSSB(fsh=sp)
 
 par(mfrow=c(4,3), par.args)
-Plot_Catchtraj(fsh=sp)
+Plot_Catchtraj(fsh=sp) ## error
 
 ### Plot subset median Trajectories
 par(mfrow=c(4,3), par.args)
@@ -181,6 +181,32 @@ Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,7:8),#subset=c(1,8:13),
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1:6),
              colsR=c('black','deepskyblue','steelblue','deeppink','darkorange','steelblue'))
+
+
+## compare indices for base, uobsHi and uobsLo
+# higher CV allows for higher observed index values (logn distn; that no upper bound but lower bound of 0) -- higher index values translates to higher observed abundance -- higher TACs, which reduce the pop size relative to Base and uobsLo scenarios.
+base<-get(sp)[["base"]]
+uobsHi<-get(sp)[["uobs_hi"]]
+uobsLo<-get(sp)[["uobs_lo"]]
+par(mfrow=c(4,3))
+for(i in 100:111){
+  plot(uobsHi@PPD$SCA_1@AddInd[i,1,], type='l', col='red', ylab="Index",xlab="Year")
+  lines(uobsLo@PPD$SCA_1@AddInd[i,1,], type='l', col='deepskyblue')
+  lines(base@PPD$SCA_1@AddInd[i,1,], type='l')
+}
+
+
+boxplot(c(uobsHi@PPD$SCA_1@AddInd[,1,59:88]), c(base@PPD$SCA_1@AddInd[,1,59:88]), c(uobsLo@PPD$SCA_1@AddInd[,1,59:88]),
+        col=c('red','grey','deepskyblue'),ylab="Index (last 30 years)")
+boxplot(c(uobsHi@TAC[,2,21:50]), c(base@TAC[,2,21:50]), c(uobsLo@TAC[,2,21:50]),
+        col=c('red','grey','deepskyblue'),ylab="TAC (last 30 years)", ylim=c(0,7500))
+# vioplot(c(uobsHi@TAC[,2,1:9]), c(base@TAC[,2,1:9]), c(uobsLo@TAC[,2,1:9]),
+#         col=c('red','grey','deepskyblue'),ylab="TAC", ylim=c(0,7500))
+# uobsHi@PPD[[2]]@CV_AddInd[,1,]
+# uobsHi@Hist@Data@CV_AddInd
+
+  # summary(uobsHi)
+
 
 ### plot violin plots
 stat=c("AAVY","trelSSB","treldSSB0", "trelF","t10relSSB",
