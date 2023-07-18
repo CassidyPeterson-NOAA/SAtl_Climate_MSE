@@ -59,6 +59,8 @@ See complete result reports below.
   * [See RP_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/RP_O_SAtl_Climate_MSE_Results.html)
 
 
+## EM Performance
+See EM performance through values of estimated key parameters [here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/ModelEM_Performance.html). 
 
 
 
