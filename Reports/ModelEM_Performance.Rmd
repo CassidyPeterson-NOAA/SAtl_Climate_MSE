@@ -7,20 +7,25 @@ output: html_document
 
 ```{r setup, include=FALSE}
 # library(knitr)
-knitr::opts_chunk$set(echo = TRUE, autodep = TRUE)#, cache=TRUE)
+knitr::opts_chunk$set(echo = TRUE, autodep = TRUE, cache=TRUE)
 # library(openMSE)
 # library(vioplot)
 setwd('C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
+# knitr::opts_knit$set(root.dir = 'C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
 source("get_testEM_results.R")
+source("get_terminalEM_results.R")
 
 ```
 
 ## Background
 
-This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)). Analyses are based on the base-case OM scenario at the end of the historical period compared to the first application of the EM. 
+This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)). 
 
 
 
+
+# First SCA application 
+These first round of analyses are based on the base-case OM scenario at the end of the historical period compared to the first application of the EM. 
 
 ## VS Model-EM Results
 
@@ -126,4 +131,45 @@ for(i in 1:length(evalEM_)){
     hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
   }
 }
+```
+
+
+
+
+
+# Final SCA application
+These second round of results are comparing SCA-based EM results to the OM dynamics at the final SCA application of the simulation. Plots show histograms of relative error ( EMest-OMval)/OMval ) of EM-estimated values. The bars are colored in gray-scale based on MP, and the bar borders are colored based on the OM scenario. 
+
+
+```{r VS-final-EM, echo=FALSE, fig.height=9,  fig.cap = "VS final EM relative performance"}
+sp<-"VS"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
+```
+
+```{r BSB-final-EM, echo=FALSE, fig.height=9,  fig.cap = "BSB final EM relative performance"}
+sp<-"BSB"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
+```
+
+```{r RP-final-EM, echo=FALSE, fig.height=9,  fig.cap = "RP final EM relative performance"}
+sp<-"RP"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
 ```

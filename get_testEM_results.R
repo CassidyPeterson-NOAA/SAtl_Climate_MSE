@@ -9,6 +9,7 @@ testOM_VermilionSnapper <- readRDS("~/Github/SAtl_Climate_MSE/SCAtest/testOM_Ver
 testEM_RedPorgy <- readRDS("~/Github/SAtl_Climate_MSE/SCAtest/testEM_RedPorgy_base.rds")
 testOM_RedPorgy <- readRDS("~/Github/SAtl_Climate_MSE/SCAtest/testOM_RedPorgy_base.rds")
 
+
 evalEM<-function(testOM, testEM, param=c("R0","B0","SSBMSY","tSSB","tSSB_SSBMSY","FMSY","F_FMSY","hbias","NLL")){
   Results<-list()
 
@@ -133,71 +134,4 @@ OM_Perry_hist <- function(testOM, title="OM dynamics"){
 
 
 
-# testOM<-testOM_BlackSeaBass
-# testEM<-testEM_BlackSeaBass
-# sp<-"BSB"
-# testOM<-testOM_VermilionSnapper
-# testEM<-testEM_VermilionSnapper
-# sp<-"VS"
-# testOM<-testOM_RedPorgy
-# testEM<-testEM_RedPorgy
-# sp<-"RP"
-#
-# evalEM_<-evalEM(testOM, testEM)
-# assign(paste0("evalEM_",sp),evalEM_)
-#
-# OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
-#
-#
-# # length(evalEM_)
-# par(mfrow=c(3,3))
-# for(i in 1:length(evalEM_)){
-#   if(names(evalEM_)[i]!="NLL") {
-#       hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
-#   }
-#   if(names(evalEM_)[i]=="NLL") {
-#     hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
-#   }
-# }
-#
-#
-#
-#
-# # NOTES
-#
-# sd(testEM[[1]]@Dev)
-# testOM@SampPars$Stock$AC
-# testOM@SampPars$Stock$procsd
-# apply(testOM@SampPars$Stock$Perr_y,1, sd)
-# testOM@Data@sigmaR
-# testOM@SampPars$Obs$BMSY_B0bias
-# testOM@SampPars$Stock$D # estimated current level of depletion defined as the current SSB divided by the unfished spawnign stock biomass
-# testOM@SampPars$Stock$D * testOM@OMPars$SSB0 # END YEAR SSB
-# testEM[[1]]@SSB[length(testEM[[1]]@SSB)]
-#
-#
-# testEM[[1]]@SSB0
-# testOM@OMPars$SSB0
-# testEM[[1]]@SE_FMSY
-#
-#
-#
-# testEM[[1]]@SSBMSY
-#
-#
-# testEM[[1]]@FMSY
-# testOM@OMPars$FMSY
-# testOM@SampPars$Stock$FMSY
-#
-# testOM@OM@Name
-# testOM@SampPars$Fleet$Find
-# testOM@TSdata$Find # Find: Historical fishing mortality (scale-free); matrix
-#
-# (testOM@TSdata$Find[,ncol(testOM@TSdata$Find)] / testOM@OMPars$FMSY) # STATIC FMSY
-# (testOM@TSdata$Find[,ncol(testOM@TSdata$Find)]  / testOM@Ref$ByYear$FMSY[,ncol(testOM@Ref$ByYear$FMSY)] ) # ANNUAL FMSY
-# testEM[[1]]@F_FMSY[length(testEM[[1]]@F_FMSY)]
-#
-#
-#
-# testOM@TSdata$RecDev
-# # Rec: Unfished recruitment
+
