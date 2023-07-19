@@ -95,16 +95,16 @@ FinalEMResults<-function(MSE, mp){ #MPs = c(2,12,13,3,4)
 
 # function to plot final EM results
 Plot_tEMres<- function(tEMres, p){
-  par(mfrow=c(5,11), mar=c(1, 1, 0.1, 0.1), oma=c(0.3,0.3,1.1,0.1), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+  par(mfrow=c(11,5), mar=c(1, 1, 0.1, 0.1), oma=c(0.3,0.3,1.1,0.1), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+  for(s in names(mse)){
   for(mp in names(tEMres[[1]])){
-    for(s in names(mse)){
       hist(tEMres[[s]][[mp]][[p]] , main="",
            col=MP_col[which(names(tEMres[[1]])==mp)],
            border=scen_col[which(names(mse)==s)])
       mtext(mp, 3, line=-2.5, cex=0.8)
       mtext(s, 3, line=-1.2, cex=0.8)
-    } # end s loop
   } # end mp loop
+  } # end s loop
   mtext(paste(sp, p, sep=" "), 3, line=-0.2, cex=1, outer=T)
 
 }

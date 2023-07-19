@@ -140,8 +140,10 @@ for(i in 1:length(evalEM_)){
 # Final SCA application
 These second round of results are comparing SCA-based EM results to the OM dynamics at the final SCA application of the simulation. Plots show histograms of relative error ( EMest-OMval)/OMval ) of EM-estimated values. The bars are colored in gray-scale based on MP, and the bar borders are colored based on the OM scenario. 
 
+Note that MSY-based reference points are assumed static in the OM projections except in the age0_hi and age0_lo scenarios, reflecting dynamics where the spawner-recruit relationship is unchanging. 
 
-```{r VS-final-EM, echo=FALSE, fig.height=9,  fig.cap = "VS final EM relative performance"}
+
+```{r VS-final-EM, echo=FALSE, fig.height=12,  fig.cap = "VS final EM relative performance"}
 sp<-"VS"
 tEMres<- get(paste0(sp,"_tEM"))
 
@@ -152,7 +154,7 @@ for(p in names(tEMres[[s]][[mp]]) ){
 
 ```
 
-```{r BSB-final-EM, echo=FALSE, fig.height=9,  fig.cap = "BSB final EM relative performance"}
+```{r BSB-final-EM, echo=FALSE, fig.height=12,  fig.cap = "BSB final EM relative performance"}
 sp<-"BSB"
 tEMres<- get(paste0(sp,"_tEM"))
 
@@ -163,7 +165,7 @@ for(p in names(tEMres[[s]][[mp]]) ){
 
 ```
 
-```{r RP-final-EM, echo=FALSE, fig.height=9,  fig.cap = "RP final EM relative performance"}
+```{r RP-final-EM, echo=FALSE, fig.height=12,  fig.cap = "RP final EM relative performance"}
 sp<-"RP"
 tEMres<- get(paste0(sp,"_tEM"))
 
