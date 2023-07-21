@@ -91,33 +91,34 @@ OMName_scen_complete <- NA
 
 
 
-MPs_user_BSB <- c("ZeroC",
-                  "SCA_1", #"SCA_5", "SCA_10",
+MPs_user_BSB <- c("SCA_1", #"SCA_5", "SCA_10",
                   "pMP_5","pMP_10" ,
                   "GB_target_BSB", # "GB_target_BSB2",
                   "myICI_BSB", "myIratio_BSB",
                   "myIT10_BSB", "myItarget_BSB" ,
                   "GB_slope_BSB",#"GB_slope_BSB1","GB_slope_BSB2",
-                  "myIslope_BSB2" # "myIslope_BSB",
+                  "myIslope_BSB2", # "myIslope_BSB",
+                  "ZeroC"
+
 )
-MPs_user_RP <- c("ZeroC",
-                 "SCA_1", #"SCA_5", "SCA_10",
+MPs_user_RP <- c("SCA_1", #"SCA_5", "SCA_10",
                  "pMP_5","pMP_10" ,
                  "GB_target_RP2", #"GB_target_RP",
                  "myICI_RP2", #"myICI_RP",
                  "myIratio_RP",
                  "myIT10_RP", "myItarget_RP",
                  "GB_slope_RP2",#"GB_slope_RP",
-                 "myIslope_RP2" #"myIslope_RP",
+                 "myIslope_RP2", #"myIslope_RP",
+                 "ZeroC"
 )
-MPs_user_VS <- c("ZeroC",
-                 "SCA_1", #"SCA_5", "SCA_10",
+MPs_user_VS <- c("SCA_1", #"SCA_5", "SCA_10",
                  "pMP_5","pMP_10" ,
                  "GB_target_VS2", #"GB_target_VS",
                  "myICI_VS", "myIratio_VS",
                  "myIT10_VS", "myItarget_VS",
                  "GB_slope_VS", # "GB_slope_VS2",
-                 "myIslope_VS2" #"myIslope_VS",
+                 "myIslope_VS2", #"myIslope_VS",
+                 "ZeroC"
 )
 
 
