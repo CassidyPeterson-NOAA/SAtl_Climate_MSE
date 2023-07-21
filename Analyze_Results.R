@@ -116,7 +116,7 @@ scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
 #   MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
 # }
 # if(abbrev==TRUE){
-  MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
+  MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') #'lightskyblue1',,'lightskyblue','skyblue3''darkturquoise'
 # }
 
 par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)

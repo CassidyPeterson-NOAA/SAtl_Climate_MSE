@@ -597,8 +597,8 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
     results<-get(res,data)
 
     MP_names<-data[[1]]@MPs
-    MP_namesR<-c(MP_names[oMPs])
-
+    MP_namesR<-c(MP_names[oMPs])[subset]
+    if(length(subset)!=length(colsR)){colsR=colsR[subset]}
 
 
     ## SSB/SSBMSY
@@ -622,14 +622,14 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
 
     index<-subset[1]
     plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2,
-         ylab=expression("SSB / SSB"['MSY']), xlab="Projected Years", col=colsR[index])
+         ylab=expression("SSB / SSB"['MSY']), xlab="Projected Years", col=colsR[1])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@SB_SBMSY[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -666,6 +666,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
 
     MP_names<-data[[1]]@MPs
     MP_namesR<-c(MP_names[oMPs])[subset]
+    if(length(subset)!=length(colsR)){colsR=colsR[subset]}
 
 
     ## SSB/SSBMSY
@@ -689,7 +690,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
     SSBSSB0<-apply(SSBtmp, 2, median)
 
     plot(SSBSSB0, type='l', ylim=ylims, lwd=2,
-         ylab=expression("SSB / dSSB"['0']), xlab="Projected Years", col=colsR[index])
+         ylab=expression("SSB / dSSB"['0']), xlab="Projected Years", col=colsR[1])
 
     abline(h=1)
     abline(h=refline, lty=2)
@@ -703,7 +704,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
                        results@RefPoint$Dynamic_Unfished$SSB0[,lngth], 2, median)
       lines(SSBSSB0, type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=1)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=5, cex=1)
     mtext( paste0(fsh, " ", res), side=3, line=labline, cex=0.8)
 
     if(save.png==T){
@@ -713,7 +714,7 @@ Plot_SSBtraj_dSSB0<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=2, cex=0.75)
 
 } # end function
 
@@ -738,6 +739,7 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
 
     MP_names<-data[[1]]@MPs
     MP_namesR<-c(MP_names[oMPs])[subset]
+    if(length(subset)!=length(colsR)){colsR=colsR[subset]}
 
 
 
@@ -762,14 +764,14 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
 
     index<-subset[1]
     plot(apply(results@SSB[,index,], 2, median), type='l', ylim=c(0, max_y*0.95), lwd=2,
-         ylab="SSB" , xlab="Projected Years", col=colsR[index])
+         ylab="SSB" , xlab="Projected Years", col=colsR[1])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@SSB[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -779,7 +781,7 @@ Plot_SSBtraj_rawSSB<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=2, cex=0.75)
 
 } # end function
 
@@ -800,6 +802,7 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
   } # end get scenarios
   if(is.null(subset)){subset<-c(1:data[[1]]@nMPs)
   }else{ subset<-subset }
+  if(length(subset)!=length(colsR)){colsR=colsR[subset]}
 
   for(res in scenarios){
     results<-get(res,data)
@@ -828,14 +831,14 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
     }
 
     index<-subset[1]
-    plot(apply(results@Catch[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years", col=colsR[index])
+    plot(apply(results@Catch[,index,], 2, median), type='l', ylim=c(0, max(max_y*1.1, 1.1)), lwd=2, ylab="Catch", xlab="Projected Years", col=colsR[1])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
       lines(apply(results@Catch[,i,], 2, median), type='l', lwd=2, lty=iorder, col=colsR[iorder])
     }
-    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=5, cex=0.75)
+    if(save.png==T) legend("bottom", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=5, cex=0.75)
     mtext( paste0(fsh, " ", res), side=3, line=-1.2)
 
     if(save.png==T){
@@ -845,7 +848,7 @@ Plot_Catchtraj<-function( fsh, scenarios=NULL, save.png=F,
   } # end for res
 
   plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')
-  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR[subset], bty='n', ncol=2, cex=0.75)
+  legend("center", namesR[subset], lwd=2, lty=1:length(subset), col=colsR, bty='n', ncol=2, cex=0.75)
 
 } # end function
 
