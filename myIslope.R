@@ -60,9 +60,9 @@ class(myIslope_VS)<-"MP"
 
 
 myIslope_VS2<-myIslope          # THIS ONE USED IN RESULTS
-formals(myIslope_VS2)$lambda<-1 #0.45
-formals(myIslope_VS2)$xx<- 0.33    # 0.05
-formals(myIslope_VS2)$c1<-1.02       # 1
+formals(myIslope_VS2)$lambda<-1 #1
+formals(myIslope_VS2)$xx<- 0.33    # 0.33
+formals(myIslope_VS2)$c1<-1.0275      # 1.02
 
 class(myIslope_VS2)<-"MP"
 
