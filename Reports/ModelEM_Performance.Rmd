@@ -1,0 +1,177 @@
+---
+title: "ModelEM_Performance"
+author: "Cassidy Peterson"
+date: "July 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# library(knitr)
+knitr::opts_chunk$set(echo = TRUE, autodep = TRUE, cache=TRUE)
+# library(openMSE)
+# library(vioplot)
+setwd('C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
+# knitr::opts_knit$set(root.dir = 'C:\\Users\\cassidy.peterson\\Documents\\Github\\SAtl_Climate_MSE')
+source("get_testEM_results.R")
+source("get_terminalEM_results.R")
+
+```
+
+## Background
+
+This document shows the performance of the model-based EMs from a South Atlantic MSE exercise for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)). 
+
+
+
+
+# First SCA application 
+These first round of analyses are based on the base-case OM scenario at the end of the historical period compared to the first application of the EM. 
+
+## VS Model-EM Results
+
+```{r VS-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "VS OM Recruitment Dynamics"}
+
+# testOM<-testOM_BlackSeaBass
+# testEM<-testEM_BlackSeaBass
+# sp<-"BSB"
+testOM<-testOM_VermilionSnapper
+testEM<-testEM_VermilionSnapper
+sp<-"VS"
+# testOM<-testOM_RedPorgy
+# testEM<-testEM_RedPorgy
+# sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r VS-EM, echo=FALSE, fig.height=8, fig.cap = "VS EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
+
+
+## BSB Model-EM Results
+
+
+```{r BSB-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "BSB OM Recruitment Dynamics"}
+
+testOM<-testOM_BlackSeaBass
+testEM<-testEM_BlackSeaBass
+sp<-"BSB"
+# testOM<-testOM_VermilionSnapper
+# testEM<-testEM_VermilionSnapper
+# sp<-"VS"
+# testOM<-testOM_RedPorgy
+# testEM<-testEM_RedPorgy
+# sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r BSB-EM, echo=FALSE, fig.height=8, fig.cap = "BSB EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
+
+
+## RP Model-EM Results
+
+
+```{r RP-OMRec, echo=FALSE, fig.height=6, cache=TRUE,  fig.cap = "RP OM Recruitment Dynamics"}
+
+# testOM<-testOM_BlackSeaBass
+# testEM<-testEM_BlackSeaBass
+# sp<-"BSB"
+# testOM<-testOM_VermilionSnapper
+# testEM<-testEM_VermilionSnapper
+# sp<-"VS"
+testOM<-testOM_RedPorgy
+testEM<-testEM_RedPorgy
+sp<-"RP"
+# 
+evalEM_<-evalEM(testOM, testEM)
+
+hst<-OM_Perry_hist(testOM, title=paste0(sp," OM recruitment dynamics"))
+```
+
+EM estimates are presented relative to OM-designated values (e.g., (EMval - OMval)/OMval). 
+```{r RP-EM, echo=FALSE, fig.height=8,  fig.cap = "RP EM relative performance"}
+
+# length(evalEM_)
+par(mfrow=c(3,3))
+for(i in 1:length(evalEM_)){
+  if(names(evalEM_)[i]!="NLL") {
+      hist(evalEM_[[i]], main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+  if(names(evalEM_)[i]=="NLL") {
+    hist(evalEM_[[i]]$Total, main=paste0(sp," ", names(evalEM_)[i]), xlab="")
+  }
+}
+```
+
+
+
+
+
+# Final SCA application
+These second round of results are comparing SCA-based EM results to the OM dynamics at the final SCA application of the simulation. Plots show histograms of relative error ( EMest-OMval)/OMval ) of EM-estimated values. The bars are colored in gray-scale based on MP, and the bar borders are colored based on the OM scenario. 
+
+Note that MSY-based reference points are assumed static in the OM projections except in the age0_hi and age0_lo scenarios, reflecting dynamics where the spawner-recruit relationship is unchanging. 
+
+
+```{r VS-final-EM, echo=FALSE, fig.height=12,  fig.cap = "VS final EM relative performance"}
+sp<-"VS"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
+```
+
+```{r BSB-final-EM, echo=FALSE, fig.height=12,  fig.cap = "BSB final EM relative performance"}
+sp<-"BSB"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
+```
+
+```{r RP-final-EM, echo=FALSE, fig.height=12,  fig.cap = "RP final EM relative performance"}
+sp<-"RP"
+tEMres<- get(paste0(sp,"_tEM"))
+
+# run plotting loop for every em perf metric (p)
+for(p in names(tEMres[[s]][[mp]]) ){
+  Plot_tEMres(tEMres, p)
+} # end p loop
+
+```

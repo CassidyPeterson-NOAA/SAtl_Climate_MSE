@@ -140,7 +140,7 @@ class(myItarget)<-"MP"
 # BSB
 myItarget_BSB<-myItarget
 formals(myItarget_BSB)$c1<-1     #1
-formals(myItarget_BSB)$c2<-0.3   #0.3
+formals(myItarget_BSB)$c2<-0.47   #0.3
 formals(myItarget_BSB)$xx<-0     #0
 formals(myItarget_BSB)$Imulti<-1 #1
 class(myItarget_BSB)<-"MP"
@@ -181,10 +181,10 @@ class(myItarget_VS1)<-"MP"
 
 
 myItarget_VS2<-myItarget         # THIS ONE USED IN RESULTS
-formals(myItarget_VS2)$c1<-0.5     #1
-formals(myItarget_VS2)$c2<-0.8   #0.3
+formals(myItarget_VS2)$c1<-0.5     #0.5
+formals(myItarget_VS2)$c2<-0.8   #0.8
 formals(myItarget_VS2)$xx<-0     #0
-formals(myItarget_VS2)$Imulti<-1.1 #1
+formals(myItarget_VS2)$Imulti<-1.0 #1.1
 class(myItarget_VS2)<-"MP"
 
 

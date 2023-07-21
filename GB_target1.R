@@ -41,7 +41,7 @@ class(myGB_target)<-"MP"
 
 GB_target_BSB<-myGB_target # THIS ONE SELECTED FOR RESULTS
 formals(GB_target_BSB)$w<-0.1      # 0.5
-formals(GB_target_BSB)$c0<-0.2    # 0.35
+formals(GB_target_BSB)$c0<-0.25 #0.2    # 0.35
 formals(GB_target_BSB)$delta<-0.3  # 0.2
 class(GB_target_BSB)<-"MP"
 
@@ -60,11 +60,17 @@ formals(GB_target_RP)$c0<-0.941   #0.955
 formals(GB_target_RP)$delta<-0.3  #0.2
 class(GB_target_RP)<-"MP"
 
-GB_target_RP2<-myGB_target # THIS ONE SELECTED FOR RESULTS
+GB_target_RP2<-myGB_target # THIS ONE SELECTED FOR RESULTS July 2023
 formals(GB_target_RP2)$w<-0.5      # 0.5
-formals(GB_target_RP2)$c0<-1    # 1
+formals(GB_target_RP2)$c0<-1.05    # 1
 formals(GB_target_RP2)$delta<-0.2  # 0.2
 class(GB_target_RP2)<-"MP"
+
+GB_target_RP3<-myGB_target # old results
+formals(GB_target_RP3)$w<-0.5      # 0.5
+formals(GB_target_RP3)$c0<-1    # 1
+formals(GB_target_RP3)$delta<-0.2  # 0.2
+class(GB_target_RP3)<-"MP"
 
 
 
@@ -79,8 +85,9 @@ class(GB_target_VS)<-"MP"
 
 
 # less responsive GBtarget_VS
-GB_target_VS2<-GB_target_VS # THIS ONE SELECTED IN RESULTS
-formals(GB_target_VS2)$w<-0.25
+GB_target_VS2<-myGB_target # THIS ONE SELECTED IN RESULTS
+formals(GB_target_VS2)$w<-0.2 # 0.25
+formals(GB_target_VS2)$c0<-0.56    # 0.49
 formals(GB_target_VS2)$delta<-0.2
 class(GB_target_VS2)<-"MP"
 

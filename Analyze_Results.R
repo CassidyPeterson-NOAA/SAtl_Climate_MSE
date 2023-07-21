@@ -9,111 +9,115 @@ source("Analyze_Results_Setup.R")
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
 # species<-"RedPorgy"; sp<-"RP"
-# species<-"VermilionSnapper"; sp<-"VS"
-species<-"BlackSeaBass"; sp<-"BSB"
+species<-"VermilionSnapper"; sp<-"VS"
+# species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
 
-MPs_user_BSB <- c("SCA_1", "pMP_5","pMP_10" ,
-                  "GB_target_BSB", "GB_target_BSB2",
+MPs_user_BSB <- c("ZeroC",
+                  "SCA_1", "SCA_5", "SCA_10",
+                  "pMP_5","pMP_10" ,
+                  "GB_target_BSB", # "GB_target_BSB2",
                   "myICI_BSB", "myIratio_BSB",
                   "myIT10_BSB", "myItarget_BSB" ,
-                  "GB_slope_BSB","GB_slope_BSB1","GB_slope_BSB2",
-                  "myIslope_BSB","myIslope_BSB2",
-                  "SCA_5","SCA_10"
+                  "GB_slope_BSB",#"GB_slope_BSB1","GB_slope_BSB2",
+                  "myIslope_BSB2" # "myIslope_BSB",
 )
-MPs_user_RP <- c("SCA_1", "pMP_5", "pMP_10",
-                 "GB_target_RP", "GB_target_RP2",
-                 "myICI_RP", "myICI_RP2", "myIratio_RP",
+MPs_user_RP <- c("ZeroC",
+                 "SCA_1", "SCA_5", "SCA_10",
+                 "pMP_5","pMP_10" ,
+                 "GB_target_RP2", #"GB_target_RP",
+                 "myICI2_RP", #"myICI_RP",
+                 "myIratio_RP",
                  "myIT10_RP", "myItarget_RP",
-                 "GB_slope_RP","GB_slope_RP2",
-                 "myIslope_RP", "myIslope_RP2",
-                 "SCA_5","SCA_10"
+                 "GB_slope_RP2",#"GB_slope_RP",
+                 "myIslope_RP2" #"myIslope_RP",
 )
-MPs_user_VS <- c("SCA_1", "pMP_5", "pMP_10",
-                 "GB_target_VS", "GB_target_VS2",
+MPs_user_VS <- c("ZeroC",
+                 "SCA_1", "SCA_5", "SCA_10",
+                 "pMP_5","pMP_10" ,
+                 "GB_target_VS2", #"GB_target_VS",
                  "myICI_VS", "myIratio_VS",
-                 "myIT10_VS", "myItarget_VS", "myItarget_VS2",
-                 "GB_slope_VS", "GB_slope_VS2",
-                 "myIslope_VS", "myIslope_VS2",
-                 "SCA_5","SCA_10"
+                 "myIT10_VS", "myItarget_VS",
+                 "GB_slope_VS", # "GB_slope_VS2",
+                 "myIslope_VS2" #"myIslope_VS",
 )
 
-abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
+# abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
 
-orderedMPs<- c(1, 15:16, 2:14) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedMPs<- c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
 orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
 # get(sp)$base@MPs
-if(sp=="VS" | sp=="VS_O") {
-  if(abbrev==TRUE){
-    # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
-    orderedMPs<-c(1,15:16,2:3,5:8,10:11,14)
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+# if(sp=="VS" | sp=="VS_O") {
+  # if(abbrev==TRUE){
+  #   # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
+  #   orderedMPs<-c(1,15:16,2:3,5:8,10:11,14)
+    MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+    MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "GBt",
                         "ICI","Ir","I10","It","GBs","Is")
-  }#end if abbrev==TRUE
+#   }#end if abbrev==TRUE
+#
+#   if(abbrev==FALSE){
+#     MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+#                      "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","Itarg2",
+#                      "GBslope","GBslope2","Islope","Islope2")
+#     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+#                         "ICI","Ira","I10","Ita","It2","GBs","Gs2","Isl","Is2")
+#   }#end if abbrev==False
+# } # end if sp==VS
+#
+# if(sp=="RP" | sp=="RP_O") {
+#   # if(abbrev==FALSE){
+#   #   MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+#   #                    "GBtarg","GBtarg2","ICI","ICI2","Irat","IT10","Itarg",
+#   #                    "GBslope","GBslope2","Islope","Islope2")
+#   #   MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+#   #                       "ICI","IC2","Ira","I10","Ita","GBs","Gs2","Isl","Is2")
+#   # }#end abbrev=F
+#   # if(abbrev==TRUE){
+#     # RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
+#     # orderedMPs<- c(1, 15:16, 2:3, 5, 7:10, 12, 14)
+#     MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+#                      "GBtarg","ICI","Irat","IT10","Itarg",
+#                      "GBslope","Islope")
+#     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+#                         "ICI","Ir","I10","It","GBs","Is")
+#   # }#end abbrev=T
+# }# end RP
+#
+# if(sp=="BSB" | sp=="BSB_O") {
+#   # if(abbrev==FALSE){
+#   #   MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+#   #                    "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg",
+#   #                    "GBslope","GBslope1","GBslope2","Islope","Islope2")
+#   #   MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
+#   #                       "ICI","Ira","I10","Ita","GBs","Gs1","Gs2","Isl","Is2")
+#   # }# end abbrev=F
+#   # if(abbrev==TRUE){
+#     # orderedMPs<- c(1, 15:16, 2:4, 6:10, 13)
+#     # BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
+#     MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+#                      "GBtarg","ICI","Irat","IT10","Itarg",
+#                      "GBslope","Islope")
+#     MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
+#                         "ICI","Ir","I10","It","GBs","Is")
+#   # }# end abbrev=T
+#
+#   } #end BSB
 
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg","Itarg2",
-                     "GBslope","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","Ira","I10","Ita","It2","GBs","Gs2","Isl","Is2")
-  }#end if abbrev==False
-} # end if sp==VS
 
-if(sp=="RP" | sp=="RP_O") {
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","ICI2","Irat","IT10","Itarg",
-                     "GBslope","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","IC2","Ira","I10","Ita","GBs","Gs2","Isl","Is2")
-  }#end abbrev=F
-  if(abbrev==TRUE){
-    # RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
-    orderedMPs<- c(1, 15:16, 2:3, 5, 7:10, 12, 14)
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","ICI","Irat","IT10","Itarg",
-                     "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ir","I10","It","GBs","Is")
-  }#end abbrev=T
-}# end RP
-
-if(sp=="BSB" | sp=="BSB_O") {
-  if(abbrev==FALSE){
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","GBtarg2","ICI","Irat","IT10","Itarg",
-                     "GBslope","GBslope1","GBslope2","Islope","Islope2")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt","Gt2",
-                        "ICI","Ira","I10","Ita","GBs","Gs1","Gs2","Isl","Is2")
-  }# end abbrev=F
-  if(abbrev==TRUE){
-    orderedMPs<- c(1, 15:16, 2:4, 6:10, 13)
-    # BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
-    MP_namesR_leg<-c("SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","ICI","Irat","IT10","Itarg",
-                     "GBslope","Islope")
-    MP_namesR_abbrev<-c("S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ir","I10","It","GBs","Is")
-  }# end abbrev=T
-
-  } #end BSB
-
-
-if(abbrev==FALSE){
-  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
-}
-if(abbrev==TRUE){
-  MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
-}
+# if(abbrev==FALSE){
+#   MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
+# }
+# if(abbrev==TRUE){
+  MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') #'lightskyblue1',,'lightskyblue','skyblue3''darkturquoise'
+# }
 
 par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par(par.args)
@@ -155,28 +159,54 @@ par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_MSY(fsh=sp)
 par(mfrow=c(4,3), par.args)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp)
+Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2:13))
 par(mfrow=c(4,3), par.args)
 Plot_SSBtraj_rawSSB(fsh=sp)
 
 par(mfrow=c(4,3), par.args)
-Plot_Catchtraj(fsh=sp)
+Plot_Catchtraj(fsh=sp) ## error
 
 ### Plot subset median Trajectories
 par(mfrow=c(4,3), par.args)
-Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,6:12),#subset=c(1,8:13),
+Plot_SSBtraj_dSSB0(fsh=sp, subset=c(2,7:13),#subset=c(1,8:13),
              colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue', 'orchid'))
                      # ,'blue','pink','green','orchid','cyan'))
 get(sp)$base@MPs[orderedMPs]
-Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,6:7),#subset=c(1,8:13),
+Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1,7:8),#subset=c(1,8:13),
              colsR=c('black','deepskyblue','deeppink'))
 # BSB: GB_targ_BSB | GB_slope_BSB | myIslope_BSB
 # RP: GB_targ_RP2 | myICI_RP2 | GB_slope_RP2 | myIslope_RP2
 # RP_O: GB_targ_RP | myICI_RP (doesn't really matter) | myIslope_RP (doesn't really matter)
 # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
 par(mfrow=c(4,3), par.args)
-Plot_SSBtraj(fsh=sp, subset=c(1:5),
-             colsR=c('black','deepskyblue','steelblue','deeppink','darkorange'))
+Plot_SSBtraj_dSSB0(fsh=sp, subset=c(1:6),
+             colsR=c('black','deepskyblue','steelblue','deeppink','darkorange','steelblue'))
+
+
+## compare indices for base, uobsHi and uobsLo
+# higher CV allows for higher observed index values (logn distn; that no upper bound but lower bound of 0) -- higher index values translates to higher observed abundance -- higher TACs, which reduce the pop size relative to Base and uobsLo scenarios.
+base<-get(sp)[["base"]]
+uobsHi<-get(sp)[["uobs_hi"]]
+uobsLo<-get(sp)[["uobs_lo"]]
+par(mfrow=c(4,3))
+for(i in 100:111){
+  plot(uobsHi@PPD$SCA_1@AddInd[i,1,], type='l', col='red', ylab="Index",xlab="Year")
+  lines(uobsLo@PPD$SCA_1@AddInd[i,1,], type='l', col='deepskyblue')
+  lines(base@PPD$SCA_1@AddInd[i,1,], type='l')
+}
+
+
+boxplot(c(uobsHi@PPD$SCA_1@AddInd[,1,59:88]), c(base@PPD$SCA_1@AddInd[,1,59:88]), c(uobsLo@PPD$SCA_1@AddInd[,1,59:88]),
+        col=c('red','grey','deepskyblue'),ylab="Index (last 30 years)")
+boxplot(c(uobsHi@TAC[,2,21:50]), c(base@TAC[,2,21:50]), c(uobsLo@TAC[,2,21:50]),
+        col=c('red','grey','deepskyblue'),ylab="TAC (last 30 years)", ylim=c(0,7500))
+# vioplot(c(uobsHi@TAC[,2,1:9]), c(base@TAC[,2,1:9]), c(uobsLo@TAC[,2,1:9]),
+#         col=c('red','grey','deepskyblue'),ylab="TAC", ylim=c(0,7500))
+# uobsHi@PPD[[2]]@CV_AddInd[,1,]
+# uobsHi@Hist@Data@CV_AddInd
+
+  # summary(uobsHi)
+
 
 ### plot violin plots
 stat=c("AAVY","trelSSB","treldSSB0", "trelF","t10relSSB",

@@ -55,14 +55,14 @@ formals(myICI_RP)$csd<- 0.1 # 1
 class(myICI_RP)<-"MP"
 #RP
 myICI_RP2<-myICI            # THIS ONE USED FOR RESULTS
-formals(myICI_RP2)$cmu<-0.9175 # 0.9175
+formals(myICI_RP2)$cmu<- 1.1 # 0.9175
 formals(myICI_RP2)$csd<- 1 # 1
 class(myICI_RP2)<-"MP"
 
 
 # VS
 myICI_VS<-myICI
-formals(myICI_VS)$cmu<-0.625 #
+formals(myICI_VS)$cmu<- 0.55 # 0.625 #
 formals(myICI_VS)$csd<- 1 #
 class(myICI_VS)<-"MP"
 

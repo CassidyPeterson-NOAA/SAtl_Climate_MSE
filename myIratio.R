@@ -51,14 +51,14 @@ class(myIratio_VS)<-"MP"
 
 # BSB
 myIratio_BSB<-myIratio
-formals(myIratio_BSB)$const<-1.3 # 1.2 or 1.32
+formals(myIratio_BSB)$const<-1.15 #1.3 # 1.2 or 1.32
 formals(myIratio_BSB)$yrs<-c(2,5) # c(2,5) or c(2,6)
 class(myIratio_BSB)<-"MP"
 
 
 # RP
 myIratio_RP<-myIratio
-formals(myIratio_RP)$const<-0.995 #0.99
+formals(myIratio_RP)$const<-0.985 #0.995
 class(myIratio_RP)<-"MP"
 
 

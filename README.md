@@ -5,6 +5,8 @@ This [repository](https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE) cont
 
 > Peterson et al. (in prep) Climate-readiness of fisheries management procedures with application to the southeast U.S. Atlantic. 
 
+Note this research builds on work led by Nikolai Klibansky found [here](https://github.com/nikolaifish/SEFSCInterimAnalysis).  
+
 ## Overview
 * This analysis used a desk MSE to explore the performance of various MPs with nonstationary future projections, using three commercially and recreationally important fish stocks in the southeast U.S. Atlantic as a case study.
 * MPs tested include traditional model-based (statistical-catch-at-age stock assessment) and less conventional [empirical (non-model, indicator-based) MPs](https://dlmtool.github.io/DLMtool/reference/index.html). 
@@ -27,23 +29,38 @@ This [repository](https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE) cont
 ## Software and Packages
 This project uses [openMSE](https://openmse.com/) software (developed by [Blue Matter Science](https://www.bluematterscience.com/)) and builds on extensive foundational work led by Nikolai Klibansky (see [bamExtras](https://github.com/nikolaifish/bamExtras), [bamMSE](https://github.com/nikolaifish/bamMSE), and [SEFSCInterimAnalysis](https://github.com/nikolaifish/SEFSCInterimAnalysis)).
 
+
+## OM dynamics 
+See conditioned operating model summary reports below. 
+
+* [See VS OM Report Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/OM_VermilionSnapper_base.html)
+* [See BSB OM Report Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/OM_BlackSeaBass_base.html)
+* [See RP OM Report Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/OM_RedPorgy_base.html)
+
+
 ## Results
-[See All Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results.html)
+See complete result reports below. 
 
-[See VS Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_SAtl_Climate_MSE_Results.html)
+* [See All Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/SAtl_ClimateMSE_Results.html)
 
-[See BSB Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_SAtl_Climate_MSE_Results.html)
+  * [See VS Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/VS_SAtl_Climate_MSE_Results.html)
 
-[See RP Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_SAtl_Climate_MSE_Results.html)
+  * [See BSB Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/BSB_SAtl_Climate_MSE_Results.html)
+
+  * [See RP Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/RP_SAtl_Climate_MSE_Results.html)
 
 
-[See All Results with Implementation Overages Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/SAtl_ClimateMSE_Results_Overages.html)
+* [See All Results with Implementation Overages Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/SAtl_ClimateMSE_Results_Overages.html)
 
-[See VS_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/VS_O_SAtl_Climate_MSE_Results.html)
+  * [See VS_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/VS_O_SAtl_Climate_MSE_Results.html)
 
-[See BSB_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/BSB_O_SAtl_Climate_MSE_Results.html)
+  * [See BSB_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/BSB_O_SAtl_Climate_MSE_Results.html)
 
-[See RP_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/RP_O_SAtl_Climate_MSE_Results.html)
+  * [See RP_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/RP_O_SAtl_Climate_MSE_Results.html)
+
+
+## EM Performance
+See EM performance through values of estimated key parameters [here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/ModelEM_Performance.html). 
 
 
 

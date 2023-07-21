@@ -110,10 +110,10 @@ class(myIT10_BSB)<-"MP"
 # RP
 # yrsmth=5, mc=0.1, ii=1, c=0.95
 myIT10_RP<-myIT10
-formals(myIT10_RP)$mc<-0.3   #0.1 # alternate tuning mc=0.3, c1=1, c2=0.905, damp=1
-formals(myIT10_RP)$c1<-1     #1
-formals(myIT10_RP)$c2<-0.9225 #0.945
-formals(myIT10_RP)$damp<-0.75 #1
+formals(myIT10_RP)$mc<-0.3   #0.3 # alternate tuning mc=0.3, c1=1, c2=0.905, damp=1
+formals(myIT10_RP)$c1<-1.26     #1
+formals(myIT10_RP)$c2<-0.9225 #0.9225
+formals(myIT10_RP)$damp<-0.5 #0.75
 
 class(myIT10_RP)<-"MP"
 
