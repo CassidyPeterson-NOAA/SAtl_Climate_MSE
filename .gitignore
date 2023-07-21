@@ -76,4 +76,5 @@ HelperFile.R
 run_script_simple_FullDiag.R
 
 SAVE_PLOTS_Analyze_Results.R
+run_script_CPTest2_AllScenarios_SUPERCOMP_slope2.R
 
