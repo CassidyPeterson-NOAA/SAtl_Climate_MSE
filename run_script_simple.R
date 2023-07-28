@@ -18,8 +18,8 @@ t_list <- Sys.time()
 myseed <- 8675309
 
 
-# filepath <- "C:/Users/cassidy.peterson/Documents/git"
-filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
+filepath <- "C:/Users/cassidy.peterson/Documents/git"
+# filepath<-"C:/Users/cassidy.peterson/Documents/Github/"
 
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/Assess_diagnostic_NK.R"))
 source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/make_MP_NK.R"))
@@ -693,7 +693,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
       res <- MSE_batch
       names(res@PPD) <- res@MPs
 
-      saveRDS(res,file = paste0("MSE_obj/", MSEName_k, "_", scenario_i, ".rds"))
+      saveRDS(res,file = paste0("D:/SAtl_MSE/MSE_obj/", MSEName_k, "_", scenario_i, ".rds"))
     # } #end if OMName_scen is not complete
   }
 
@@ -702,5 +702,4 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
 # save.image("run_script.RData")
 
 sfStop()
-
 
