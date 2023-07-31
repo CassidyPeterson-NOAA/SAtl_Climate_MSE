@@ -358,7 +358,7 @@ source(file.path(filepath,"SAtl_Climate_MSE/myIratio.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIslope.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myIT10.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/myItarget.R"))
-source(file.path(filepath,"SEFSCInterimAnalysis/RunMSE/SEFSC/fn/merge_MSE.R"))
+source(file.path(filepath,"SAtl_Climate_MSE/merge_MSE_CP.R"))
 source(file.path(filepath,"SAtl_Climate_MSE/ZeroC.R"))
 
 
@@ -370,6 +370,7 @@ OMNames<-OMName
 
 # OMName_k<-OMNames[3]
 # scenario_i<-scenario[1]
+# scenario<-scenario[1]
 
 
 for(OMName_k in OMNames)       { ######### Loop over operating model
@@ -677,19 +678,21 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
       testOM_temp<-Simulate(OM_k)
       testEM_temp<-prelim_AM(OM_k, SCA_NK, args=BAM_SCA_args)
 
-      TempListOM[[scenario_i]]<-testOM_temp
-      TempListEM[[scenario_i]]<-testEM_temp
+      # TempListOM[[scenario_i]]<-testOM_temp
+      # TempListEM[[scenario_i]]<-testEM_temp
+      saveRDS(testOM_temp,file = paste0("SCAtest/", gsub("OM","testOM",OMName_k),"_",scenario_i, ".rds"))
+      saveRDS(testEM_temp,file = paste0("SCAtest/", gsub("OM","testEM",OMName_k),"_",scenario_i, ".rds"))
 
-      plot(OM_k, output_dir="SCAtest", output_file=paste0(OMName_ki))
+      # plot(OM_k, output_dir="SCAtest", output_file=paste0(OMName_ki))
       # Perry<-testOM_temp@SampPars$Stock$Perr_y
       # summary(apply(log(Perry),1,sd))
       # hist(apply(log(Perry),1,sd), breaks=10)
 
   }
 
-
-  saveRDS(TempListOM,file = paste0("SCAtest/", gsub("OM","testOM",OMName_k), ".rds"))
-  saveRDS(TempListEM,file = paste0("SCAtest/", gsub("OM","testEM",OMName_k), ".rds"))
+#
+#   saveRDS(TempListOM,file = paste0("SCAtest/", gsub("OM","testOM",OMName_k), ".rds"))
+#   saveRDS(TempListEM,file = paste0("SCAtest/", gsub("OM","testEM",OMName_k), ".rds"))
 
 }
 
