@@ -258,12 +258,16 @@ base<-get(sp)[["base"]]
 uobsHi<-get(sp)[["uobs_hi"]]
 uobsLo<-get(sp)[["uobs_lo"]]
 par(mfrow=c(4,3), oma=c(0,1.2,1.2,0), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+yrs<-uobsHi@PPD$SCA_1@Year
+ey<-length(yrs)
+obj<-uobsHi@PPD$SCA_1@AddInd[1,1,]
+by<-tail(which(is.na(obj)),1)+1
 for(i in 100:111){
-  plot(uobsHi@PPD$SCA_1@AddInd[i,1,], type='l', col='red', ylab="Index",xlab="Year")
-  lines(uobsLo@PPD$SCA_1@AddInd[i,1,], type='l', col='deepskyblue')
-  lines(base@PPD$SCA_1@AddInd[i,1,], type='l')
+  plot(yrs[by:ey], uobsHi@PPD$SCA_1@AddInd[i,1,by:ey], type='l', col='red', ylab="Index",xlab="Year")
+  lines(yrs[by:ey], uobsLo@PPD$SCA_1@AddInd[i,1,by:ey], type='l', col='deepskyblue')
+  lines(yrs[by:ey], base@PPD$SCA_1@AddInd[i,1,by:ey], type='l')
 }
-
+legend("topright", c("base","uobsHi","uobsLo"), lty=1, lwd=1, col=c('black','red','deepskyblue'), bty='n')
 par(mfrow=c(1,2))
 boxplot(c(uobsHi@PPD$SCA_1@AddInd[,1,59:88]), c(base@PPD$SCA_1@AddInd[,1,59:88]), c(uobsLo@PPD$SCA_1@AddInd[,1,59:88]), 
         col=c('red','grey','deepskyblue'),ylab="Index (last 30 years)", names=c("uobs_Hi","base","uobs_Lo"))
