@@ -140,10 +140,15 @@ class(myItarget)<-"MP"
 # BSB
 myItarget_BSB<-myItarget
 formals(myItarget_BSB)$c1<-1     #1
-formals(myItarget_BSB)$c2<-0.47   #0.3
+formals(myItarget_BSB)$c2<-0.4   #0.3
 formals(myItarget_BSB)$xx<-0     #0
 formals(myItarget_BSB)$Imulti<-1 #1
 class(myItarget_BSB)<-"MP"
+# c1 | c2 | xx | Imulti | med(SSBRatio30)
+#  1 | 0.47 | 0 | 1 | 1.117
+#  1 | 0.49 | 0 | 1 | 1.122
+#  1 | 0.45 | 0 | 1 | 1.09
+#  1 | 0.4 | 0 | 1 | 1.03
 
 
 
@@ -152,10 +157,13 @@ class(myItarget_BSB)<-"MP"
 # RP
 myItarget_RP<-myItarget
 formals(myItarget_RP)$c1<-0.5     #0.5
-formals(myItarget_RP)$c2<-0.8   #0.8
+formals(myItarget_RP)$c2<-1   #0.8
 formals(myItarget_RP)$xx<-0     #0
 formals(myItarget_RP)$Imulti<-1.75 #1.75
 class(myItarget_RP)<-"MP"
+# c1 | c2 | xx | Imulti | med(SSBRatio30)
+# 0.5 | 0.8 | 0 | 1.75 | 0.82
+# 0.5 | 1 | 0 | 1.75 | 0.987
 
 
 
@@ -165,27 +173,39 @@ class(myItarget_RP)<-"MP"
 
 # VS
 
-myItarget_VS<-myItarget        # TESTED BUT NOT USED
-formals(myItarget_VS)$c1<-1
-formals(myItarget_VS)$c2<-1
+myItarget_VS<-myItarget
+formals(myItarget_VS)$c1<- 0.5
+formals(myItarget_VS)$c2<-0.9
 formals(myItarget_VS)$xx<-0
-formals(myItarget_VS)$Imulti<-2.5
+formals(myItarget_VS)$Imulti<-1
 class(myItarget_VS)<-"MP"
 
-myItarget_VS1<-myItarget        # TESTED BUT NOT USED
-formals(myItarget_VS1)$c1<-0.65     #1
-formals(myItarget_VS1)$c2<-0.6   #0.3
-formals(myItarget_VS1)$xx<-0     #0
-formals(myItarget_VS1)$Imulti<-1.5 #1
-class(myItarget_VS1)<-"MP"
+#c1 | c2 | xx | Imulti | med(SSBratio30)
+# 0.5 | 0.8 | 0 | 1 | 1.11
+# 0.5 | 0.9 | 0 | 1 | 1.028
+
+# myItarget_VS<-myItarget        # TESTED BUT NOT USED
+# formals(myItarget_VS)$c1<- 1
+# formals(myItarget_VS)$c2<-1
+# formals(myItarget_VS)$xx<-0
+# formals(myItarget_VS)$Imulti<-2.5
+# class(myItarget_VS)<-"MP"
 
 
-myItarget_VS2<-myItarget         # THIS ONE USED IN RESULTS
-formals(myItarget_VS2)$c1<-0.5     #0.5
-formals(myItarget_VS2)$c2<-0.8   #0.8
-formals(myItarget_VS2)$xx<-0     #0
-formals(myItarget_VS2)$Imulti<-1.0 #1.1
-class(myItarget_VS2)<-"MP"
+# myItarget_VS1<-myItarget        # TESTED BUT NOT USED
+# formals(myItarget_VS1)$c1<-0.65     #1
+# formals(myItarget_VS1)$c2<-0.6   #0.3
+# formals(myItarget_VS1)$xx<-0     #0
+# formals(myItarget_VS1)$Imulti<-1.5 #1
+# class(myItarget_VS1)<-"MP"
+
+
+# myItarget_VS2<-myItarget         # THIS ONE USED IN RESULTS
+# formals(myItarget_VS2)$c1<-0.5     #0.5
+# formals(myItarget_VS2)$c2<-0.8   #0.8
+# formals(myItarget_VS2)$xx<-0     #0
+# formals(myItarget_VS2)$Imulti<-1.0 #1.1
+# class(myItarget_VS2)<-"MP"
 
 
 

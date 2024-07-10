@@ -101,21 +101,51 @@ class(myIT10)<-"MP"
 myIT10_BSB<-myIT10
 formals(myIT10_BSB)$mc<-0.2 # 0.1
 formals(myIT10_BSB)$c1<-1
-formals(myIT10_BSB)$c2<-1.0 #0.9975
-formals(myIT10_BSB)$damp<-0.5 #1
+formals(myIT10_BSB)$c2<-1 #0.9975
+formals(myIT10_BSB)$damp<-0.25 #1
 class(myIT10_BSB)<-"MP"
-
+# mc | c1 | c2 | damp | med(SSBratio30)
+# 0.2 | 1 | 1 | 0.5 | 1.27
+# 0.2 | 1 | 1 | 1 | 1.37
+# 0.2 | 1 | 0.9 | 1 | 1.65
+# 0.2 | 0.9 | 1 | 1 | 1.54
+# 0.2 | 1.1 | 1 | 1 | 1.18
+# 0.2 | 1.2 | 1 | 1 | 0.93
+# 0.2 | 1.2 | 1 | 0.5 | 0.92
+# 0.2 | 1.2 | 1 | 0.25 | 0.92
+# 0.2 | 1.2 | 1 | 0.25 | 0.78
+# 0.2 | 1 | 1 | 0.25 | 0.96
 
 
 # RP
 # yrsmth=5, mc=0.1, ii=1, c=0.95
 myIT10_RP<-myIT10
 formals(myIT10_RP)$mc<-0.3   #0.3 # alternate tuning mc=0.3, c1=1, c2=0.905, damp=1
-formals(myIT10_RP)$c1<-1.26     #1
-formals(myIT10_RP)$c2<-0.9225 #0.9225
-formals(myIT10_RP)$damp<-0.5 #0.75
-
+formals(myIT10_RP)$c1<-1.0    #1
+formals(myIT10_RP)$c2<-0.965 #0.9225
+formals(myIT10_RP)$damp<-0.2 #0.75
 class(myIT10_RP)<-"MP"
+# mc | c1 | c2 | damp | med(SSBratio30)
+# 0.3 | 1.26 | 0.9225 | 0.5 | 1.6
+# 0.3 | 1.26 | 1 | 0.5 | 1.23
+# 0.3 | 1.26 | 1 | 1 | 1.31
+# 0.3 | 1.1 | 0.9225 | 0.5 | 1.42
+# 0.3 | 1.4 | 0.9225 | 0.5 | 1.7
+# 0.3 | 1.4 | 1 | 0.5 | 1.5
+# 0.3 | 1.4 | 0.8 | 0.5 | 1.8
+# 0.3 | 1.1 | 0.8 | 0.5 | 1.7
+# 0.3 | 0.9 | 0.9 | 0.5 | 1.03
+# 0.3 | 1.1 | 0.9 | 0.5 | 1.5
+# 0.3 | 1 | 0.9 | 0.5 | 1.33
+# 0.3 | 1 | 0.9 | 0.1 | 1.5
+# 0.3 | 1 | 0.9 | 0.2 | 1.5
+# 0.3 | 1 | 0.9 | 0.3 | 1.44
+# 0.3 | 1 | 0.95 | 0.3 | 1.1
+# 0.3 | 1 | 0.95 | 0.2 | 1.15
+# 0.3 | 1 | 1 | 0.2 | 0.48
+# 0.3 | 1 | 0.96 | 0.2 | 1.06
+# 0.3 | 1 | 0.965 | 0.2 | 1.0
+# 0.3 | 1 | 0.97 | 0.2 | 0.95
 
 # myIT10_RP2<-myIT10
 # formals(myIT10_RP2)$mc<-0.3   #0.1 # alternate tuning mc=0.3, c1=1, c2=0.905, damp=1
@@ -129,19 +159,35 @@ class(myIT10_RP)<-"MP"
 # yrsmth=5, mc=0.1, ii=1, c=0.8
 myIT10_VS<-myIT10          # SELECTED FOR RESULTS ANALYSIS
 formals(myIT10_VS)$mc<-0.3 # 0.3 - ALT tuning: mc=0.9, c1=1.6
-formals(myIT10_VS)$c1<- 1.575 # 1.575; TESTING: 1.6 when mc>0.5
+formals(myIT10_VS)$c1<- 0.98# 1.575; TESTING: 1.6 when mc>0.5
 formals(myIT10_VS)$c2<-1 # 1; OLD=0.9225
 formals(myIT10_VS)$c3<-1
 formals(myIT10_VS)$damp<-1 #1
-
 class(myIT10_VS)<-"MP"
+# mc | c1 | c2 | c3 | damp | med(SSBratio30)
+# 0.3 | 1.575 | 1 | 1 | 1 | 1.64
+# 0.3 | 1 | 1 | 1 | 1 | 1.08
+# 0.2 | 1 | 1 | 1 | 1 | 0.926
+# 0.3 | 1 | 1.2 | 1 | 1 | 0.508
+# 0.3 | 1 | 0.8 | 1 | 1 | 1.87
+# 0.3 | 1 | 0.9 | 1 | 1 | 1.77
+# 0.3 | 1.2 | 1.2 | 1 | 1 | 0.5460862
+# 0.3 | 1.2 | 1.5 | 1 | 1 | 0.48
+# 0.3 | 1.2 | 0.95 | 1 | 1 | 1.625
+# 0.3 | 1.05 | 1 | 1 | 1 | 1.24
+# 0.3 | 1.01 | 1 | 1 | 1 | 1.14
+# 0.3 | 0.99 | 1 | 1 | 1 | 1.056
+# 0.3 | 0.98 | 1 | 1 | 1 | 1.015
 
 
-myIT10_VS2<-myIT10           # TESTED BUT NOT USED
-formals(myIT10_VS2)$mc<-0.4 # 0.3 - ALT tuning: mc=0.9, c1=1.6
-formals(myIT10_VS2)$c1<-1.6 # 1.575; TESTING: 1.6 when mc>0.5
-formals(myIT10_VS2)$c2<-1 # 1; OLD=0.9225
-formals(myIT10_VS2)$c3<-1
-formals(myIT10_VS2)$damp<-0.5
 
-class(myIT10_VS2)<-"MP"
+
+
+
+# myIT10_VS2<-myIT10           # TESTED BUT NOT USED
+# formals(myIT10_VS2)$mc<-0.4 # 0.3 - ALT tuning: mc=0.9, c1=1.6
+# formals(myIT10_VS2)$c1<-1.6 # 1.575; TESTING: 1.6 when mc>0.5
+# formals(myIT10_VS2)$c2<-1 # 1; OLD=0.9225
+# formals(myIT10_VS2)$c3<-1
+# formals(myIT10_VS2)$damp<-0.5
+# class(myIT10_VS2)<-"MP"

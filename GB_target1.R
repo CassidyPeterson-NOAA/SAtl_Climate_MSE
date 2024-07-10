@@ -38,39 +38,53 @@ class(myGB_target)<-"MP"
 
 
 # BSB
-
 GB_target_BSB<-myGB_target # THIS ONE SELECTED FOR RESULTS
 formals(GB_target_BSB)$w<-0.1      # 0.5
-formals(GB_target_BSB)$c0<-0.25 #0.2    # 0.35
+formals(GB_target_BSB)$c0<-0.3 #0.2    # 0.35
 formals(GB_target_BSB)$delta<-0.3  # 0.2
 class(GB_target_BSB)<-"MP"
+# w | c0 | delta | med(SSBratio30)
+# 0.1 | 0.25 | 0.3 | 0.946
+# 0.5 | 0.25 | 0.3 | 0.779
+# 0.5 | 0.35 | 0.3 | 0.84
+# 0.5 | 0.5 | 0.3 | 1.04
+# 0.1 | 0.35 | 0.3 | 1.07
+# 0.1 | 0.3 | 0.3 | 1.0
 
-GB_target_BSB2<-myGB_target # TESTED BUT NOT PRESENTED
-formals(GB_target_BSB2)$w<-0.5      # 0.5
-formals(GB_target_BSB2)$c0<-0.35    # 0.35
-formals(GB_target_BSB2)$delta<-0.2  # 0.2
-class(GB_target_BSB2)<-"MP"
+
+
+
+# GB_target_BSB2<-myGB_target # TESTED BUT NOT PRESENTED
+# formals(GB_target_BSB2)$w<-0.5      # 0.5
+# formals(GB_target_BSB2)$c0<-0.35    # 0.35
+# formals(GB_target_BSB2)$delta<-0.2  # 0.2
+# class(GB_target_BSB2)<-"MP"
 
 
 # RP
-
-GB_target_RP<-myGB_target # TESTED BUT NOT PRESENTED
-formals(GB_target_RP)$w<-0.1     #0.25
-formals(GB_target_RP)$c0<-0.941   #0.955
-formals(GB_target_RP)$delta<-0.3  #0.2
+GB_target_RP<-myGB_target # THIS ONE SELECTED FOR RESULTS July 2023
+formals(GB_target_RP)$w<-0.5      # 0.5
+formals(GB_target_RP)$c0<-1.15    # 1
+formals(GB_target_RP)$delta<-0.2  # 0.2
 class(GB_target_RP)<-"MP"
+# w | c0 | delta | med(SSBratio30)
+# 0.5 | 1.05 | 0.2 |0.727
+# 0.5 | 1.2 | 0.2 |1.155
+# 0.5 | 1.15 | 0.2 | 1.03
 
-GB_target_RP2<-myGB_target # THIS ONE SELECTED FOR RESULTS July 2023
-formals(GB_target_RP2)$w<-0.5      # 0.5
-formals(GB_target_RP2)$c0<-1.05    # 1
-formals(GB_target_RP2)$delta<-0.2  # 0.2
-class(GB_target_RP2)<-"MP"
 
-GB_target_RP3<-myGB_target # old results
-formals(GB_target_RP3)$w<-0.5      # 0.5
-formals(GB_target_RP3)$c0<-1    # 1
-formals(GB_target_RP3)$delta<-0.2  # 0.2
-class(GB_target_RP3)<-"MP"
+
+# GB_target_RP<-myGB_target # TESTED BUT NOT PRESENTED
+# formals(GB_target_RP)$w<-0.1     #0.25
+# formals(GB_target_RP)$c0<-0.941   #0.955
+# formals(GB_target_RP)$delta<-0.3  #0.2
+# class(GB_target_RP)<-"MP"
+
+# GB_target_RP3<-myGB_target # old results
+# formals(GB_target_RP3)$w<-0.5      # 0.5
+# formals(GB_target_RP3)$c0<-1    # 1
+# formals(GB_target_RP3)$delta<-0.2  # 0.2
+# class(GB_target_RP3)<-"MP"
 
 
 
@@ -78,18 +92,27 @@ class(GB_target_RP3)<-"MP"
 
 # VS
 GB_target_VS<-myGB_target # TESTED BUT NOT PRESENTED
-formals(GB_target_VS)$w<-0.1      # 0.1
-formals(GB_target_VS)$c0<-0.49    # 0.49
+formals(GB_target_VS)$w<-0.15      # 0.1
+formals(GB_target_VS)$c0<-0.53    # 0.49
 formals(GB_target_VS)$delta<-0.3  # 0.3
 class(GB_target_VS)<-"MP"
+# w | c0 | delta | med(SSBratio30)
+# 0.1 | 0.49 | 0.3 | 0.89
+# 0.2 | 0.49 | 0.3 | 0.7977
+# 0.2 | 0.55 | 0.3 | 1.08
+# 0.2 | 0.54 | 0.3 | 1.007
+# 0.15 | 0.54 | 0.3 | 1.04
+# 0.15 | 0.52 | 0.3 | 0.967
+# 0.15 | 0.53 | 0.3 | 1.01629
+
 
 
 # less responsive GBtarget_VS
-GB_target_VS2<-myGB_target # THIS ONE SELECTED IN RESULTS
-formals(GB_target_VS2)$w<-0.2 # 0.25
-formals(GB_target_VS2)$c0<-0.56    # 0.49
-formals(GB_target_VS2)$delta<-0.2
-class(GB_target_VS2)<-"MP"
+# GB_target_VS2<-myGB_target # THIS ONE SELECTED IN RESULTS
+# formals(GB_target_VS2)$w<-0.2 # 0.25
+# formals(GB_target_VS2)$c0<-0.56    # 0.49
+# formals(GB_target_VS2)$delta<-0.2
+# class(GB_target_VS2)<-"MP"
 
 
 

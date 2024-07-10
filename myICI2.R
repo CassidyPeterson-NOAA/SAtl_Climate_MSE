@@ -44,27 +44,56 @@ class(myICI)<- "MP"
 
 # BSB
 myICI_BSB<-myICI
-formals(myICI_BSB)$cmu<-0.45 # 0.5
-formals(myICI_BSB)$csd<- 1 #
+formals(myICI_BSB)$cmu<-0.4 # 0.5
+formals(myICI_BSB)$csd<- 0.6 #
 class(myICI_BSB)<-"MP"
+# cmu | csd | med(SSBratio30)
+# 0.45 |1 | 1.189
+# 0.5 |1 | 1.27
+# 0.4 |1 | 1.05 *
+# 0.4 | 0.9 | 1.13
+# 0.4 | 0.8 | 1.1
+# 0.4 | 0.7 | 1.06
+# 0.4 | 0.6 | 1.046
 
 # RP
-myICI_RP<-myICI            # TESTED BUT NOT USED
-formals(myICI_RP)$cmu<-0.9125 # 0.9175
-formals(myICI_RP)$csd<- 0.1 # 1
-class(myICI_RP)<-"MP"
+# myICI_RP<-myICI            # TESTED BUT NOT USED
+# formals(myICI_RP)$cmu<-0.9125 # 0.9175
+# formals(myICI_RP)$csd<- 0.1 # 1
+# class(myICI_RP)<-"MP"
 #RP
-myICI_RP2<-myICI            # THIS ONE USED FOR RESULTS
-formals(myICI_RP2)$cmu<- 1.1 # 0.9175
-formals(myICI_RP2)$csd<- 1 # 1
-class(myICI_RP2)<-"MP"
+myICI_RP<-myICI            # THIS ONE USED FOR RESULTS
+formals(myICI_RP)$cmu<- 1 # 0.9175
+formals(myICI_RP)$csd<- 1 # 1
+class(myICI_RP)<-"MP"
+# cmu | csd | med(SSBratio30)
+# 1.1 |1 | 1.36
+# 0.9 |1 | 0.58
+# 0.9 |1.2 | 0.54
+# 0.9 |0.8 | 0.58
+# 0.9 |0.4 | 0.59
+# 1 |0.4 | 1.01
+# 1 |1 | 1.01
 
 
 # VS
 myICI_VS<-myICI
-formals(myICI_VS)$cmu<- 0.55 # 0.625 #
+formals(myICI_VS)$cmu<- 0.5 #0.55 # 0.625 #
 formals(myICI_VS)$csd<- 1 #
 class(myICI_VS)<-"MP"
+# cmu | csd | med(SSBratio30)
+# 0.55 | 1 | 1.24
+# 1 | 1 | 2.65
+# 1 | 0.5 | 2.7
+# 0.75 | 0.75 | 2.01
+# 0.5 | 0.75 | 1.1
+# 0.5 | 0.5 | 1.2
+# 0.5 | 0.1 | 1.2
+# 0.4 | 1 | 0.66
+# 0.45 | 1 | 0.83
+# 0.5 | 1 | 1.02
+
+
 
 # myICI_VS<-myICI
 # formals(myICI_VS)$cmu<-0.575 #

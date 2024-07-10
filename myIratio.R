@@ -46,20 +46,33 @@ myIratio_VS<-myIratio
 formals(myIratio_VS)$const<-1.125 #1.125
 formals(myIratio_VS)$c1<-1
 formals(myIratio_VS)$yrs<-c(2,5) # c(2,5) -> c(2, 6)
-
 class(myIratio_VS)<-"MP"
+# const | c1 | med(SSBratio30)
+# 1.125 | 1 | 1.05
+
 
 # BSB
 myIratio_BSB<-myIratio
-formals(myIratio_BSB)$const<-1.15 #1.3 # 1.2 or 1.32
+formals(myIratio_BSB)$const<-1.2 #1.3 # 1.2 or 1.32
 formals(myIratio_BSB)$yrs<-c(2,5) # c(2,5) or c(2,6)
 class(myIratio_BSB)<-"MP"
+# const | c1 | med(SSBratio30)
+# 1.15 | 1 | 1.177
+# 1.05 | 1 | 1.57
+# 1.25 | 1 | 0.93
+# 1.25 | 1 | 1.05
+
 
 
 # RP
 myIratio_RP<-myIratio
-formals(myIratio_RP)$const<-0.985 #0.995
+formals(myIratio_RP)$const<-0.97 #0.995
 class(myIratio_RP)<-"MP"
+# const | med(SSBratio30)
+# 0.985 | 0.757
+# 0.95 | 1.17
+# 0.96 | 1.07
+# 0.97 | 0.955
 
 
 
