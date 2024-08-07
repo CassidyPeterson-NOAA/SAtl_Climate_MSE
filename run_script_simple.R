@@ -260,88 +260,90 @@ ubias_args <- list("int"=0,
                    "yr1diff"=10  # Number of years between the beginning of the projection period and start of change in errors
 )
 
-# FUNCTION to generate index observation errors
-# gen_AddIerr()
-gen_AddIerr <- function(OM,
-                        scale_cv=FALSE,
-                        bias_cv=FALSE,
-                        fix_cv=FALSE,
-                        AddIndToMod = 1,
-                        args,
-                        cv_constant
-){
-
-  # args <- get(paste0(scenario_i,"_args"))
-  proyears <- OM@proyears
-  nyears <- OM@nyears
-  years <- OM@nyears+proyears
-
-  # Setup empty array
-  AddInd <- OM@cpars$Data@AddInd
-  CV_AddInd <- OM@cpars$Data@CV_AddInd
-  AddIerr_hist <- AddInd*NA
-  AddIerr_proj <- array(NA,
-                        dim=c(dim(AddIerr_hist)[1:2],proyears),
-                        dimnames = list(dimnames(AddIerr_hist)[[1]],
-                                        dimnames(AddIerr_hist)[[2]],
-                                        rev(as.numeric(dimnames(AddIerr_hist)[[3]]))[1]+1:proyears
-                        )
-  )
-
-  # Generate bootstrap residuals for AddInd indices of abundance
-  for(i in  1:dim(CV_AddInd)[2]){
-    CV_AddInd_i <- CV_AddInd[,i,]
-    # Possibly scale cvs
-    if(scale_cv & i %in% AddIndToMod){
-      CV_AddInd_i <- CV_AddInd_i*args$scale
-    }
-    # Possibly fix cvs
-    if(fix_cv & i %in% AddIndToMod){
-      CV_AddInd_i[!is.na(CV_AddInd_i)] <- cv_constant
-    }
-
-    if(length(args)==1){
-      args$projscale = args$scale
-      args$yr1diff = 0
-      args$transdur = 0
-    }
-
-    AddIerr_hist[,i,] <- t(apply(CV_AddInd_i,1,function(x){
-      lnorm_vector_boot(x=x/x,cv=x)
-    }))
-    AddIerr_proj[,i,] <- t(apply(CV_AddInd_i,1,function(x){
-      # x=CV_AddInd_i[1,]
-      x_proj <- sample(as.numeric(x[!is.na(x)]),size=proyears,replace=TRUE)
-      y<-rep(1,proyears)
-      slope <- (args$projscale-args$scale)/args$transdur
-      yrdiff <- 0:args$transdur
-      yrtrans <- args$yr1diff+yrdiff
-      y[yrtrans] <- 1+(slope*yrdiff)
-      # Fill in multipliers for years of regime 2
-      yrr2 <- (args$yr1diff+args$transdur+1):proyears
-      y[yrr2] <- args$projscale
-      y=y/min(y)
-      # lnorm_vector_boot(x=x_proj/x_proj,cv=x_proj)
-      lnorm_vector_boot(x=y,cv=x_proj, standardize=F)
-    }))
-  }
-  AddIerr <- abind::abind(AddIerr_hist,AddIerr_proj,along=3)
-
-
-
-
-  # Add bias to AddInd
-  for(i in  1:dim(CV_AddInd)[2]){
-    if(bias_cv & i %in% AddIndToMod){
-      yr1 <- OM@nyears+args$yr1diff+1
-      yrsmod <- yr1:max(years) # Years to modify
-      yrdiff <- yrsmod-yr1
-      AddIerr[,i,yrsmod] <- t(t(AddIerr[,i,yrsmod])+(args$int+args$slope*yrdiff))
-    }
-  }
-
-  return(AddIerr)
-}
+#####
+# # FUNCTION to generate index observation errors
+# # gen_AddIerr()
+# gen_AddIerr <- function(OM,
+#                         scale_cv=FALSE,
+#                         bias_cv=FALSE,
+#                         fix_cv=FALSE,
+#                         AddIndToMod = 1,
+#                         args,
+#                         cv_constant
+# ){
+#
+#   # args <- get(paste0(scenario_i,"_args"))
+#   proyears <- OM@proyears
+#   nyears <- OM@nyears
+#   years <- OM@nyears+proyears
+#
+#   # Setup empty array
+#   AddInd <- OM@cpars$Data@AddInd
+#   CV_AddInd <- OM@cpars$Data@CV_AddInd
+#   AddIerr_hist <- AddInd*NA
+#   AddIerr_proj <- array(NA,
+#                         dim=c(dim(AddIerr_hist)[1:2],proyears),
+#                         dimnames = list(dimnames(AddIerr_hist)[[1]],
+#                                         dimnames(AddIerr_hist)[[2]],
+#                                         rev(as.numeric(dimnames(AddIerr_hist)[[3]]))[1]+1:proyears
+#                         )
+#   )
+#
+#   # Generate bootstrap residuals for AddInd indices of abundance
+#   for(i in  1:dim(CV_AddInd)[2]){
+#     CV_AddInd_i <- CV_AddInd[,i,]
+#     # Possibly scale cvs
+#     if(scale_cv & i %in% AddIndToMod){
+#       CV_AddInd_i <- CV_AddInd_i*args$scale
+#     }
+#     # Possibly fix cvs
+#     if(fix_cv & i %in% AddIndToMod){
+#       CV_AddInd_i[!is.na(CV_AddInd_i)] <- cv_constant
+#     }
+#
+#     if(length(args)==1){
+#       args$projscale = args$scale
+#       args$yr1diff = 0
+#       args$transdur = 0
+#     }
+#
+#     AddIerr_hist[,i,] <- t(apply(CV_AddInd_i,1,function(x){
+#       lnorm_vector_boot(x=x/x,cv=x)
+#     }))
+#     AddIerr_proj[,i,] <- t(apply(CV_AddInd_i,1,function(x){
+#       # x=CV_AddInd_i[1,]
+#       x_proj <- sample(as.numeric(x[!is.na(x)]),size=proyears,replace=TRUE)
+#       y<-rep(1,proyears)
+#       slope <- (args$projscale-args$scale)/args$transdur
+#       yrdiff <- 0:args$transdur
+#       yrtrans <- args$yr1diff+yrdiff
+#       y[yrtrans] <- 1+(slope*yrdiff)
+#       # Fill in multipliers for years of regime 2
+#       yrr2 <- (args$yr1diff+args$transdur+1):proyears
+#       y[yrr2] <- args$projscale
+#       y=y/min(y)
+#       # lnorm_vector_boot(x=x_proj/x_proj,cv=x_proj)
+#       lnorm_vector_boot(x=y,cv=x_proj, standardize=F)
+#     }))
+#   }
+#   AddIerr <- abind::abind(AddIerr_hist,AddIerr_proj,along=3)
+#
+#
+#
+#
+#   # Add bias to AddInd
+#   for(i in  1:dim(CV_AddInd)[2]){
+#     if(bias_cv & i %in% AddIndToMod){
+#       yr1 <- OM@nyears+args$yr1diff+1
+#       yrsmod <- yr1:max(years) # Years to modify
+#       yrdiff <- yrsmod-yr1
+#       AddIerr[,i,yrsmod] <- t(t(AddIerr[,i,yrsmod])+(args$int+args$slope*yrdiff))
+#     }
+#   }
+#
+#   return(AddIerr)
+# }
+#####
 
 MSEtool::setup(ncores,logical=TRUE) # Run in parallel over ncores
 sfLibrary("magrittr", character.only = TRUE, verbose = FALSE)
@@ -503,12 +505,7 @@ for(OMName_k in OMNames)       { ######### Loop over operating model
 
 
 
-      # Index bias trend
-      if(scenario_i=="ubias"){
-        ## Generate observation error for AddInd
-        OM_k@cpars$AddIerr <- gen_AddIerr(OM_k,bias_cv = TRUE, args=ubias_args)
 
-      }
 
       ########### induce shift in index observation error over time
       if(scenario_i == "uobs_hi" | scenario_i == "uobs_lo"){

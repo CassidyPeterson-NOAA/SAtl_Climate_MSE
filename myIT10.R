@@ -124,6 +124,14 @@ class(myIT10_RP)<-"MP"
 # formals(myIT10_RP2)$damp<-1 #1
 # class(myIT10_RP2)<-"MP"
 
+# myIT10_RP3<-myIT10
+# formals(myIT10_RP3)$mc<-0.3   #0.3 # alternate tuning mc=0.3, c1=1, c2=0.905, damp=1
+# formals(myIT10_RP3)$c1<-1.2     #1
+# formals(myIT10_RP3)$c2<-1 #0.9225
+# formals(myIT10_RP3)$damp<-1 #0.75
+#
+# class(myIT10_RP3)<-"MP"
+
 
 # VS
 # yrsmth=5, mc=0.1, ii=1, c=0.8
