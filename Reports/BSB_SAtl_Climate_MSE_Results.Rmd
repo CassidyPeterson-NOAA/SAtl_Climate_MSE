@@ -1,8 +1,11 @@
 ---
-title: "SAtl_Climate_MSE_Results"
+title: "Climate-readiness of empirical vs. model-based MPs in the US South Atlantic - Black Sea Bass"
 author: "Cassidy Peterson"
-date: "July 2023"
-output: html_document
+date: "August 2024"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -16,43 +19,87 @@ source("Analyze_Results_Setup.R")
 
 ```
 
-## Background
+# Background
 
-Here are the results from a South Atlantic MSE exercise testing the behavior of model-based versus empirical MPs for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)).
+Supplement to Peterson CD. Klibansky N. Vincent MT. Walter III JF. Climate-readiness of fishery management procedures with application to the southeast U.S. Atlantic. 
+
+This report contains supplementary materials from a South Atlantic MSE exercise testing the behavior of model-based versus empirical MPs for black sea bass (BSB), vermilion snapper (VS), and red porgy (RP) using the openMSE software ([Blue Matter Science](bluematterscience.com)).
+
+This section is focused on results for black sea bass. 
+
+## Abbreviations 
+
+* MSE abbreviations
+  + MSE - management strategy evaluation
+  + OM - operating model
+  + MP - management procedure
+  + PM - performance metrics
+
+* Case study species
+  + VS - vermilion snapper
+  + BSB - black sea bass
+  + RP- red porgy
+
+* Management procedures (MP). Refer to [openMSE](openmse.com) and [dlmtool](https://dlmtool.openmse.com/reference/index.html) documentation for further details on each MP. Note that all non-SCA MPs are empirical (indicator-based) MPs
+  + ZeroC - zero catch MP, used for demonstration purposes only. 
+  + SCA*x* - statistical catch at age model that occurs every *x* years; may also be specified by a c or p (e.g., SCA5_c) to indicate that catches between assessments are constant (c) or specified by assessment forecast / projections
+  + GBtarg - Gt - Geromont and Butterworth target CPUE and catch MP 
+  + ICI - index confidence interval MP
+  + Irat - Ir - Iratio - mean index ratio
+  + IT10 - I10 - iterative index target MP
+  + Itarg - It - Itarget - incremental index target MP
+  + GBslope - Gs - Geromont and Butterworth index slope MP
+  + Islope - Is - index slope tracking MP
+
+* Operating model (OM) scenarios 
+  + Base - base-case OM with no nonstationarity
+  + recdev_hi - Mean recruitment deviations in normal space was linearly adjusted to a value twice the size of the historical value from years 11-20 and remained at the shifted value until projection year 50
+  + recdev_lo - Mean recruitment deviations in normal space was linearly adjusted to a value half the size of the historical value from years 11-20 and remained at the shifted value until projection year 50
+  + age0M_hi - A shift in age-0 natural mortality simulated by linearly increasing age-0 M from the historical value to twice the historical value from years 11-20 and remaining at the higher value until projection year 50
+  + age0M_lo - A shift in age-0 natural mortality simulated by linearly decreasing age-0 M from the historical value to half the historical value from years 11-20 and remaining at the lower value until projection year 50
+  + recns - Base case recruitment deviations are multiplied by a random walk vector with a mean of 1 and standard deviation of 5 (using random_walk function in [bamExtras](https://github.com/nikolaifish/bamExtras) version 0.0.1 R package)
+  + epiM - A multiplier greater than 1 is applied to historical natural mortality (M) in 10% of years; multiplier was defined as $1+lognormal(\mu = 0$,$\sigma = 0.2$) with a maximum value of 3 for red porgy or 4 for black sea bass and vermilion snapper
+  + uobs_hi - The coefficient of variation (CV) of the survey index was linearly increased from the value from the last year of the historical period to twice that level over years 11-20 and remaining at the higher value until projection year 50
+  + uobs_lo - The CV of the survey index was linearly decreased from the value from the last year of the historical period to half that level over years 11-20 and remaining at the higher value until projection year 50
+
+* Performance metrics (PMs)
+  + $dSSB_{0}$ - dynamic spawning stock biomass that would occur under no fishing pressure
+  + $F_{MSY}$ - the rate of fishing mortality ($F$) that would produce MSY 
+  + $SSB_{MSY}$ - SSB that would produce MSY if fished at $F_{MSY}$ 
+  + $SSB_{y}$ - SSB in the year $y$
+  + SSBratio	- The ratio of SSB to dynamic SSB that would be achieved in the absence of fishing ($dSSB_{0}$) calculated annually
+  + t10SSBratio - Mean terminal 10 years of SSBratio; SSBratio calculated annually over the final 10 years of the projection period and averaged across years 40-50
+  + Fratio - The ratio of realized fishing mortality ($F$) to the rate that would produce MSY ($F_{MSY}$) calculated annually
+  + PNOF - Probability of not overfishing, calculated as the proportion of years that $F/F_{MSY}$ exceeds 1 for the 50-year projection period of each projection iteration
+  + P100 - Proportion of years in the final 10 years of the simulation period (years 40-50) in which SSB>SSBMSY for each projection iteration
+  + cyield - Cumulative relative yield, where relative yield is calculated as realized yield relative to OM-defined MSY (i.e., if yield = MSY, then relative yield = 1 for that year) summed across all 50 projected years
+  + AAVY - Annual average variability in yield, calculated as the average change in yield from year-to-year across all years of the projection period: $AAVY= \Sigma_{t=0}^{t=50} sqrt( (((yield_{t}-yield_{t-1}) / (yield_{t-1} ))^{2}) )$
 
 
-Below are the results for BSB. 
 
 
-
-
-## BSB Results
+# Black Sea Bass Results
 
 ```{r BSB-FOUNDATION, setup, include=FALSE, cache=TRUE, cache.lazy=FALSE}
 # knitr::opts_chunk$set(cache = TRUE) # do not re-run if unnecessary
 
 ##### INPUTS ######
 set.file<-"MSE_obj/"
-# species<-"RedPorgy"; sp<-"RP"
-# species<-"VermilionSnapper"; sp<-"VS"
 species<-"BlackSeaBass"; sp<-"BSB"
-# species<-"RedPorgy_Over"; sp<-"RP_O"
-# species<-"VermilionSnapper_Over"; sp<-"VS_O"
-# species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 
 
-orderedMPs<- c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
-orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
+orderedMPs<-c(1:13)  #c(11,1, 12:13, 2:10) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedScenarios<-c(3, 5,6,4,1,2,7,10,11) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
-             "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
+             "recns", "uobs_hi", "uobs_lo") 
 
-MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+    MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
                      "GBtarg","ICI","Irat","IT10","Itarg",
                      "GBslope","Islope")
-MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "GBt",
-                        "ICI","Ir","I10","It","GBs","Is")
+    MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "Gt",
+                        "ICI","Ir","I10","It","Gs","Is")
 
-MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue', 'lightseagreen','cadetblue','cadetblue1')
+  MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') 
 
 # par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par.args<-list(mar=c(0.5, 0.5, 0.2, 0.2), mgp=c(0.7, 0.25, 0), tck=-0.01, cex.axis=1)
@@ -67,6 +114,7 @@ sptemp<-get(sp)                       # save SP as sptemp
 summary(sptemp$epiM@SB_SBMSY)         # see nonsensical sptemp results
 assign(sp, EpiMDeal(sptemp))          # deal with nonsensical results -- resave as SP
 summary(get(sp)$epiM@SB_SBMSY)        # see updated results
+remove(sptemp)
 
 # Get performance metrics and reorder
 CollatePMs_temp<-CollatePMs(sp)
@@ -77,15 +125,18 @@ assign(paste(sp, "PM_nest", sep="_"), Reorder_MPs(get(paste0(sp,"_PMs_nest")), n
 
 # Get performance metrics relative to base OM case
 assign(paste(sp,"RelPM_rd", sep='_'), Relative_MP_Perf_rd(sp)) #SP_RelPM_rd
-# 
-# # temp<-get(sp); temp_PM<-get(paste(sp, "PM", sep="_")); temp_PM_nest<-get(paste(sp, "PM_nest", sep="_"))
-# # save(temp, file="SP_temp.RData")
-# # save(temp_PM, file="SP_PMs.RData")
-# # save(temp_PM_nest, file="SP_PMs_nest.RData")
-```
-#### Median Trajectory Plots
 
-```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSB / dynSSB0 trajectories"}
+```
+
+
+## Median Trajectory Plots
+
+Below plots demonstrate median trajectories across 250 iterations per OM and MP scenario. Note y-axis limits. 
+
+
+### Median SSBratio trajectory 
+
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSBratio ($SSB / dSSB_{0}$) trajectories for each MP in each OM."}
 # exercise.setup="PreviousChunk",
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
@@ -93,184 +144,98 @@ Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(1:13))
 
 ```
 
+### Median $SSB / SSB_{MSY}$ trajectory
 
-```{r echo=FALSE, fig.height=9, fig.cap = "Median SSB / dynSSB0 trajectories for model MPs"}
+Note that changes to recruitment deviations are not reflected in MSY-based reference points. 
 
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median $SSB / static SSB_{MSY}$ trajectories for each MP in each OM."}
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2,7:13),#subset=c(1,8:13),
-                   colsR=c('black','deepskyblue','deeppink','darkolivegreen3','darkorchid','darkorange','steelblue', 'orchid'))
-# ,'blue','pink','green','orchid','cyan'))
+Plot_SSBtraj_MSY(fsh=sp, ylimsRDHi=c(0,7))
 
 ```
 
-```{r echo=FALSE, fig.height=9, fig.cap = "Median SSB / dynSSB0 trajectories for empirical MPs"}
+### Median catch trajectory
 
-par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-Plot_SSBtraj_dSSB0(fsh=sp, refline=reflinetemp, subset=c(2:6),
-                   colsR=c('black','deepskyblue','steelblue','deeppink','darkorange'))
-
-```
-
-```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSB / static SSBMSY trajectories"}
-par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-Plot_SSBtraj_MSY(fsh=sp)
-
-```
-
-```{r echo=FALSE, fig.height=9,  fig.cap = "Median catch trajectories"}
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median catch trajectories for each MP in each OM."}
 
 par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 Plot_Catchtraj(fsh=sp, subset=c(2:13))
 
 ```
 
+### Median SSBratio trajectory with 90% CIs
+
+```{r echo=FALSE, fig.height=9,  fig.cap = "Median SSBratio ($SSB / dSSB_{0}$) trajectories for each MP with 90% confidence intervals. Each MP is plotted in a single coordinate for each OM scenario for simplicity."}
+ 
+par(mfrow=c(4,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1, oma=c(0,0,1.2,0) )
+Plot_SSBtraj_dSSB0_CI(fsh=sp, subset=c(2:13),refline=reflinetemp, legend=F)
+```
 
 
 
-#### Biomass Performance Metrics
-```{r BSB-biomass-PM, echo=FALSE, fig.height=7, fig.width=9, fig.cap = "OM-specific MP biomass performance"}
+## Violin plots
 
-par(mfrow=c(3,4), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+Below plots demonstrate distribution of performance metrics across 250 iterations per OM and MP scenario. Note y-axis limits. 
+
+
+### Biomass 
+
+```{r BSB-biomass1-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Relative $SSB/SSB_{MSY}$ at year 30 by MP for each OM."}
+par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='treldSSB0', ylims=c(0,1.1), refline2=reflinetemp)
- PlotRelPM(sp, calc='rd', Pstat='treldSSB0',
-            baserefline=c(1,reflinetemp), refline=0,
-            maxylim=c(1.1, 4, 4, 2, 4, 3, 2, 1, 1.5, 1.5, 3), #BSB
-            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
- 
- 
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='t10reldSSB0', ylims=c(0,1.1), refline2=reflinetemp)
-  PlotRelPM(sp, calc='rd', Pstat='t10reldSSB0',
-            baserefline=c(1, reflinetemp), refline=0,
-            maxylim=c(1.1, 2.5, 3, 2, 4, 3, 2, 1, 1.5, 1.5, 3), #BSB
-            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
-  
-  
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='P100', ylims=c(0,1.1), refline2=0.5)
-  PlotRelPM(sp, calc='rd', Pstat='P100',
-            baserefline=1, refline=0,
-            maxylim=c(1.1, 10, 0.5, 1.75, 5, 3, 1.5, 1, 2, 1, 2.5), #BSB
-            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
-
-```
-#### Fishing mortality metrics
-```{r BSB-F-PM, echo=FALSE, warning=FALSE, fig.height=7, fig.width=9, fig.cap = "OM-specific MP fishing mortality performance"}
-
-par(mfrow=c(3,4), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='trelF', ylimsEpiM=c(0,4))
-PlotRelPM(sp, calc='rd', Pstat='trelF',
-            baserefline=1, refline=0,
-            maxylim=c(2.25, 10, 6, 10, 20, 5, 3, 5, 2, 3, 5), #BSB
-            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
-
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='t10relF', ylimsEpiM=c(0,4))
- PlotRelPM(sp, calc='rd', Pstat='t10relF',           ### NOTE THAT relF is arbitrarily set to 100 where F/FMSY == INF
-            baserefline=1, refline=0,
-            maxylim=c(2.25, 7, 4, 50, 13.5, 3, 2, 4, 1, 3, 3), #BSB
-            minylim=c(0, rep(-1.05,10)) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
- 
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='PNOF', ylims=c(0,1.1), refline2=0.5)
-PlotRelPM(sp, calc='rd', Pstat='PNOF',
-            baserefline=1, refline=0,
-            maxylim=c(1.1, 1, 1, 1.25, 1.25, 1.25, 1.25, 1, 1.25, 1, 1.25), #BSB
-            minylim=c(0, rep(-1.05,10))) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OF
-
-
+myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='relSSB30', ylimsEpiM=c(0,5), legend=F, mf=c(3,3))
 
 ```
 
-#### Yield metrics
-```{r BSB-yield-plots, echo=FALSE, fig.height=7, fig.width=9, fig.cap = "OM-specific MP yield performance"}
 
-par(mfrow=c(3,4), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='AAVY', ylims=c(0,1.5))
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='tyield', ylims=c(0,3))
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield', refline2=50, ylims=c(0,150))
-PlotRelPM(sp, calc='rd', Pstat='cyield',
-            baserefline=50, refline=0,
-            maxylim=c(100, 0.2, 2.5, 1.5, 5, 0.1, 1.5, 0.5, 0.5, 0.3, 0.3), #BSB
-            minylim=c(0, -1, -0.75, -1,  -0.25, -1, -1, -.5, -0.5, -0.5, -1) ) ## PLEASE NOTE THAT OUTLIERS HAVE BEEN CUT OFF
-Plot_my_tyield(SPP=get(sp), ylims=c(0,5000))
-Plot_my_cyield(SPP=get(sp), ylims=c(0, 150000))
+```{r BSB-biomass2-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Relative SSBratio ($SSB / dSSB_{0}$) at year 30 (reldSSB030) by MP for each OM. Horizontal reference line is indicative of $SSB_{MSY}/SSB_{0}$ calculated at the OM conditioning step; note that this reference value may change over the projection period as population dynamics change, which is not considered for this illustration."}
+par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
+myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='reldSSB030', refline2=reflinetemp, ylims=c(0,1.15), legend=F, mf=c(3,3))
 
 ```
 
-#### Cumulative Performance Metrics
-```{r BSB-cumulative-PM-plot, echo=FALSE, fig.height=5, fig.cap = "MP performance across OMs"}
 
+### Fishing mortality 
+
+```{r BSB-F1-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Relative $F/F{MSY}$ at year 30 by MP for each OM."}
+par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='relF30', ylimsEpiM=c(0,25), legend=F, mf=c(3,3))
+```
+
+
+```{r BSB-F2-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Probability of not overfishing (PNOF) across the 50-year projection period by MP for each OM."}
+par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='PNOF', legend=F, mf=c(3,3))
+```
+
+
+### Yield 
+
+
+```{r BSB-Yield1-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Relative yield (yield / MSY) at projection year 30 by MP for each OM."}
+ par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='yield30', legend=F, mf=c(3,3),ylimsrecns=c(0,10))
+```
+
+
+```{r BSB-Yield2-PM, echo=FALSE, fig.height=5, fig.width=9, fig.cap = "Cumulative relative yield (yield / MSY) at projection year 30 by MP for each OM."}
+ par(mfrow=c(3,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+ myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='cyield30', refline1=30, legend=F, mf=c(3,3),ylimsrecns=c(0,400))
+```
+
+## Cumulative Violin Plots (Across all OMs)
+
+Below plots demonstrate distribution of performance metrics across all iterations, OMs, and MPs. Note y-axis limits. 
+
+
+```{r BSB-cumulative-PM-plot, echo=FALSE, fig.height=5, fig.width=7, fig.cap = "MP performance across OMs"}
 par(mfrow=c(2,3), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
 PlotCumPM(sp, Pstat="AAVY", refline=c(0.3), title=species, ylims=c(0,1)) # for BSB_O ylims=c(0,5) |for VS ylims=c(0,5)
 PlotCumPM(sp, Pstat="PNOF", refline=c(0.5), title=species, ylims=c(0,1.1))
 PlotCumPM(sp, Pstat="P100", refline=c(0.5), title=species, ylims=c(0,1.1))
-PlotCumPM(sp, Pstat="treldSSB0", ylim=c(0,1.1), refline=c(1, reflinetemp), title=species)
-PlotCumPM(sp, Pstat="t10reldSSB0", ylim=c(0,1.1), refline=c(1, reflinetemp), title=species)
+PlotCumPM(sp, Pstat="relSSB30", refline=c(1), title=species, ylims=c(0,10))
+PlotCumPM(sp, Pstat="relF30", refline=c(1), title=species, ylims=c(0,7))
 PlotCumPM(sp, Pstat="cyield",  refline=c(50), title=species, ylims=c(0, 150))
-```
-
-#### Trade off plots
-```{r BSB-trade-off-plots, echo=FALSE, fig.height=5, fig.cap = "MP performance across OMs"}
-### Tradeoff plot
-spp_pm<-get(paste(sp, "PM", sep="_"))
-
-par(mfrow=c(1,2), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-reflinetemp<-get(sp)[[1]]@OM$SSBMSY_SSB0[1]
-TOff_Plot(SPP_PM=spp_pm, PMy='PNOF', PMx='cyield', errbars=F); abline(h=0.7, lty=3); abline(v=50, lty=2)
-TOff_Plot(SPP_PM=spp_pm, PMy='t10reldSSB0', PMx='AAVY', errbars=F); abline(h=reflinetemp, lty=2); abline(v=0.3, lty=2)
-
-
-```
-
-
-#### Worm plots
-```{r BSB-worm-plots, echo=FALSE, fig.height=5, fig.cap = "MP performance across OMs"}
-nms<-get(sp)$base@MPs
-# cbind(MP_namesR_leg,orderedMPs)
-mpnms<-nms[c(1,7,8)]
-# names(get(sp))
-
-# par(mfrow=c(1,4))
-# myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY")
-par(mfrow=c(3,3), oma=c(0,1.2,1.2,0), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY", nworms=9)
-mtext(species, 3, outer=TRUE, line=-0.3)
-par(mfrow=c(3,3), oma=c(0,0,1.2,0), mar=c(2.4, 3.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
-myWorm(sp, OM="recdev_lo", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
-myWorm(sp, OM="epiM", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
-mtext(species, 3, outer=TRUE, line=0)
-
-
-```
-
-
-#### Other
-Compare observed indices in uobs_hi and uobs_lo scenarios. Note that when index observation error increases, observed index values reach greater values, indicating a higher relative abundance. This translates to higher TACs and higher fishing pressure, resulting in lower abundances. 
-
-```{r BSB-indices-plots, echo=FALSE, fig.height=5, fig.cap = "Observed indices of abundance"}
-base<-get(sp)[["base"]]
-uobsHi<-get(sp)[["uobs_hi"]]
-uobsLo<-get(sp)[["uobs_lo"]]
-par(mfrow=c(4,3), oma=c(0,1.2,1.2,0), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
-yrs<-uobsHi@PPD$SCA_1@Year
-ey<-length(yrs)
-obj<-uobsHi@PPD$SCA_1@AddInd[1,1,]
-by<-tail(which(is.na(obj)),1)+1
-for(i in 100:111){
-  plot(yrs[by:ey], uobsHi@PPD$SCA_1@AddInd[i,1,by:ey], type='l', col='red', ylab="Index",xlab="Year")
-  lines(yrs[by:ey], uobsLo@PPD$SCA_1@AddInd[i,1,by:ey], type='l', col='deepskyblue')
-  lines(yrs[by:ey], base@PPD$SCA_1@AddInd[i,1,by:ey], type='l')
-}
-legend("topright", c("base","uobsHi","uobsLo"), lty=1, lwd=1, col=c('black','red','deepskyblue'), bty='n')
-par(mfrow=c(1,2))
-boxplot(c(uobsHi@PPD$SCA_1@AddInd[,1,59:88]), c(base@PPD$SCA_1@AddInd[,1,59:88]), c(uobsLo@PPD$SCA_1@AddInd[,1,59:88]), 
-        col=c('red','grey','deepskyblue'),ylab="Index (last 30 years)", names=c("uobs_Hi","base","uobs_Lo"))
-boxplot(c(uobsHi@TAC[,2,21:50]), c(base@TAC[,2,21:50]), c(uobsLo@TAC[,2,21:50]), 
-        col=c('red','grey','deepskyblue'),ylab="TAC (last 30 years)", ylim=c(0,7500), names=c("uobs_Hi","base","uobs_Lo"))
-```
 ```
