@@ -39,9 +39,7 @@ See conditioned operating model summary reports below.
 
 
 ## Results
-See complete result reports below. 
-
-* [See All Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/SAtl_ClimateMSE_Results.html)
+See complete result reports below. Complete results by species: 
 
   * [See VS Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/VS_SAtl_Climate_MSE_Results.html)
 
@@ -49,8 +47,7 @@ See complete result reports below.
 
   * [See RP Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/RP_SAtl_Climate_MSE_Results.html)
 
-
-* [See All Results with Implementation Overages Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/SAtl_ClimateMSE_Results_Overages.html)
+Results with implementation overages by species: 
 
   * [See VS_Overages Results Here](https://htmlpreview.github.io/?https://github.com/CassidyPeterson-NOAA/SAtl_Climate_MSE/blob/main/Reports/VS_O_SAtl_Climate_MSE_Results.html)
 
