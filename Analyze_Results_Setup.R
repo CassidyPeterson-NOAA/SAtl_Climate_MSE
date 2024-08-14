@@ -729,7 +729,8 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
                             colsR=MP_R_col, namesR=MP_namesR_leg,
                             subset=NULL,
                             ylims=c(0,3), refline=NULL,
-                            labline=-1.1, legend=TRUE, llwd=2, labs=T, ylabs=T){
+                            labline=-1.1, legend=TRUE, llwd=2, labs=T, ylabs=T,
+                            ylimsRDHi=NULL){
 
   data<-get(fsh)
   if(is.null(scenarios)){
@@ -775,7 +776,13 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
     index<-which(MP_names==MP_namesR[1])
     if(ylabs==T){yla<-expression("SSB / SSB"['MSY'])}else{yla<-""}
 
-    plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=ylims, lwd=llwd,
+    if(res=='recdev_hi'){
+      ylims1=ylimsRDHi
+      if(is.null(ylimsRDHi) & !is.null(ylims)){ylims1=ylims}
+    }#end if epiM
+    if(res!='recdev_hi'){ylims1=ylims}
+
+    plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=ylims1, lwd=llwd,
          ylab=yla, xlab="Projected Years", col=colsR[1])
     abline(h=1)
     for(iname in MP_namesR[2:length(MP_namesR)]){
@@ -1132,7 +1139,7 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","relSSB30","treldSSB0"
                                          "cyield", "PNOF", "P100" ,'relSSB30',
                                          'reldSSB030','relF30', 'yield30','cyield30','P10030',
                                          'P5030', 'P1030'),
-                        ylims=c(NULL), ylimsEpiM=c(NULL), MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
+                        ylims=c(NULL), ylimsEpiM=c(NULL), ylimsrecns=c(NULL), MPnam=MP_namesR_abbrev, MPcol=MP_R_col,
                         mf=c(4,3), xlab.cex=0.79, refline1=1, refline2=NULL, ylabs=NULL,
                         namesR=MP_namesR_leg, subset=c(2:13), scenarios=NULL, legend=TRUE, labs=T){
 
@@ -1148,7 +1155,11 @@ myPlot_Violin<-function(SPP_nest, stat=c("AAVY","trelSSB","relSSB30","treldSSB0"
       ylims1=ylimsEpiM
       if(is.null(ylimsEpiM) & !is.null(ylims)){ylims1=ylims}
     }#end if epiM
-    if(ii!='epiM'){ylims1=ylims}
+    if(ii=='recns'){
+      ylims1=ylimsrecns
+      if(is.null(ylimsrecns) & !is.null(ylims)){ylims1=ylims}
+    }#end if epiM
+    if(ii!='epiM' & ii!='recns'){ylims1=ylims}
     vioplot(data[[ii]][,subset], col=MPcol[subset], names=NA, ylim=ylims1, axes=F)
     axis(2)
     axis(1, at=1:length(MPnam[subset]), labels=MPnam[subset], cex.axis=xlab.cex)

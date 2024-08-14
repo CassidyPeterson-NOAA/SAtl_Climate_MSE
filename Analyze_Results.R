@@ -8,9 +8,9 @@ source("Analyze_Results_Setup.R")
 ##### INPUTS ######
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
-species<-"RedPorgy"; sp<-"RP"
+# species<-"RedPorgy"; sp<-"RP"
 # species<-"VermilionSnapper"; sp<-"VS"
-# species<-"BlackSeaBass"; sp<-"BSB"
+species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
@@ -228,7 +228,7 @@ remove(uobsHi)
 remove(uobsLo)
   # summary(uobsHi)
 
-# example rec devs.
+# example index.
 par(mfrow=c(2,1))
 tmp<-apply(get(sp)$base@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)
 tmpH<-apply(get(sp)$uobs_hi@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)
@@ -253,14 +253,12 @@ mtext("ZeroC Median Recruitment", side=3, line=-1.1, cex=1)
 par(mfrow=c(4,3))
 
 
-
-
-
+par(mar=c(1,1,0,0), mfrow=c(3,3))
 ### plot violin plots
 stat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
        't10relF','tyield','cyield', 'PNOF', 'P100','relSSB30',
        'reldSSB030','relF30', 'yield30','cyield30', 'P10030')
-myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='AAVY', ylims=c(0,1.5))
+myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='AAVY', ylims=c(0,1.5), legend=F)
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='treldSSB0', ylims=c(0,1.1), refline2=0.5)
 myPlot_Violin(get(paste0(sp,"_PM_nest")), stat='t10reldSSB0', ylims=c(0,1.1), refline2=0.5)
 
@@ -701,8 +699,8 @@ Toff_Difference_Plot(sp, calc='rd',Pstatx='cyield',Pstaty='trelSSB', stat=median
 ### wormplot
 nms<-get(sp)$base@MPs; nms
 if(sp=='BSB') mpnms<-nms[c(1,5,6,8)]
-if(sp=='') mpnms<-nms[c(1,6,7)]
-if(sp=='') mpnms<-nms[c(1,6,7)]
+if(sp=='VS') mpnms<-nms[c(1,6,7)]
+if(sp=='RP') mpnms<-nms[c(1,6,7)]
 names(get(sp))
 
 # par(mfrow=c(1,4))
@@ -715,6 +713,17 @@ myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
 myWorm(sp, OM="recdev_lo", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
 myWorm(sp, OM="epiM", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
 mtext(species, 3, outer=TRUE, line=-0.3)
+
+nms<-get(sp)$base@MPs
+par(mfrow=c(3,3), oma=c(0,1.2,1.2,0), mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY", nworms=9)
+mtext(species, 3, outer=TRUE, line=-0.3)
+par(mfrow=c(3,3), oma=c(0,0,1.2,0), mar=c(2.4, 3.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
+myWorm(sp, OM="base", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
+myWorm(sp, OM="recdev_lo", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
+myWorm(sp, OM="epiM", MPs=mpnms, metric="SB_SBMSY", byMP=T, nworms=5)
+mtext(species, 3, outer=TRUE, line=0)
+
 
 
 
