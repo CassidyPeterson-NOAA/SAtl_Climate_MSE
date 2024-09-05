@@ -16,6 +16,18 @@ species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
 
+orderedMPs<-c(1:13)  #c(11,1, 12:13, 2:10) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedScenarios<-c(3, 5,6,4,1,2,7,10,11) #c(3,5:6,4,1:2,7:11)
+scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
+             "recns", "uobs_hi", "uobs_lo") #, "refbias_hi",  "refbias_lo")
+MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+                 "GBtarg","ICI","Irat","IT10","Itarg",
+                 "GBslope","Islope")
+MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "Gt",
+                    "ICI","Ir","I10","It","Gs","Is")
+MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') #'lightskyblue1',,'lightskyblue
+
+###### skip notes ####
 # MPs_user_BSB <- c("ZeroC",
 #                   "SCA_1", "SCA_5", "SCA_10",
 #                   "pMP_5","pMP_10" ,
@@ -47,20 +59,16 @@ species<-"BlackSeaBass"; sp<-"BSB"
 
 # abbrev=TRUE # true to select best performing MP configurations for each species. false to show all MP results.
 
-orderedMPs<-c(1:13)  #c(11,1, 12:13, 2:10) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
-orderedScenarios<-c(3, 5,6,4,1,2,7,10,11) #c(3,5:6,4,1:2,7:11)
-scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
-             "recns", "uobs_hi", "uobs_lo") #, "refbias_hi",  "refbias_lo")
 # get(sp)$base@MPs
 # if(sp=="VS" | sp=="VS_O") {
   # if(abbrev==TRUE){
   #   # VS: GB_targ_VS2 | myItarget_VS2? | GB_slope_VS | GB_Islope2
   #   orderedMPs<-c(1,15:16,2:3,5:8,10:11,14)
-    MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
-                     "GBtarg","ICI","Irat","IT10","Itarg",
-                     "GBslope","Islope")
-    MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "Gt",
-                        "ICI","Ir","I10","It","Gs","Is")
+    # MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
+    #                  "GBtarg","ICI","Irat","IT10","Itarg",
+    #                  "GBslope","Islope")
+    # MP_namesR_abbrev<-c("ZC","S1","5c","10c","5p","10p", "Gt",
+    #                     "ICI","Ir","I10","It","Gs","Is")
 #   }#end if abbrev==TRUE
 #
 #   if(abbrev==FALSE){
@@ -116,8 +124,9 @@ scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
 #   MP_R_col=c('grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','lightskyblue1','lightskyblue','cadetblue','cadetblue1','cadetblue3', 'lightseagreen','mediumseagreen', 'aquamarine','aquamarine3')
 # }
 # if(abbrev==TRUE){
-  MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') #'lightskyblue1',,'lightskyblue','skyblue3''darkturquoise'
+  # MP_R_col=c('grey15','grey30','gray40','gray50','gray60','gray70','deepskyblue4','deepskyblue3','deepskyblue','skyblue3','cadetblue1','cadetblue', 'lightseagreen') #'lightskyblue1',,'lightskyblue','skyblue3''darkturquoise'
 # }
+###############
 
 par.args<-list(mar=c(2.4, 2.4, 0.2, 0.2), mgp=c(1.1, 0.25, 0), tck=-0.01, cex.axis=1)
 par(par.args)
@@ -240,6 +249,12 @@ if(sp=="RP"){const_t<-2}
 plot(tmp[yrs], x=yrs, type='l', ylim=c(0, max(tmp, na.rm=T)*const_t), ylab='Median index', lwd=2, xlab="Years")
 lines(tmpH[yrs], x=yrs, type='l', col='blue', lwd=2)
 lines(tmpL[yrs], x=yrs, type='l', col='red', lwd=2)
+# lines(apply(get(sp)$epiM@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray20', lwd=2, lty=2)
+# lines(apply(get(sp)$recdev_hi@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray30', lwd=2, lty=2)
+# lines(apply(get(sp)$recdev_lo@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray40', lwd=2, lty=2)
+# lines(apply(get(sp)$age0M_hi@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray50', lwd=2, lty=2)
+# lines(apply(get(sp)$age0M_lo@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray60', lwd=2, lty=2)
+# lines(apply(get(sp)$recns@PPD$ZeroC@AddInd[,1,], 2, median, na.rm=T)[yrs], x=yrs, type='l', col='gray80', lwd=2, lty=2)
 lines(tmp[yrs], x=yrs, type='l', lwd=2)
 mtext("ZeroC Median Index", side=3, line=-1.1, cex=1)
 
@@ -252,8 +267,52 @@ lines(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median), type='l', lwd=2)
 mtext("ZeroC Median Recruitment", side=3, line=-1.1, cex=1)
 par(mfrow=c(4,3))
 
-
+plot(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median), type='l', ylim=c(0, max(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median))*1.5), ylab='Median Recruitment', lwd=2, xlab="Years")
+lines(apply(get(sp)$recdev_hi@PPD$ZeroC@Rec, 2, median), type='l', col='blue', lwd=2)
+lines(apply(get(sp)$recdev_lo@PPD$ZeroC@Rec, 2, median), type='l', col='red', lwd=2)
+# lines(apply(get(sp)$epiM@PPD$ZeroC@Rec, 2, median), type='l', col='gray20', lwd=2, lty=2)
+# lines(apply(get(sp)$age0M_hi@PPD$ZeroC@Rec, 2, median), type='l', col='gray30', lwd=2, lty=2)
+# lines(apply(get(sp)$age0M_lo@PPD$ZeroC@Rec, 2, median), type='l', col='gray40', lwd=2, lty=2)
+# lines(apply(get(sp)$recns@PPD$ZeroC@Rec, 2, median), type='l', col='deepskyblue', lwd=2, lty=2)
+# lines(apply(get(sp)$uobs_hi@PPD$ZeroC@Rec, 2, median), type='l', col='gray60', lwd=2, lty=2)
+# lines(apply(get(sp)$uobs_lo@PPD$ZeroC@Rec, 2, median), type='l', col='gray80', lwd=2, lty=2)
+lines(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median), type='l', lwd=2)
+mtext("ZeroC Median Recruitment", side=3, line=-1.1, cex=1)
 par(mar=c(1,1,0,0), mfrow=c(3,3))
+
+
+plot(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median), type='l', ylim=c(0, max(apply(get(sp)$base@PPD$ZeroC@Rec, 2, median))*1.5), ylab='Median Recruitment', lwd=2, xlab="Years")
+lines(apply(get(sp)$recdev_hi@PPD$ZeroC@Rec, 2, median), type='l', col='blue', lwd=2)
+
+# dim(VS$epiM@Hist@AtAge$N.Mortality) #(iters, age, yrs)
+# Mtmp=VS$epiM@Hist@AtAge$N.Mortality
+# VS$epiM@Hist@AtAge$N.Mortality[1,,72:121]
+
+
+Mtmp<-get(sp)$epiM@Hist@AtAge$N.Mortality
+pyr<-(get(sp)$base@nyears+1):(get(sp)$base@nyears+50)
+eM<-as.data.frame(matrix( ncol=dim(Mtmp)[2]) )
+for(y in pyr){
+  is<-which(Mtmp[,1,y] > 0.3781 )  # calculate yrs for which epiM occurred in iter
+  eM<-rbind(eM, Mtmp[is,,y])
+}
+eM<-eM[-1,]
+summary(eM)
+maxeM<-apply(eM, 2, max)
+mineM<-apply(eM, 2, min)
+maxage<-dim(eM)[2] - 1
+
+plot(x=0:maxage, Mtmp[1,,72], type='b', lwd=2, ylim=c(0,(round(max(maxeM), 2)+0.01)),
+     ylab="Natural mortality",xlab="Age")
+polygon(y=c(mineM,rev(maxeM)), x=c(0:maxage, maxage:0),
+        col=adjustcolor( 'gray', alpha.f = 0.7), border=NA)
+for(i in 1:dim(eM)[1]){
+  lines(x=0:12, eM[i,], type='l', col='gray')
+}
+remove(Mtmp, pyr, eM, maxeM, mineM, maxage)
+
+
+
 ### plot violin plots
 stat=c('AAVY','trelSSB','treldSSB0','trelF','t10relSSB','t10reldSSB0',
        't10relF','tyield','cyield', 'PNOF', 'P100','relSSB30',
