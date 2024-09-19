@@ -159,8 +159,8 @@ CollatePMs <- function(dataN=sp,
     returnlist_nest[['relSSB30']][[OM_names[1]]]<-relSSB30
     colnames(returnlist_nest[['relSSB30']][[OM_names[1]]])<-MP_names
     for(i in 2:length(data)){
-      relSSB30<-rbind(relSSB30, P100(data[[i]], Yrs=-1)@Stat)
-      returnlist_nest[['relSSB30']][[OM_names[i]]]<-P100(data[[i]], Yrs=-1)@Stat
+      relSSB30<-rbind(relSSB30, P100(data[[i]], Yrs=c(30,30))@Stat)
+      returnlist_nest[['relSSB30']][[OM_names[i]]]<-P100(data[[i]], Yrs=c(30,30))@Stat
       colnames(returnlist_nest[['relSSB30']][[OM_names[i]]])<-MP_names
     } # end for loop
 
