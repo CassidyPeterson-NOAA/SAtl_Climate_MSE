@@ -730,7 +730,7 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
                             subset=NULL,
                             ylims=c(0,3), refline=NULL,
                             labline=-1.1, legend=TRUE, llwd=2, labs=T, ylabs=T,
-                            ylimsRDHi=NULL){
+                            xlabs=T, ylimsRDHi=NULL){
 
   data<-get(fsh)
   if(is.null(scenarios)){
@@ -775,6 +775,7 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
 
     index<-which(MP_names==MP_namesR[1])
     if(ylabs==T){yla<-expression("SSB / SSB"['MSY'])}else{yla<-""}
+    if(xlabs==T){xla<-"Projected Years"}else{xla<-""}
 
     if(res=='recdev_hi'){
       ylims1=ylimsRDHi
@@ -783,11 +784,14 @@ Plot_SSBtraj_MSY<-function( fsh, scenarios=NULL, save.png=F,
     if(res!='recdev_hi'){ylims1=ylims}
 
     plot(apply(results@SB_SBMSY[,index,], 2, median), type='l', ylim=ylims1, lwd=llwd,
-         ylab=yla, xlab="Projected Years", col=colsR[1])
+         ylab=yla, xlab=xla, col=colsR[1])
     abline(h=1)
+
+
     for(iname in MP_namesR[2:length(MP_namesR)]){
       i = which(results@MPs==iname)
       iorder<-which(MP_namesR==iname)
+
       lines(apply(results@SB_SBMSY[,i,], 2, median), type='l', lwd=llwd, lty=iorder, col=colsR[iorder])
     }
     if(save.png==T) legend("bottom", namesR[subset], lwd=llwd, lty=1:length(subset), col=colsR, bty='n', ncol=5, cex=0.75)

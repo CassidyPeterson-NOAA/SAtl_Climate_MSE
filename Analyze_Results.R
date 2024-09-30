@@ -9,15 +9,15 @@ source("Analyze_Results_Setup.R")
 # BSB<-loadRDS("MSE_obj/MSE_BlackSeaBass_base.rds")
 set.file<-"MSE_obj/"
 # species<-"RedPorgy"; sp<-"RP"
-# species<-"VermilionSnapper"; sp<-"VS"
-species<-"BlackSeaBass"; sp<-"BSB"
+species<-"VermilionSnapper"; sp<-"VS"
+# species<-"BlackSeaBass"; sp<-"BSB"
 # species<-"RedPorgy_Over"; sp<-"RP_O"
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 ## DATA AND PLOTTING INPUTS
 
-orderedMPs<-c(1:13)  #c(11,1, 12:13, 2:10) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
-orderedScenarios<-c(3, 5,6,4,1,2,7,10,11) #c(3,5:6,4,1:2,7:11)
+orderedMPs<- c(1:2, 14,15, 5:13) #c(1:13)  #c(11,1, 12:13, 2:10) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedScenarios<-c(3, 5:6, 1:2, 7, 4, 8:9) #c(3, 5,6, 4,1,2,7,10,11) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
              "recns", "uobs_hi", "uobs_lo") #, "refbias_hi",  "refbias_lo")
 MP_namesR_leg<-c("ZeroC","SCA1","SCA5_c","SCA10_c","SCA5_p","SCA10_p",
@@ -135,7 +135,7 @@ par(par.args)
 
 
 ### Run FUNCTIONS for input species #####
-assign(sp, GetResults(species1=species,sp1=sp)[-c(10,11)]) # save GetResults with sp | SP
+assign(sp, GetResults(species1=species,sp1=sp)) #[-c(10,11)]) # save GetResults with sp | SP
 
 
 # correct results for EpiM SSB nonsensical results
