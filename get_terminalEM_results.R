@@ -15,12 +15,12 @@ species_list[[3]]<-c("RedPorgy","RP")
 # species<-"VermilionSnapper_Over"; sp<-"VS_O"
 # species<-"BlackSeaBass_Over"; sp<-"BSB_O"
 
-orderedMPs<- c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
-orderedScenarios<-c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
+orderedMPs<- c(1:2, 14,15, 5:13) #c(1:2, 12:13, 3:11) #c(1, 10:11, 2:9, 12:13) #c(1, 9:10, 2:8)
+orderedScenarios<-c(3, 5:6, 1:2, 7, 4, 8:9) #c(3, 5,6,4,1,2,7,10,11,8,9) #c(3,5:6,4,1:2,7:11)
 scenarios<-c("base","recdev_hi", "recdev_lo", "epiM", "age0M_hi", "age0M_lo",
-             "recns", "uobs_hi", "uobs_lo", "refbias_hi",  "refbias_lo")
+             "recns", "uobs_hi", "uobs_lo") #, "refbias_hi",  "refbias_lo")
 MP_col=c('grey30','gray40','gray50','gray60','gray70') #R0 #h #MSY #FMSY #SSBMSY #SSB_SSBMSY #F_FMSY
-scen_col=c('black','deepskyblue','deepskyblue4','firebrick','slateblue','slateblue4','darkorange','darkolivegreen2','darkolivegreen','darkorchid','darkorchid4')
+scen_col=c('black','deepskyblue','deepskyblue4','firebrick','darkorchid','darkorchid4','darkorange','darkolivegreen2','darkolivegreen') #,'slateblue','slateblue4'
 
 
 
@@ -130,7 +130,7 @@ for(ii in 1:length(species_list)){
   tEMres<-list() # define list structure
   for(s in names(mse)){
     mtemp<-mse[[s]] # get MSE for OM scenario s
-    for(mp in c(2,12,13,3,4)){
+    for(mp in c(2,14,15,5,6)){ # select 2, 14, 15, 5:6 c(2,12,13,3,4)
       tEMres[[s]][[paste0(mtemp@MPs[mp])]]<-FinalEMResults(mtemp, mp=mp) # get results for each mp
     }# end m loop
   }# end s loop
