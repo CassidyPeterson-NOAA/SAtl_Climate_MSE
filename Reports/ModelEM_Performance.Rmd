@@ -2,7 +2,9 @@
 title: "ModelEM_Performance"
 author: "Cassidy Peterson"
 date: "July 2023"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -148,7 +150,7 @@ sp<-"VS"
 tEMres<- get(paste0(sp,"_tEM"))
 
 # run plotting loop for every em perf metric (p)
-for(p in names(tEMres[[s]][[mp]]) ){
+for(p in names(tEMres[[1]][[1]]) ){
   Plot_tEMres(tEMres, p)
 } # end p loop
 
@@ -159,7 +161,7 @@ sp<-"BSB"
 tEMres<- get(paste0(sp,"_tEM"))
 
 # run plotting loop for every em perf metric (p)
-for(p in names(tEMres[[s]][[mp]]) ){
+for(p in names(tEMres[[1]][[1]]) ){
   Plot_tEMres(tEMres, p)
 } # end p loop
 
@@ -170,7 +172,7 @@ sp<-"RP"
 tEMres<- get(paste0(sp,"_tEM"))
 
 # run plotting loop for every em perf metric (p)
-for(p in names(tEMres[[s]][[mp]]) ){
+for(p in names(tEMres[[1]][[1]]) ){
   Plot_tEMres(tEMres, p)
 } # end p loop
 

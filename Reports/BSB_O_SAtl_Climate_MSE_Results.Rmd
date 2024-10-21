@@ -2,12 +2,13 @@
 title: "Climate-readiness of empirical vs. model-based MPs in the US South Atlantic - Black Sea Bass with Overages"
 author: "Cassidy Peterson"
 date: "August 2024"
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-  github_document:
-    toc: true
+output: word_document
+# output: 
+#   html_document:
+#     toc: true
+#     toc_float: true
+#   github_document:
+#     toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -79,7 +80,7 @@ This section is focused on results for black sea bass *with implementation overa
 
 
 
-
+\newpage
 # Black Sea Bass with Implementation Overages Results
 
 ```{r BSB_O-FOUNDATION, setup, include=FALSE, cache=TRUE, cache.lazy=FALSE}

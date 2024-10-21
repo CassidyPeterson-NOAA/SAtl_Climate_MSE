@@ -1,13 +1,16 @@
 ---
-title: "Climate-readiness of empirical vs. model-based MPs in the US South Atlantic - Vermilion Snapper with Overages"
+title: "Climate-readiness of empirical vs. model-based MPs in the US South Atlantic
+  - Vermilion Snapper with Overages"
 author: "Cassidy Peterson"
 date: "August 2024"
-output: 
-  html_document:
-    toc: true
-    toc_float: true
+output:
+  word_document:
+    toc: yes
   github_document:
-    html_preview: FALSE
+    html_preview: no
+  html_document:
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
